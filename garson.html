@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kırkikindi — Garson Paneli</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{--g:#C9A84C;--g3:#8B6914;--paper:#FDFAF4;--black:#120E08;}
+body{font-family:system-ui,sans-serif;background:var(--paper);min-height:100vh;}
+
+.topbar{background:var(--black);padding:10px 16px;display:flex;align-items:center;justify-content:space-between;}
+.brand{display:flex;align-items:center;gap:10px;}
+.brand-num{font-size:22px;font-weight:700;color:var(--g);font-family:Georgia,serif;}
+.brand-name{font-size:10px;letter-spacing:3px;color:rgba(255,255,255,0.5);}
+.panel-title{font-size:11px;color:rgba(255,255,255,0.35);}
+.live{display:flex;align-items:center;gap:5px;font-size:10px;color:#22c55e;}
+.live-dot{width:7px;height:7px;border-radius:50%;background:#22c55e;}
+
+.notif-bar{background:var(--g);color:#000;padding:9px 14px;font-size:11px;font-weight:500;letter-spacing:1px;text-align:center;display:none;}
+.notif-bar.on{display:block;}
+
+.section-head{padding:12px 14px 6px;display:flex;justify-content:space-between;align-items:center;}
+.section-title{font-size:11px;font-weight:500;color:#555;letter-spacing:1.5px;}
+.section-count{font-size:11px;color:#999;}
+
+/* MASA GRID */
+.masa-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding:0 10px 10px;}
+@media(max-width:500px){.masa-grid{grid-template-columns:repeat(3,1fr);}}
+.masa-card{border-radius:6px;border:0.5px solid #e0d9cc;padding:10px 6px;cursor:pointer;text-align:center;transition:all .15s;background:#fff;}
+.masa-card:hover{border-color:var(--g);}
+.masa-card.sel{border:2px solid var(--g);background:#fdf8ee;}
+.masa-num{font-size:17px;font-weight:600;color:#1a1208;}
+.masa-badge{font-size:9px;padding:2px 6px;border-radius:10px;margin-top:3px;display:inline-block;}
+.mb-bos{background:#f0ede8;color:#888;}
+.mb-aktif{background:#FAEEDA;color:#854F0B;}
+.mb-hazir{background:#EAF3DE;color:#27500A;}
+.mb-hesap{background:#FCEBEB;color:#A32D2D;}
+.mb-garson{background:#E6F1FB;color:#185FA5;}
+
+/* DETAY */
+.detail{margin:0 10px 10px;background:#fff;border-radius:8px;border:0.5px solid #e0d9cc;overflow:hidden;display:none;}
+.detail.on{display:block;}
+.detail-head{background:var(--black);padding:10px 14px;display:flex;justify-content:space-between;align-items:center;}
+.detail-masa{font-size:14px;font-weight:600;color:var(--g);letter-spacing:1px;}
+.detail-durum{font-size:9px;letter-spacing:1.5px;color:rgba(255,255,255,0.5);}
+.detail-body{padding:12px 14px;}
+.order-row{display:flex;justify-content:space-between;font-size:13px;padding:4px 0;border-bottom:0.5px solid #f0ede8;color:#3d3020;}
+.order-row:last-child{border-bottom:none;}
+.order-note{font-size:11px;color:var(--g3);font-style:italic;margin-top:6px;}
+.order-total{display:flex;justify-content:space-between;font-size:14px;font-weight:600;margin-top:10px;padding-top:10px;border-top:0.5px solid #e0d9cc;color:#1a1208;}
+.order-total span:last-child{color:var(--g);}
+.detail-actions{display:flex;gap:6px;padding:10px 14px;border-top:0.5px solid #f0ede8;flex-wrap:wrap;}
+.act-btn{font-size:10px;letter-spacing:1px;padding:7px 14px;border-radius:2px;border:0.5px solid #ccc;background:#fff;cursor:pointer;color:#333;}
+.act-btn.primary{background:var(--black);color:var(--g);border-color:var(--black);}
+.act-btn.warn{background:#FAEEDA;color:#854F0B;border-color:#EF9F27;}
+.act-btn.danger{background:#FCEBEB;color:#A32D2D;border-color:#E24B4A;}
+
+/* GARSON ÇAĞRILARI */
+.calls-list{padding:0 10px 16px;}
+.call-item{background:#fff;border-radius:6px;border:0.5px solid #e0d9cc;padding:10px 12px;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;}
+.call-item.unread{border-left:3px solid var(--g);}
+.call-masa{font-size:13px;font-weight:600;color:#1a1208;}
+.call-msg{font-size:12px;color:#666;margin-top:2px;}
+.call-time{font-size:10px;color:#aaa;}
+.call-done-btn{font-size:9px;padding:4px 10px;border-radius:2px;border:0.5px solid #ccc;background:#fff;cursor:pointer;color:#555;white-space:nowrap;}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">
+    <div class="brand-num">40</div>
+    <div><div class="brand-name">KIRKİKİNDİ</div><div class="panel-title">Garson Paneli</div></div>
+  </div>
+  <div class="live"><div class="live-dot"></div>CANLI</div>
+</div>
+
+<div class="notif-bar" id="notif"></div>
+
+<div class="section-head">
+  <div class="section-title">SALON — TÜM MASALAR</div>
+  <div class="section-count" id="masa-count">0 aktif</div>
+</div>
+<div class="masa-grid" id="masa-grid"></div>
+
+<div class="detail" id="detail">
+  <div class="detail-head">
+    <div class="detail-masa" id="det-masa">—</div>
+    <div class="detail-durum" id="det-durum">—</div>
+  </div>
+  <div class="detail-body">
+    <div id="det-items"></div>
+    <div class="order-total"><span>Toplam</span><span id="det-total">—</span></div>
+    <div class="order-note" id="det-note"></div>
+  </div>
+  <div class="detail-actions">
+    <button class="act-btn primary" onclick="servisEt()">Servis edildi</button>
+    <button class="act-btn warn" onclick="hesapAc()">Hesap getir</button>
+    <button class="act-btn" onclick="masaKapat()">Masayı kapat</button>
+    <button class="act-btn danger" onclick="closeDetail()">Kapat</button>
+  </div>
+</div>
+
+<div class="section-head" id="calls-head" style="display:none;">
+  <div class="section-title">GARSON ÇAĞRILARI</div>
+  <div class="section-count" id="calls-count"></div>
+</div>
+<div class="calls-list" id="calls-list"></div>
+
+<script>
+var SUPABASE_URL  = 'https://xhuvpbzpghazpipaovwt.supabase.co';
+var SUPABASE_ANON_KEY = 'sb_publishable_vR5mtSCXn0nxd-_I0TzLfw_jQrT_KZK';
+var sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+var MASA_SAYISI = 12;
+var masaData = {};    // masa_no -> siparis obj
+var calls    = [];    // garson_cagrisi
+var selected = null;
+
+var durumLabel = {bos:'Boş',aktif:'Aktif',hazir:'Hazır',hesap:'Hesap iste',garson:'Garson!'};
+var durumBadge = {bos:'mb-bos',aktif:'mb-aktif',hazir:'mb-hazir',hesap:'mb-hesap',garson:'mb-garson'};
+
+async function load(){
+  var today = new Date().toISOString().split('T')[0];
+  var {data:sis} = await sb.from('siparisler').select('*').gte('created_at',today).neq('durum','done');
+  if(sis) sis.forEach(function(s){ masaData[s.masa_no] = s; });
+
+  var {data:cs} = await sb.from('garson_cagrisi').select('*').gte('created_at',today).eq('tamamlandi',false).order('created_at',{ascending:false});
+  if(cs) calls = cs;
+
+  render();
+}
+
+function render(){
+  // Masa grid
+  var html = '';
+  var aktif = 0;
+  for(var i=1;i<=MASA_SAYISI;i++){
+    var s = masaData[i];
+    var durum = s ? s.garson_cagrisi ? 'garson' : s.durum==='ready' ? 'hazir' : s.durum==='hesap_istendi' ? 'hesap' : 'aktif' : 'bos';
+    if(durum!=='bos') aktif++;
+    var selCls = selected && selected.masa_no==i ? ' sel' : '';
+    html += '<div class="masa-card'+selCls+'" onclick="selectMasa('+i+')">';
+    html += '<div class="masa-num">'+i+'</div>';
+    html += '<div class="masa-badge '+durumBadge[durum]+'">'+durumLabel[durum]+'</div>';
+    html += '</div>';
+  }
+  document.getElementById('masa-grid').innerHTML = html;
+  document.getElementById('masa-count').textContent = aktif + ' aktif';
+
+  // Detay
+  if(selected){
+    var s2 = masaData[selected.masa_no];
+    if(s2) renderDetail(s2);
+  }
+
+  // Garson çağrıları
+  if(calls.length){
+    document.getElementById('calls-head').style.display='flex';
+    document.getElementById('calls-count').textContent = calls.length + ' bekliyor';
+    var ch = '';
+    calls.forEach(function(c){
+      var t = new Date(c.created_at).toLocaleTimeString('tr',{hour:'2-digit',minute:'2-digit'});
+      ch += '<div class="call-item unread"><div><div class="call-masa">Masa '+c.masa_no+'</div><div class="call-msg">'+c.mesaj+'</div></div><div style="text-align:right;"><div class="call-time">'+t+'</div><button class="call-done-btn" onclick="callDone(\''+c.id+'\')">Tamam</button></div></div>';
+    });
+    document.getElementById('calls-list').innerHTML = ch;
+  } else {
+    document.getElementById('calls-head').style.display='none';
+    document.getElementById('calls-list').innerHTML='';
+  }
+}
+
+function selectMasa(no){
+  var s = masaData[no];
+  if(!s){ closeDetail(); selected=null; render(); return; }
+  selected = s;
+  render();
+  renderDetail(s);
+  document.getElementById('detail').classList.add('on');
+}
+
+function renderDetail(s){
+  document.getElementById('det-masa').textContent = 'Masa ' + s.masa_no;
+  document.getElementById('det-durum').textContent = {new:'SİPARİŞ ALINDI',prep:'HAZIRLANIYOR',ready:'HAZIR — SERVİS BEKLİYOR',done:'TAMAMLANDI'}[s.durum] || s.durum.toUpperCase();
+  var items = Array.isArray(s.items) ? s.items : JSON.parse(s.items||'[]');
+  document.getElementById('det-items').innerHTML = items.map(function(it){return '<div class="order-row"><span>'+it+'</span></div>';}).join('');
+  document.getElementById('det-total').textContent = '₺' + (s.toplam||0);
+  document.getElementById('det-note').textContent = s.siparis_notu ? 'Not: ' + s.siparis_notu : '';
+}
+
+function closeDetail(){ document.getElementById('detail').classList.remove('on'); selected=null; render(); }
+
+async function servisEt(){
+  if(!selected) return;
+  await sb.from('siparisler').update({durum:'done'}).eq('id',selected.id);
+  delete masaData[selected.masa_no];
+  showNotif('Masa ' + selected.masa_no + ' — servis edildi');
+  closeDetail();
+}
+async function hesapAc(){
+  if(!selected) return;
+  await sb.from('siparisler').update({durum:'hesap_istendi'}).eq('id',selected.id);
+  masaData[selected.masa_no].durum = 'hesap_istendi';
+  showNotif('Masa ' + selected.masa_no + ' — hesap hazır');
+  closeDetail();
+}
+async function masaKapat(){
+  if(!selected) return;
+  await sb.from('siparisler').update({durum:'done'}).eq('id',selected.id);
+  delete masaData[selected.masa_no];
+  showNotif('Masa ' + selected.masa_no + ' — kapatıldı');
+  closeDetail();
+}
+async function callDone(id){
+  await sb.from('garson_cagrisi').update({tamamlandi:true}).eq('id',id);
+  calls = calls.filter(function(c){return c.id !== id;});
+  render();
+}
+
+function showNotif(msg){
+  var n = document.getElementById('notif');
+  n.textContent = msg; n.classList.add('on');
+  setTimeout(function(){n.classList.remove('on');},3500);
+}
+
+// Gerçek zamanlı
+sb.channel('garson-siparis').on('postgres_changes',{event:'*',schema:'public',table:'siparisler'},function(p){
+  if(p.eventType==='INSERT'||p.eventType==='UPDATE'){
+    masaData[p.new.masa_no] = p.new;
+    if(p.new.durum==='ready') showNotif('HAZIR! Masa ' + p.new.masa_no + ' — servis bekliyor');
+  }
+  render();
+}).subscribe();
+
+sb.channel('garson-cagri').on('postgres_changes',{event:'INSERT',schema:'public',table:'garson_cagrisi'},function(p){
+  calls.unshift(p.new);
+  showNotif('ÇAĞRI! Masa ' + p.new.masa_no + ' — ' + p.new.mesaj);
+  render();
+}).subscribe();
+
+load();
+</script>
+</body>
+</html>

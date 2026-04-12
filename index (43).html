@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kırkikindi Restoran — Menü</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Cormorant:ital,wght@0,300;0,400;1,400&family=Cinzel:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{--g:#C9A84C;--g2:#E8C97A;--g3:#8B6914;--ink:#0F0D09;--ink2:#3D3020;--ink3:#7A6645;--paper:#FDFAF4;--black:#120E08;}
+body{font-family:'Cormorant',serif;background:var(--paper);max-width:430px;margin:0 auto;}
+
+.header{background:var(--black);padding:1.5rem 1.5rem 1.25rem;text-align:center;position:relative;}
+.header::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--g),var(--g2),var(--g),transparent);}
+.header::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(201,168,76,0.35),transparent);}
+.logo{font-family:'Cinzel',serif;color:var(--g);font-size:22px;}
+.logo span{font-family:'Playfair Display',serif;font-size:44px;display:block;line-height:1;}
+.hero-sub{font-family:'Cormorant',serif;font-style:italic;font-size:11px;color:rgba(255,255,255,0.35);letter-spacing:3px;margin-top:8px;}
+.divider{display:flex;align-items:center;gap:10px;margin-top:12px;}
+.divider-line{flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(201,168,76,0.3));}
+.divider-line.r{background:linear-gradient(270deg,transparent,rgba(201,168,76,0.3));}
+.gem{width:5px;height:5px;background:var(--g);transform:rotate(45deg);}
+
+.masa-badge{display:inline-block;font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;color:rgba(201,168,76,0.7);margin-top:6px;}
+
+.order-status{background:var(--black);margin:0;padding:0.875rem 1rem;display:none;}
+.order-status.on{display:block;}
+.os-title{font-family:'Cinzel',serif;font-size:8px;letter-spacing:2px;color:var(--g);margin-bottom:8px;}
+.os-steps{display:flex;align-items:center;}
+.os-step{flex:1;display:flex;flex-direction:column;align-items:center;}
+.os-dot{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);}
+.os-dot.done{background:var(--g);border-color:var(--g);}
+.os-dot.active{border:2px solid var(--g);background:transparent;}
+.os-line{flex:1;height:1px;background:rgba(255,255,255,0.1);}
+.os-line.done{background:var(--g);}
+.os-lbl{font-family:'Cinzel',serif;font-size:7px;color:rgba(255,255,255,0.3);margin-top:4px;text-align:center;}
+.os-lbl.done{color:var(--g);}
+.os-eta{font-family:'Cormorant',serif;font-style:italic;font-size:12px;color:rgba(255,255,255,0.55);margin-top:6px;text-align:center;}
+.os-eta span{color:var(--g);font-size:15px;}
+
+.tabs{display:flex;background:var(--black);border-top:1px solid rgba(201,168,76,0.1);}
+.tab{flex:1;padding:11px 2px;font-family:'Cinzel',serif;font-size:8px;letter-spacing:1px;color:rgba(255,255,255,0.3);cursor:pointer;text-align:center;border-top:2px solid transparent;}
+.tab.on{color:var(--g);border-top-color:var(--g);}
+
+.pg{display:none;}
+.pg.on{display:block;}
+
+.cat{display:flex;align-items:center;padding:1.25rem 1rem 0.6rem;}
+.cat-line{flex:1;height:1px;background:linear-gradient(90deg,rgba(201,168,76,0.3),transparent);}
+.cat-line.r{background:linear-gradient(270deg,rgba(201,168,76,0.3),transparent);}
+.cat-lbl{font-family:'Cinzel',serif;font-size:8px;letter-spacing:2.5px;color:var(--g3);padding:0 10px;white-space:nowrap;}
+
+.dish{margin:0 0.875rem 0.4rem;background:#fff;border:1px solid rgba(201,168,76,0.12);border-radius:2px;display:flex;overflow:hidden;cursor:pointer;}
+.dish-acc{width:3px;background:linear-gradient(180deg,var(--g),var(--g3));flex-shrink:0;}
+.dish-body{flex:1;padding:0.75rem 0.875rem;}
+.dish-top{display:flex;justify-content:space-between;align-items:flex-start;}
+.dish-name{font-family:'Playfair Display',serif;font-size:13px;color:var(--ink);flex:1;margin-right:6px;}
+.dish-price{font-family:'Cinzel',serif;font-size:12px;color:var(--g);}
+.dish-desc{font-family:'Cormorant',serif;font-style:italic;font-size:11.5px;color:var(--ink3);margin-top:3px;line-height:1.5;}
+.dish-foot{display:flex;justify-content:flex-end;align-items:center;margin-top:7px;gap:6px;}
+.badge{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.8px;padding:2px 7px;border-radius:1px;}
+.bv{background:#EAF3DE;color:#27500A;border:0.5px solid #639922;}
+.bs{background:rgba(201,168,76,0.12);color:var(--g3);border:0.5px solid rgba(201,168,76,0.4);}
+.bh{background:#FCEBEB;color:#A32D2D;border:0.5px solid #E24B4A;}
+.addbtn{font-family:'Cinzel',serif;font-size:8px;letter-spacing:1px;padding:5px 12px;background:var(--black);color:var(--g);border:1px solid rgba(201,168,76,0.35);cursor:pointer;border-radius:1px;}
+.addbtn.done{background:var(--g);color:#000;}
+
+.aibox{background:var(--black);margin:0 0.875rem 0.5rem;border-radius:2px;padding:0.875rem;display:none;}
+.aibox.on{display:block;}
+.ai-eye{font-family:'Cinzel',serif;font-size:7px;letter-spacing:2px;color:var(--g);margin-bottom:5px;}
+.ai-txt{font-family:'Cormorant',serif;font-style:italic;font-size:12px;color:rgba(255,255,255,0.68);line-height:1.65;}
+
+.mood-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin:0 0.875rem 0.875rem;}
+.mood-card{background:#fff;border:1px solid rgba(201,168,76,0.15);border-radius:2px;padding:0.875rem;cursor:pointer;text-align:center;}
+.mood-card.on{border:1px solid var(--g);background:rgba(201,168,76,0.06);}
+.mood-icon{font-size:18px;margin-bottom:4px;display:block;}
+.mood-lbl{font-family:'Cinzel',serif;font-size:8px;letter-spacing:1px;color:var(--ink2);}
+.pref-row{display:flex;gap:5px;margin:0 0.875rem 0.875rem;}
+.pref-btn{font-family:'Cinzel',serif;font-size:8px;padding:5px 11px;border-radius:1px;border:1px solid rgba(201,168,76,0.2);background:#fff;color:var(--ink3);cursor:pointer;}
+.pref-btn.on{background:var(--black);color:var(--g);border-color:var(--g);}
+.rec-box{background:var(--black);border-radius:2px;padding:1rem;display:none;margin:0 0.875rem 0.875rem;}
+.rec-box.on{display:block;}
+
+.call-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin:0 0.875rem;}
+.call-card{background:#fff;border:1px solid rgba(201,168,76,0.12);border-radius:2px;padding:0.875rem;cursor:pointer;text-align:center;}
+.call-card:hover{border-color:var(--g);}
+.call-ico{font-size:20px;margin-bottom:5px;}
+.call-nm{font-family:'Cinzel',serif;font-size:9px;letter-spacing:1.5px;color:var(--ink);}
+.call-sb{font-family:'Cormorant',serif;font-style:italic;font-size:11px;color:var(--ink3);margin-top:2px;}
+
+.cart-panel{margin:0 0.875rem 0.6rem;background:#fff;border:1px solid rgba(201,168,76,0.18);border-radius:2px;padding:1rem;}
+.cart-item-row{display:flex;justify-content:space-between;font-family:'Cormorant',serif;font-size:13px;color:var(--ink2);padding:4px 0;border-bottom:1px solid rgba(201,168,76,0.08);}
+.cart-item-row:last-child{border-bottom:none;}
+.cart-total-row{display:flex;justify-content:space-between;margin-top:8px;padding-top:8px;border-top:1px solid rgba(201,168,76,0.2);}
+.cart-total-lbl{font-family:'Cinzel',serif;font-size:9px;letter-spacing:1.5px;color:var(--ink2);}
+.cart-total-val{font-family:'Cinzel',serif;font-size:15px;color:var(--g);}
+.note-panel{background:var(--black);border-radius:2px;padding:0.875rem;margin:0 0.875rem 0.6rem;}
+.note-lbl{font-family:'Cinzel',serif;font-size:7px;letter-spacing:2px;color:var(--g);margin-bottom:5px;}
+.note-inp{width:100%;background:transparent;border:none;border-bottom:1px solid rgba(201,168,76,0.25);color:rgba(255,255,255,0.7);font-family:'Cormorant',serif;font-style:italic;font-size:13px;padding:3px 0;outline:none;}
+.cta{display:block;width:calc(100% - 1.75rem);margin:0 0.875rem 0.875rem;padding:12px;background:var(--black);color:var(--g);font-family:'Cinzel',serif;font-size:9px;letter-spacing:2.5px;border:1px solid rgba(201,168,76,0.35);border-radius:2px;cursor:pointer;text-align:center;}
+.cta:hover{background:var(--g);color:#000;}
+.notif{background:var(--g);color:#000;border-radius:2px;padding:9px 12px;font-family:'Cinzel',serif;font-size:8px;letter-spacing:1.5px;text-align:center;margin:0 0.875rem 0.875rem;display:none;}
+.notif.on{display:block;}
+.empty-cart{text-align:center;padding:2rem;font-family:'Cormorant',serif;font-style:italic;font-size:14px;color:var(--ink3);}
+.foot{padding:1rem;text-align:center;border-top:1px solid rgba(201,168,76,0.12);}
+.foot-txt{font-family:'Cinzel',serif;font-size:7px;letter-spacing:1.5px;color:var(--ink3);}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">
+    <span>40</span>
+    KIRKİKİNDİ
+  </div>
+  <div class="hero-sub">Akyokuş Kasrı · Konya</div>
+  <div id="masa-badge" class="masa-badge">MASA —</div>
+  <div class="divider">
+    <div class="divider-line"></div>
+    <div class="gem"></div>
+    <div class="divider-line r"></div>
+  </div>
+</div>
+
+<div id="order-status" class="order-status">
+  <div class="os-title">◆ SİPARİŞ DURUMU</div>
+  <div class="os-steps">
+    <div class="os-step"><div id="d1" class="os-dot done"></div><div id="l1" class="os-lbl done">ALINDI</div></div>
+    <div id="ln1" class="os-line done"></div>
+    <div class="os-step"><div id="d2" class="os-dot active"></div><div id="l2" class="os-lbl done">MUTFAKTA</div></div>
+    <div id="ln2" class="os-line"></div>
+    <div class="os-step"><div id="d3" class="os-dot"></div><div id="l3" class="os-lbl">HAZIR</div></div>
+    <div id="ln3" class="os-line"></div>
+    <div class="os-step"><div id="d4" class="os-dot"></div><div id="l4" class="os-lbl">SERVİS</div></div>
+  </div>
+  <div class="os-eta">Tahmini süre: <span id="eta">—</span></div>
+</div>
+
+<div class="tabs">
+  <div class="tab on" onclick="showPg('menu',0)">MENÜ</div>
+  <div class="tab" onclick="showPg('aksam',1)">NE YESEM</div>
+  <div class="tab" onclick="showPg('garson',2)">GARSON</div>
+  <div class="tab" onclick="showPg('sepet',3)">SEPETİM</div>
+</div>
+
+<div id="pg-menu" class="pg on">
+  <!-- SOĞUK BAŞLANGIÇLAR -->
+  <div class="cat"><div class="cat-line"></div><div class="cat-lbl">SOĞUK BAŞLANGIÇLAR</div><div class="cat-line r"></div></div>
+  <div class="dish" onclick="aiToggle('a1')"><div class="dish-acc"></div><div class="dish-body"><div class="dish-top"><div class="dish-name">Zeytinyağlı Yaprak Sarma</div><div class="dish-price">₺175</div></div><div class="dish-desc">İnce asma yapraklarına sarılmış pirinç ve baharat</div><div class="dish-foot"><span class="badge bv">VEGETARİYEN</span><button class="addbtn" onclick="addCart('Yaprak Sarma',175,this);event.stopPropagation()">+ EKLE</button></div></div></div>
+  <div id="a1" class="aibox"><div class="ai-eye">MUTFAK NOTU</div><div class="ai-txt">Osmanlı sofralarının vazgeçilmezi. Soğuk servis, tamamen bitkisel. ~5 dk hazırlanma.</div></div>
+
+  <div class="dish" onclick="aiToggle('a2')"><div class="dish-acc"></div><div class="dish-body"><div class="dish-top"><div class="dish-name">Humus</div><div class="dish-price">₺95</div></div><div class="dish-desc">Nohut, tahin, zeytinyağı ve limon sosu ile</div><div class="dish-foot"><span class="badge bv">VEGAN</span><button class="addbtn" onclick="addCart('Humus',95,this);event.stopPropagation()">+ EKLE</button></div></div></div>
+  <div id="a2" class="aibox"><div class="ai-eye">MUTFAK NOTU</div><div class="ai-txt">Protein açısından zengin, glütensiz. Lavaşla harika gider.</div></div>
+
+  <div class="dish" onclick="aiToggle('a3')"><div class="dish-acc"></div><div class="dish-body"><div class="dish-top"><div class="dish-name">Mütebbel</div><div class="dish-price">₺95</div></div><div class="dish-desc">Közlenmiş patlıcan, tahin, yoğurt ve nar taneleri</div><div class="dish-foot"><button class="addbtn" onclick="addCart('Mütebbel',95,this);event.stopPropagation()">+ EKLE</button></div></div></div>
+  <div id="a3" class="aibox"><div class="ai-eye">MUTFAK NOTU</div><div class="ai-txt">Dumanlı aroma + nar ekşisi mükemmel denge. Humus ile birlikte sipariş tavsiye edilir.</div></div>
+
+  <div class="dish" onclick="aiToggle('a4')"><div class="dish-acc"></div><div class="dish-body"><div class="dish-top"><div class="dish-name">Acılı Ezme</div><div class="dish-price">₺95</div></div><div class="dish-desc">Domates, soğan, maydanoz ve zeytinyağlı sos</div><div class="dish-foot"><span class="badge bh">ACILI</span><button class="addbtn" onclick="addCart('Acılı Ezme',95,this);event.stopPropagation()">+ EKLE</button></div></div></div>
+  <div id="a4" class="aibox"><div class="ai-eye">MUTFAK NOTU</div><div class="ai-txt">Acı sevmeyenler "sos ayrı" notu düşebilir. Izgara yemeklerle iyi uyum.</div></div>
+
+  <div class="dish"><div class="dish-acc"></div><div class="dish-body"><div class="dish-top"><div class="dish-name">Bal Kabaklı Tarator</div><div class="dish-price">₺95</div></div><div class="dish-desc">Bal kabağı ve yoğurt ile hazırlanmaktadır</div><div class="dish-foot"><button class="addbtn" onclick="addCart('Bal Kabaklı Tarator',95,this);event.stopPropagation()">+ EKLE</button></div></div></div>
+
+  <div class="dish"><div class="dish-acc"></div><div class="dish-body"><div class="dish-top"><div class="dish-name">Semizotlu Yoğurt</div><div class="dish-price">₺95</div></div><div class="dish-desc">Süzme yoğurt, semizotu ve zeytinyağı ile</div><div class="dish-foot"><span class="badge bv">VEGETARİYEN</span><button class="addbtn" onclick="addCart('Semizotlu Yoğurt',95,this);event.stopPropagation()">+ EKLE</button></div></div></div>
+
+  <div class="dish"><div class="dish-acc"></div><div class="dish-body"><div class="dish-top"><div class="dish-name">Zeytinyağlı Biber Dolması</div><div class="dish-price">₺175</div></div><div class="dish-desc">Pirinç, kuş üzümü ve çeşitli baharatlarla</div><div class="dish-foot"><button class="addbtn" onclick="addCart('Biber Dolması',175,this);event.stopPropagation()">+ EKLE</button></div></div></div>
+
+  <div class="dish"><div class="dish-acc"></div><div class="dish-body"><div class="dish-top"><div class="dish-name">Zeytinyağlı Köz Patlıcan</div><div class="dish-price">₺175</div></div><div class="dish-desc">Közlenmiş patlıcan, domates, kapya biber</div><div class="dish-foot"><button class="addbtn" onclick="addCart('Köz Patlıcan',175,this);event.stopPropagation()">+ EKLE</button></div></div></div>
+
+  <!-- ÇORBALAR -->
+  <div class="cat"><div class="cat-line"></div><div class="cat-lbl">ÇORBALAR</div><div class="cat-line r"></div></div>
+  <div class="dish" onclick="aiToggle('a5')"><div class="dish-acc"></div><div class="dish-body"><div class="dish-top"><div class="dish-name">Konya Tarhun Çorbası</div><div class="dish-price">₺220</div></div><div class="dish-desc">Tarhun otu, kuzu eti, yoğurt mayanesi ve tereyağı</div><div class="dish-foot"><span class="badge bs">KONYA'YA ÖZGÜ</span><button class="addbtn" onclick="addCart('Tarhun Çorbası',220,this);event.stopPropagation()">+ EKLE</button></div></div></div>
+  <div id="a5" class="aibox"><div class="ai-eye">MUTFAK NOTU</div><div class="ai-txt">Sadece Konya mutfağına ait nadir tarif. Tarhunun ferahlatıcı aroması + yoğurt kremamsı doku. ~12 dk.</div></div>
+
+  <div class="dish" onclick="aiToggle('a6')"><div class="dish-acc"></div><div class="dish-body"><div class="dish-top"><div class="dish-name">Konya Bamya Çorbası</div><div class="dish-price">₺270</div></div><div class="dish-desc">Çiçek bamya, kuzu eti ve salçalı sos</div><div class="dish-foot"><button class="addbtn" onclick="addCart('Bamya Çorbası',270,this);event.stopPropagation()">+ EKLE</button></div></div></div>
+  <div id="a6" class="aibox"><div class="ai-eye">MUTFAK NOTU</div><div class="ai-txt">Konya'nın imza çorbası. ~10 dk.</div></div>
+
+  <div class="dish"><div class="dish-acc"></div><div class="dish-body"><div class="dish-top"><div class="dish-name">Güveçte Tandır Çorbası</div><div class="dish-price">₺240</div></div><div class="dish-desc">Nohut, fasulye ve bulgur güveçte odun ateşinde</div><div class="dish-foot"><button class="addbtn" onclick="addCart('Tandır Çorbası',240,this);event.stopPropagation()">+ EKLE</button></div></div></div>
+
+  <div class="dish"><div class="dish-acc"></div><div class="dish-body"><div class="dish-top"><div class="dish-name">Mercimek Çorbası</div><div class="dish-price">₺150</div></div><div class="dish-desc">Klasik kırmızı mercimek çorbası</div><div class="dish-foot"><span class="badge bv">VEGETARİYEN</span><button class="addbtn" onclick="addCart('Mercimek Çorbası',150,this);event.stopPropagation()">+ EKLE</button></div></div></div>
+
+  <!-- ANA YEMEKLER -->
+  <div class="cat"><div class="cat-line"></div><div class="cat-lbl">ANA YEMEKLER</div><div class="cat-line r"></div></div>
+  <div class="dish" onclick="aiToggle('a8')"><div class="dish-acc"></div><div class="dish-body"><div class="dish-top"><div class="dish-name">Kuzu Şiş</div><div class="dish-price">₺550</div></div><div class="dish-desc">Pirinç pilavı, lavaş, köz domates, sumaklı soğan — 135g</div><div class="dish-foot"><span class="badge bs">ŞEFİN TAVSİYESİ</span><button class="addbtn" onclick="addCart('Kuzu Şiş',550,this);event.stopPropagation()">+ EKLE</button></div></div></div>
+  <div id="a8" class="aibox"><div class="ai-eye">MUTFAK NOTU</div><div class="ai-txt">En çok sipariş edilen yemek. Marine edilmiş kuzu, ızgara. ~18 dk.</div></div>
+
+  <div class="dish"><div class="dish-acc"></div><div class="dish-body"><div class="dish-top"><div class="dish-name">Kuzu Pirzola</div><div class="dish-price">₺750</div></div><div class="dish-desc">Pirinç pilavı, lavaş, köz domates — 185g</div><div class="dish-foot"><button class="addbtn" onclick="addCart('Kuzu Pirzola',750,this);event.stopPropagation()">+ EKLE</button></div></div></div>
+
+  <div class="dish"><div class="dish-acc"></div><div class="dish-body"><div class="dish-top"><div class="dish-name">Beyti</div><div class="dish-price">₺520</div></div><div class="dish-desc">Baharatlı kıyma lavaşa sarılı, yoğurt sosu — 110g</div><div class="dish-foot"><button class="addbtn" onclick="addCart('Beyti',520,this);event.stopPropagation()">+ EKLE</button></div></div></div>
+
+  <div class="dish"><div class="dish-acc"></div><div class="dish-body"><div class="dish-top"><div class="dish-name">Levrek Izgara</div><div class="dish-price">₺560</div></div><div class="dish-desc">Röştı patates, Kaliforniya biber özel sos — 130g</div><div class="dish-foot"><button class="addbtn" onclick="addCart('Levrek Izgara',560,this);event.stopPropagation()">+ EKLE</button></div></div></div>
+
+  <div class="dish"><div class="dish-acc"></div><div class="dish-body"><div class="dish-top"><div class="dish-name">Karışık Izgara</div><div class="dish-price">₺750</div></div><div class="dish-desc">120g kırmızı et + 70g tavuk, pirinç pilavı, lavaş</div><div class="dish-foot"><button class="addbtn" onclick="addCart('Karışık Izgara',750,this);event.stopPropagation()">+ EKLE</button></div></div></div>
+
+  <div class="dish"><div class="dish-acc"></div><div class="dish-body"><div class="dish-top"><div class="dish-name">Çöpleme</div><div class="dish-price">₺550</div></div><div class="dish-desc">Kuzu eti, patlıcan, kapya biber, arpacık soğan — 150g</div><div class="dish-foot"><button class="addbtn" onclick="addCart('Çöpleme',550,this);event.stopPropagation()">+ EKLE</button></div></div></div>
+
+  <div class="dish"><div class="dish-acc"></div><div class="dish-body"><div class="dish-top"><div class="dish-name">Tirit (Köfte)</div><div class="dish-price">₺530</div></div><div class="dish-desc">Köfte eti, tandır ekmeği ve süzme yoğurt — 110g</div><div class="dish-foot"><button class="addbtn" onclick="addCart('Tirit',530,this);event.stopPropagation()">+ EKLE</button></div></div></div>
+
+  <!-- TATLILAR -->
+  <div class="cat"><div class="cat-line"></div><div class="cat-lbl">TATLILAR</div><div class="cat-line r"></div></div>
+  <div class="dish"><div class="dish-acc"></div><div class="dish-body"><div class="dish-top"><div class="dish-name">Fırın Sütlaç</div><div class="dish-price">₺140</div></div><div class="dish-desc">Taze inek sütünden el yapımı sütlaç</div><div class="dish-foot"><span class="badge bv">GLÜTENSİZ</span><button class="addbtn" onclick="addCart('Fırın Sütlaç',140,this);event.stopPropagation()">+ EKLE</button></div></div></div>
+
+  <div class="dish"><div class="dish-acc"></div><div class="dish-body"><div class="dish-top"><div class="dish-name">Havuç Dilim Baklava</div><div class="dish-price">₺220</div></div><div class="dish-desc">Antep fıstıklı geleneksel baklava</div><div class="dish-foot"><button class="addbtn" onclick="addCart('Baklava',220,this);event.stopPropagation()">+ EKLE</button></div></div></div>
+
+  <div class="dish"><div class="dish-acc"></div><div class="dish-body"><div class="dish-top"><div class="dish-name">Dondumalı Höşmerim</div><div class="dish-price">₺250</div></div><div class="dish-desc">Konya geleneksel peynir tatlısı, dondurma ile</div><div class="dish-foot"><span class="badge bs">KLASİK</span><button class="addbtn" onclick="addCart('Höşmerim',250,this);event.stopPropagation()">+ EKLE</button></div></div></div>
+
+  <div class="dish"><div class="dish-acc"></div><div class="dish-body"><div class="dish-top"><div class="dish-name">Nevzine</div><div class="dish-price">₺210</div></div><div class="dish-desc">Tereyağında un, ceviz ve şerbet, tahin eşliğinde</div><div class="dish-foot"><button class="addbtn" onclick="addCart('Nevzine',210,this);event.stopPropagation()">+ EKLE</button></div></div></div>
+
+  <!-- İÇECEKLER -->
+  <div class="cat"><div class="cat-line"></div><div class="cat-lbl">İÇECEKLER</div><div class="cat-line r"></div></div>
+  <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px;margin:0 0.875rem 1.5rem;">
+    <div class="dish" style="margin:0;"><div class="dish-acc"></div><div class="dish-body"><div class="dish-top"><div class="dish-name" style="font-size:11px;">Sirkencubin Şerbeti</div><div class="dish-price">₺95</div></div></div></div>
+    <div class="dish" style="margin:0;"><div class="dish-acc"></div><div class="dish-body"><div class="dish-top"><div class="dish-name" style="font-size:11px;">Nar Çiçeği Şerbeti</div><div class="dish-price">₺95</div></div></div></div>
+    <div class="dish" style="margin:0;"><div class="dish-acc"></div><div class="dish-body"><div class="dish-top"><div class="dish-name" style="font-size:11px;">Reyhan Şerbeti</div><div class="dish-price">₺95</div></div></div></div>
+    <div class="dish" style="margin:0;"><div class="dish-acc"></div><div class="dish-body"><div class="dish-top"><div class="dish-name" style="font-size:11px;">Ayran</div><div class="dish-price">₺65</div></div></div></div>
+  </div>
+  <div class="foot"><div class="foot-txt">FİYATLARA KDV DAHİLDİR · 16.01.2026 İTİBARIYLA GEÇERLİDİR</div></div>
+</div>
+
+<div id="pg-aksam" class="pg">
+  <div class="cat"><div class="cat-line"></div><div class="cat-lbl">BU AKŞAM NE YESEYİM?</div><div class="cat-line r"></div></div>
+  <div class="aibox on" style="margin:0 0.875rem 0.75rem;"><div class="ai-eye">KIRKİKİNDİ YAPAY ZEKA AŞÇISI</div><div class="ai-txt">Selçuklu ve Osmanlı mutfağından ruh halinize özel tavsiye sunuyoruz.</div></div>
+  <div style="font-family:'Cinzel',serif;font-size:8px;letter-spacing:2px;color:var(--g3);padding:0 0.875rem;margin-bottom:8px;">NASIL HİSSEDİYORSUNUZ?</div>
+  <div class="mood-grid">
+    <div class="mood-card" onclick="setMood('hafif',0)"><span class="mood-icon">🍃</span><div class="mood-lbl">HAFİF BİR ŞEYLER</div></div>
+    <div class="mood-card" onclick="setMood('doyurucu',1)"><span class="mood-icon">🔥</span><div class="mood-lbl">ÇOK ACIKTIM</div></div>
+    <div class="mood-card" onclick="setMood('balik',2)"><span class="mood-icon">🐟</span><div class="mood-lbl">DENİZ ÜRÜNÜ</div></div>
+    <div class="mood-card" onclick="setMood('tatli',3)"><span class="mood-icon">🍮</span><div class="mood-lbl">TATLI CAN ATIYOR</div></div>
+  </div>
+  <div style="font-family:'Cinzel',serif;font-size:8px;letter-spacing:2px;color:var(--g3);padding:0 0.875rem;margin-bottom:6px;">TERCİHİNİZ?</div>
+  <div class="pref-row">
+    <div class="pref-btn on" id="p1" onclick="setPref('p1','H')">HERŞEYİ YERİM</div>
+    <div class="pref-btn" id="p2" onclick="setPref('p2','V')">VEGETARİYEN</div>
+    <div class="pref-btn" id="p3" onclick="setPref('p3','L')">DÜŞÜK KALORİ</div>
+  </div>
+  <button class="cta" onclick="showRec()">◆ TAVSİYE GÖSTER</button>
+  <div id="rec" class="rec-box">
+    <div class="ai-eye" style="font-family:'Cinzel',serif;font-size:7px;letter-spacing:2px;color:var(--g);margin-bottom:6px;">◆ SIZE ÖZEL TAVSİYE</div>
+    <div id="rec-t" style="font-family:'Cormorant',serif;font-style:italic;font-size:13px;color:rgba(255,255,255,0.8);line-height:1.75;"></div>
+  </div>
+</div>
+
+<div id="pg-garson" class="pg">
+  <div class="cat"><div class="cat-line"></div><div class="cat-lbl">GARSON ÇAĞIR</div><div class="cat-line r"></div></div>
+  <div class="aibox on" style="margin:0 0.875rem 0.75rem;"><div class="ai-eye">MASA <span id="garson-masa-no">—</span></div><div class="ai-txt">Talebinizi seçin, garsonunuz kısa sürede gelecektir.</div></div>
+  <div class="call-grid">
+    <div class="call-card" onclick="callWaiter('Hesap getirir misiniz?')"><div class="call-ico">💳</div><div class="call-nm">HESAP</div><div class="call-sb">Ödeme yapmak istiyorum</div></div>
+    <div class="call-card" onclick="callWaiter('Su getirir misiniz?')"><div class="call-ico">💧</div><div class="call-nm">SU</div><div class="call-sb">Su getirir misiniz?</div></div>
+    <div class="call-card" onclick="callWaiter('Peçete lazım.')"><div class="call-ico">🧻</div><div class="call-nm">PEÇETE</div><div class="call-sb">Peçete bitti</div></div>
+    <div class="call-card" onclick="callWaiter('Lavaş lazım.')"><div class="call-ico">🫓</div><div class="call-nm">EKMEK</div><div class="call-sb">Lavaş lazım</div></div>
+    <div class="call-card" onclick="callWaiter('Genel yardım istiyorum.')"><div class="call-ico">🙋</div><div class="call-nm">YARDIM</div><div class="call-sb">Genel talebim var</div></div>
+    <div class="call-card" onclick="callWaiter('Geri bildirim vermek istiyorum.')"><div class="call-ico">⭐</div><div class="call-nm">GERİ BİLDİRİM</div><div class="call-sb">Deneyimimi paylaşayım</div></div>
+  </div>
+  <div id="c-notif" class="notif"></div>
+</div>
+
+<div id="pg-sepet" class="pg">
+  <div class="cat"><div class="cat-line"></div><div class="cat-lbl">SİPARİŞİM</div><div class="cat-line r"></div></div>
+  <div id="cart-empty" class="empty-cart">Sepetiniz boş.<br>Menüden ürün seçiniz.</div>
+  <div id="cart-full" style="display:none;">
+    <div class="cart-panel">
+      <div style="font-family:'Cinzel',serif;font-size:7px;letter-spacing:2px;color:var(--g3);margin-bottom:8px;">SEPET</div>
+      <div id="cart-items"></div>
+      <div class="cart-total-row"><div class="cart-total-lbl">TOPLAM</div><div id="cart-total" class="cart-total-val">₺0</div></div>
+    </div>
+    <div class="note-panel"><div class="note-lbl">◆ ÖZEL NOT</div><input class="note-inp" id="siparis-not" placeholder="Az tuzlu, et az pişmiş, alerji..."></div>
+    <button class="cta" onclick="sendOrder()">◆ SİPARİŞİ MUTFAĞA GÖNDER</button>
+  </div>
+  <div id="o-notif" class="notif"></div>
+</div>
+
+<script>
+// ==============================
+// AYARLAR — Buraya kendi Supabase bilgilerinizi girin
+// ==============================
+var SUPABASE_URL = 'https://xhuvpbzpghazpipaovwt.supabase.co';
+var SUPABASE_ANON_KEY = 'sb_publishable_vR5mtSCXn0nxd-_I0TzLfw_jQrT_KZK';
+// ==============================
+
+var supabase = null;
+try { supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY); } catch(e){}
+
+var masaNo = new URLSearchParams(location.search).get('masa') || '?';
+document.getElementById('masa-badge').textContent = 'MASA ' + masaNo;
+document.getElementById('garson-masa-no').textContent = masaNo;
+
+var cart = {};
+var mood = '';
+var pref = 'H';
+var siparisId = null;
+
+function showPg(p,i){
+  document.querySelectorAll('.pg').forEach(function(x){x.classList.remove('on');});
+  document.querySelectorAll('.tab').forEach(function(x){x.classList.remove('on');});
+  document.getElementById('pg-'+p).classList.add('on');
+  document.querySelectorAll('.tab')[i].classList.add('on');
+}
+
+function aiToggle(id){
+  var el = document.getElementById(id);
+  if(!el) return;
+  var open = el.classList.contains('on');
+  document.querySelectorAll('.aibox').forEach(function(a){
+    if(!a.classList.contains('force-on')) a.classList.remove('on');
+  });
+  if(!open) el.classList.add('on');
+}
+
+function addCart(name, price, btn){
+  cart[name] = {name:name, price:price};
+  btn.textContent = 'EKLENDİ';
+  btn.classList.add('done');
+  renderCart();
+}
+
+function renderCart(){
+  var keys = Object.keys(cart);
+  document.getElementById('cart-empty').style.display = keys.length ? 'none' : 'block';
+  document.getElementById('cart-full').style.display = keys.length ? 'block' : 'none';
+  var total = 0, html = '';
+  keys.forEach(function(k){
+    var it = cart[k]; total += it.price;
+    html += '<div class="cart-item-row"><span>' + it.name + '</span><span>₺' + it.price + '</span></div>';
+  });
+  document.getElementById('cart-items').innerHTML = html;
+  document.getElementById('cart-total').textContent = '₺' + total;
+}
+
+async function sendOrder(){
+  var keys = Object.keys(cart);
+  if(!keys.length) return;
+  var note = document.getElementById('siparis-not').value;
+  var total = keys.reduce(function(s,k){return s+cart[k].price;}, 0);
+  var items = keys.map(function(k){return cart[k].name;});
+
+  // Supabase'e kaydet
+  if(supabase){
+    var res = await supabase.from('siparisler').insert([{
+      masa_no: masaNo,
+      items: items,
+      not: note,
+      toplam: total,
+      durum: 'new',
+      created_at: new Date().toISOString()
+    }]).select();
+    if(res.data && res.data[0]) {
+      siparisId = res.data[0].id;
+      dinleSiparis(siparisId);
+    }
+  }
+
+  var n = document.getElementById('o-notif');
+  n.textContent = 'Siparişiniz mutfağa iletildi!' + (note ? ' · ' + note : '');
+  n.classList.add('on');
+  document.getElementById('order-status').classList.add('on');
+  cart = {};
+  document.querySelectorAll('.addbtn').forEach(function(b){b.textContent='+ EKLE';b.classList.remove('done');});
+  renderCart();
+  setTimeout(function(){n.classList.remove('on'); showPg('menu',0);}, 2500);
+}
+
+function dinleSiparis(id){
+  if(!supabase) return;
+  supabase.channel('siparis-' + id)
+    .on('postgres_changes', {event:'UPDATE', schema:'public', table:'siparisler', filter:'id=eq.'+id}, function(payload){
+      updateStatusBar(payload.new.durum, payload.new.eta_dakika);
+    })
+    .subscribe();
+}
+
+function updateStatusBar(durum, eta){
+  var steps = ['new','prep','ready','done'];
+  var idx = steps.indexOf(durum);
+  for(var i=1;i<=4;i++){
+    var dot = document.getElementById('d'+i);
+    var lbl = document.getElementById('l'+i);
+    dot.className = 'os-dot' + (i-1 < idx ? ' done' : i-1 === idx ? ' active' : '');
+    lbl.className = 'os-lbl' + (i-1 <= idx ? ' done' : '');
+    if(i<4){
+      var ln = document.getElementById('ln'+i);
+      ln.className = 'os-line' + (i-1 < idx ? ' done' : '');
+    }
+  }
+  document.getElementById('eta').textContent = eta ? eta + ' dk' : (durum==='ready' ? 'Hazır!' : '—');
+}
+
+async function callWaiter(msg){
+  if(supabase){
+    await supabase.from('garson_cagrisi').insert([{masa_no:masaNo, mesaj:msg, created_at:new Date().toISOString()}]);
+  }
+  var n = document.getElementById('c-notif');
+  n.textContent = 'Garsonunuz geliyor — "' + msg + '"';
+  n.classList.add('on');
+  setTimeout(function(){n.classList.remove('on');}, 3000);
+}
+
+function setMood(m,idx){
+  mood = m;
+  document.querySelectorAll('.mood-card').forEach(function(c,i){i===idx?c.classList.add('on'):c.classList.remove('on');});
+}
+function setPref(id,val){
+  pref = val;
+  ['p1','p2','p3'].forEach(function(p){document.getElementById(p).classList.remove('on');});
+  document.getElementById(id).classList.add('on');
+}
+function showRec(){
+  var recs = {
+    hafif:{H:'Zeytinyağlı Yaprak Sarma (₺175) + Konya Tarhun Çorbası (₺220). Hafif, ferahlatıcı.',V:'Humus (₺95) + Mütebbel (₺95) + Biber Dolması (₺175). Tamamen bitkisel.',L:'Semizotlu Yoğurt + Mercimek Çorbası. En düşük kalorili seçim.'},
+    doyurucu:{H:'Kuzu Pirzola (₺750) + Konya Pirinç Pilavı (₺120). Şefin en doyurucu kombinasyonu.',V:'Güveçte Tandır Çorbası (₺240) + Zeytinyağlı Fasulye. Bol proteinli bitkisel.',L:'Beyti (₺520) + Gavurdağı Salatası. Protein zengin ama dengeli.'},
+    balik:{H:'Levrek Izgara (₺560) + Ezineli Roka Salatası. Bugün taze geldi.',V:'Zeytinyağlı tabağımızı öneririz.',L:'Levrek Izgara (₺560) + Çoban Salatası. Omega-3 zengin, hafif.'},
+    tatli:{H:'Fırın Sütlaç (₺140) + Türk kahvesi. Hafif kapanış.',V:'Fırın Sütlaç (₺140) + Nevzine (₺210). Geleneksel Konya tatlıları.',L:'Fırın Sütlaç (₺140). Glütensiz, en hafif seçenek.'}
+  };
+  var r = document.getElementById('rec');
+  var t = document.getElementById('rec-t');
+  if(!mood){r.classList.add('on');t.textContent='Lütfen önce ruh halinizi seçin.';return;}
+  t.textContent = recs[mood][pref] || recs[mood]['H'];
+  r.classList.add('on');
+}
+</script>
+</body>
+</html>
