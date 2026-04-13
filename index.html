@@ -137,6 +137,27 @@ body{font-family:'Cormorant',serif;background:var(--paper);max-width:430px;margi
   <div class="os-eta">Tahmini süre: <span id="eta">—</span></div>
 </div>
 
+
+<div id="masa-secim" style="position:fixed;top:0;left:0;right:0;bottom:0;background:var(--black);z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem;">
+  <div style="text-align:center;margin-bottom:2rem;">
+    <div style="font-family:Georgia,serif;font-size:48px;color:var(--g);line-height:1;">40</div>
+    <div style="font-family:'Cinzel',serif;font-size:16px;letter-spacing:4px;color:#fff;margin-top:4px;">KIRKİKİNDİ</div>
+    <div style="font-family:'Cormorant',serif;font-style:italic;font-size:12px;color:rgba(255,255,255,0.4);letter-spacing:2px;margin-top:6px;">Akyokuş Kasrı · Konya</div>
+  </div>
+  <div style="width:100%;max-width:280px;">
+    <div style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;color:rgba(201,168,76,0.6);text-align:center;margin-bottom:12px;">MASA NUMARANIZI GİRİN</div>
+    <input id="masa-input" type="number" min="1" max="99" placeholder="Örn: 7" 
+      style="width:100%;padding:16px;font-size:28px;text-align:center;background:rgba(255,255,255,0.06);border:1px solid rgba(201,168,76,0.3);color:#fff;border-radius:4px;outline:none;font-family:'Cinzel',serif;letter-spacing:4px;"
+      oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+    <button onclick="masaGir()" 
+      style="width:100%;margin-top:12px;padding:14px;background:var(--g);color:#000;font-family:'Cinzel',serif;font-size:10px;letter-spacing:3px;border:none;border-radius:2px;cursor:pointer;">
+      ◆ MENÜYE GEÇ
+    </button>
+    <div id="masa-hata" style="color:#E24B4A;font-size:11px;text-align:center;margin-top:8px;font-family:'Cormorant',serif;font-style:italic;display:none;">Lütfen geçerli bir masa numarası girin.</div>
+  </div>
+  <div style="margin-top:2rem;font-family:'Cormorant',serif;font-style:italic;font-size:11px;color:rgba(255,255,255,0.2);">Hoş geldiniz · Afiyet olsun</div>
+</div>
+
 <div class="tabs">
   <div class="tab on" onclick="showPg('menu',0)">MENÜ</div>
   <div class="tab" onclick="showPg('aksam',1)">NE YESEM</div>
@@ -280,9 +301,34 @@ var SUPABASE_ANON_KEY = 'sb_publishable_vR5mtSCXn0nxd-_I0TzLfw_jQrT_KZK';
 var supabase = null;
 try { supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY); } catch(e){}
 
-var masaNo = new URLSearchParams(location.search).get('masa') || '?';
-document.getElementById('masa-badge').textContent = 'MASA ' + masaNo;
-document.getElementById('garson-masa-no').textContent = masaNo;
+var masaNo = '?';
+
+// Masa numarası kontrolü
+var masaNoUrl = new URLSearchParams(location.search).get('masa');
+if(masaNoUrl){
+  masaNo = masaNoUrl;
+  document.getElementById('masa-secim').style.display = 'none';
+  document.getElementById('masa-badge').textContent = 'MASA ' + masaNo;
+  document.getElementById('garson-masa-no').textContent = masaNo;
+}
+
+function masaGir(){
+  var val = document.getElementById('masa-input').value.trim();
+  if(!val || val < 1 || val > 99){
+    document.getElementById('masa-hata').style.display = 'block';
+    return;
+  }
+  masaNo = val;
+  document.getElementById('masa-badge').textContent = 'MASA ' + masaNo;
+  document.getElementById('garson-masa-no').textContent = masaNo;
+  document.getElementById('masa-secim').style.display = 'none';
+  document.getElementById('masa-hata').style.display = 'none';
+}
+
+document.getElementById('masa-input').addEventListener('keypress', function(e){
+  if(e.key === 'Enter') masaGir();
+});
+
 
 var cart = {};
 var mood = '';
