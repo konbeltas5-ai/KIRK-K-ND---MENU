@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kırkikindi — Yönetim</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{--g:#C9A84C;--g2:#E8C97A;--g3:#8B6914;--black:#120E08;--paper:#FDFAF4;--ink:#0F0D09;--ink3:#7A6645;}
+body{font-family:system-ui,sans-serif;background:#f5f2eb;min-height:100vh;}
+
+#login-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;background:var(--black);padding:2rem;}
+.login-logo{text-align:center;margin-bottom:2rem;}
+.login-num{font-family:Georgia,serif;font-size:52px;color:var(--g);line-height:1;}
+.login-name{font-size:13px;letter-spacing:4px;color:#fff;margin-top:4px;}
+.login-sub{font-size:10px;color:rgba(255,255,255,0.3);letter-spacing:2px;margin-top:4px;}
+.login-box{width:100%;max-width:300px;}
+.login-label{font-size:9px;letter-spacing:2px;color:rgba(201,168,76,0.6);margin-bottom:8px;text-align:center;display:block;}
+.login-inp{width:100%;padding:14px;font-size:18px;text-align:center;background:rgba(255,255,255,0.06);border:1px solid rgba(201,168,76,0.3);color:#fff;border-radius:4px;outline:none;letter-spacing:4px;margin-bottom:10px;}
+.login-btn{width:100%;padding:13px;background:var(--g);color:#000;font-size:10px;letter-spacing:2px;border:none;border-radius:2px;cursor:pointer;font-weight:600;}
+.login-err{color:#E24B4A;font-size:11px;text-align:center;margin-top:8px;display:none;}
+
+#app{display:none;}
+
+.topbar{background:var(--black);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;}
+.brand{display:flex;align-items:center;gap:10px;}
+.brand-num{font-size:22px;font-weight:700;color:var(--g);font-family:Georgia,serif;}
+.brand-name{font-size:9px;letter-spacing:3px;color:rgba(255,255,255,0.5);}
+.brand-sub{font-size:9px;color:var(--g);letter-spacing:1px;margin-top:1px;}
+.cikis{font-size:9px;color:rgba(255,255,255,0.3);cursor:pointer;padding:5px 10px;border:1px solid rgba(255,255,255,0.1);border-radius:2px;}
+
+.nav{display:flex;background:#fff;border-bottom:1px solid #e8e0d0;overflow-x:auto;}
+.nav-btn{flex-shrink:0;padding:12px 16px;font-size:11px;letter-spacing:1px;color:#888;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;}
+.nav-btn.on{color:var(--g3);border-bottom-color:var(--g);font-weight:600;}
+
+.pg{display:none;padding:16px;}
+.pg.on{display:block;}
+
+.notif-bar{background:var(--g);color:#000;padding:8px 16px;font-size:11px;font-weight:600;text-align:center;display:none;}
+.notif-bar.on{display:block;}
+
+/* KART */
+.card{background:#fff;border-radius:8px;border:0.5px solid #e8e0d0;margin-bottom:12px;overflow:hidden;}
+.card-head{padding:12px 14px;border-bottom:0.5px solid #f0ebe0;display:flex;justify-content:space-between;align-items:center;}
+.card-title{font-size:13px;font-weight:600;color:var(--ink);}
+.card-sub{font-size:11px;color:#999;margin-top:2px;}
+.card-body{padding:12px 14px;}
+
+/* FORM */
+.field{margin-bottom:12px;}
+.field label{display:block;font-size:10px;letter-spacing:1px;color:#888;margin-bottom:5px;}
+.field input,.field textarea,.field select{width:100%;padding:9px 11px;border:0.5px solid #ddd;border-radius:4px;font-size:13px;color:var(--ink);background:#fff;outline:none;font-family:inherit;}
+.field input:focus,.field textarea:focus{border-color:var(--g);}
+.field textarea{min-height:60px;resize:vertical;}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+
+.save-btn{padding:9px 20px;background:var(--black);color:var(--g);font-size:10px;letter-spacing:1.5px;border:none;border-radius:2px;cursor:pointer;}
+.save-btn:hover{background:var(--g);color:#000;}
+.del-btn{padding:9px 14px;background:#FCEBEB;color:#A32D2D;font-size:10px;border:0.5px solid #E24B4A;border-radius:2px;cursor:pointer;}
+.add-btn-green{padding:9px 16px;background:#EAF3DE;color:#27500A;font-size:10px;letter-spacing:1px;border:0.5px solid #639922;border-radius:2px;cursor:pointer;margin-bottom:12px;}
+
+/* TOGGLE */
+.toggle-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:0.5px solid #f5f0e8;}
+.toggle-row:last-child{border-bottom:none;}
+.toggle-lbl{font-size:13px;color:var(--ink);}
+.toggle-sub{font-size:11px;color:#999;margin-top:1px;}
+.tog{width:36px;height:20px;background:#ddd;border-radius:10px;cursor:pointer;position:relative;transition:background .2s;flex-shrink:0;}
+.tog.on{background:#1D9E75;}
+.tog::after{content:'';position:absolute;top:2px;left:2px;width:16px;height:16px;background:#fff;border-radius:50%;transition:transform .2s;}
+.tog.on::after{transform:translateX(16px);}
+
+/* MENU ITEM */
+.menu-item{background:#fff;border:0.5px solid #e8e0d0;border-radius:6px;padding:12px;margin-bottom:8px;}
+.menu-item-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;}
+.menu-item-name{font-size:13px;font-weight:600;color:var(--ink);}
+.menu-item-price{font-size:13px;color:var(--g);font-weight:600;}
+.badge-pill{font-size:9px;padding:2px 8px;border-radius:10px;background:#EAF3DE;color:#27500A;display:inline-block;margin-top:3px;}
+
+/* ÖNERİ */
+.oneri-card{background:#fff;border:0.5px solid #e8e0d0;border-radius:6px;padding:12px;margin-bottom:8px;}
+.oneri-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.oneri-title{font-size:12px;font-weight:600;color:var(--ink);}
+
+/* DİL */
+.dil-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:0.5px solid #f5f0e8;}
+.dil-row:last-child{border-bottom:none;}
+.dil-flag{font-size:18px;margin-right:8px;}
+.dil-name{font-size:13px;color:var(--ink);}
+</style>
+</head>
+<body>
+
+<!-- GİRİŞ -->
+<div id="login-screen">
+  <div class="login-logo">
+    <div class="login-num">40</div>
+    <div class="login-name">KIRKİKİNDİ</div>
+    <div class="login-sub">Yönetim Paneli</div>
+  </div>
+  <div class="login-box">
+    <span class="login-label">YÖNETİCİ ŞİFRESİ</span>
+    <input class="login-inp" type="password" id="pw-inp" placeholder="••••••" maxlength="10"
+      onkeypress="if(event.key==='Enter')doLogin()">
+    <button class="login-btn" onclick="doLogin()">◆ GİRİŞ YAP</button>
+    <div class="login-err" id="login-err">Yanlış şifre.</div>
+  </div>
+</div>
+
+<!-- ANA UYGULAMA -->
+<div id="app">
+  <div class="topbar">
+    <div class="brand">
+      <div class="brand-num">40</div>
+      <div>
+        <div class="brand-name">KIRKİKİNDİ</div>
+        <div class="brand-sub">Yönetim Paneli</div>
+      </div>
+    </div>
+    <div class="cikis" onclick="doLogout()">Çıkış</div>
+  </div>
+
+  <div class="notif-bar" id="notif"></div>
+
+  <div class="nav">
+    <div class="nav-btn on" onclick="showPg('menu-pg',this)">Menü</div>
+    <div class="nav-btn" onclick="showPg('sef-pg',this)">Şefin Menüsü</div>
+    <div class="nav-btn" onclick="showPg('garson-pg',this)">Garson</div>
+    <div class="nav-btn" onclick="showPg('dil-pg',this)">Diller</div>
+    <div class="nav-btn" onclick="showPg('ayar-pg',this)">Ayarlar</div>
+  </div>
+
+  <!-- MENÜ YÖNETİMİ -->
+  <div id="menu-pg" class="pg on">
+    <button class="add-btn-green" onclick="yeniUrunEkle()">+ Yeni Ürün Ekle</button>
+    <div id="menu-liste"></div>
+  </div>
+
+  <!-- ŞEFİN MENÜSÜ -->
+  <div id="sef-pg" class="pg">
+    <div class="card">
+      <div class="card-head">
+        <div>
+          <div class="card-title">Tab Adı</div>
+          <div class="card-sub">Menüde görünen sekme başlığı (örn: Şefin Menüsü, Günün Önerileri...)</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="field">
+          <label>TÜRKÇE BAŞLIK</label>
+          <input type="text" id="sef-tab-tr" placeholder="Şefin Menüsü">
+        </div>
+        <div class="field">
+          <label>İNGİLİZCE BAŞLIK</label>
+          <input type="text" id="sef-tab-en" placeholder="Chef's Selection">
+        </div>
+        <button class="save-btn" onclick="sefTabKaydet()">Başlığı Kaydet</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div>
+          <div class="card-title">Bölüm Başlığı</div>
+          <div class="card-sub">Sayfanın üstündeki büyük başlık ve alt metin</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="field"><label>BÜYÜK BAŞLIK (TR)</label><input type="text" id="sef-baslik-tr" placeholder="Şefin Seçkileri"></div>
+        <div class="field"><label>ALT METİN (TR)</label><textarea id="sef-alt-tr" placeholder="Şefimiz bugün sizin için özel olarak seçti..."></textarea></div>
+        <button class="save-btn" onclick="sefBaslikKaydet()">Kaydet</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div>
+          <div class="card-title">Öneri Kartları</div>
+          <div class="card-sub">Müşterilere gösterilecek yemek önerileri</div>
+        </div>
+        <button class="add-btn-green" style="margin:0" onclick="sefOneriEkle()">+ Ekle</button>
+      </div>
+      <div class="card-body">
+        <div id="sef-oneri-liste"></div>
+        <button class="save-btn" onclick="sefOneriKaydet()">Tüm Önerileri Kaydet</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- GARSON ÇAĞRI KARTLARI -->
+  <div id="garson-pg" class="pg">
+    <div class="card">
+      <div class="card-head">
+        <div>
+          <div class="card-title">Garson Çağrı Kartları</div>
+          <div class="card-sub">Müşterilerin garson çağırmak için kullanacağı seçenekler</div>
+        </div>
+        <button class="add-btn-green" style="margin:0" onclick="garsonKartEkle()">+ Ekle</button>
+      </div>
+      <div class="card-body">
+        <div id="garson-kart-liste"></div>
+        <button class="save-btn" onclick="garsonKartKaydet()">Kartları Kaydet</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- NE YESEM ÖNERİLERİ -->
+  <div id="oneri-pg" class="pg">
+    <div class="card">
+      <div class="card-head"><div><div class="card-title">Öneri Metinleri</div><div class="card-sub">Her ruh hali için kendi önerinizi yazın</div></div></div>
+      <div class="card-body">
+        <div id="oneri-liste"></div>
+        <button class="save-btn" onclick="oneriKaydet()">Kaydet</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- DİL SEÇENEKLERİ -->
+  <div id="dil-pg" class="pg">
+    <div class="card">
+      <div class="card-head"><div><div class="card-title">Aktif Diller</div><div class="card-sub">Menüde görünecek dilleri seçin</div></div></div>
+      <div class="card-body" id="dil-liste"></div>
+    </div>
+    <div style="margin-top:12px;">
+      <button class="save-btn" onclick="dilKaydet()">Kaydet</button>
+    </div>
+  </div>
+
+  <!-- AYARLAR -->
+  <div id="ayar-pg" class="pg">
+    <div class="card">
+      <div class="card-head"><div class="card-title">Şifre Değiştir</div></div>
+      <div class="card-body">
+        <div class="field"><label>YÖNETİM ŞİFRESİ</label><input type="password" id="new-pw-yonetim" placeholder="Yeni şifre"></div>
+        <div class="field"><label>MUTFAK ŞİFRESİ</label><input type="password" id="new-pw-mutfak" placeholder="Yeni şifre"></div>
+        <div class="field"><label>GARSON ŞİFRESİ</label><input type="password" id="new-pw-garson" placeholder="Yeni şifre"></div>
+        <button class="save-btn" onclick="sifreKaydet()">Şifreleri Güncelle</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head"><div class="card-title">Genel Ayarlar</div></div>
+      <div class="card-body">
+        <div class="toggle-row">
+          <div><div class="toggle-lbl">QR Menü aktif</div><div class="toggle-sub">Müşteriler menüye erişebilir</div></div>
+          <div class="tog on" id="tog-menu" onclick="this.classList.toggle('on')"></div>
+        </div>
+        <div class="toggle-row">
+          <div><div class="toggle-lbl">Sipariş alma aktif</div><div class="toggle-sub">Müşteriler sipariş verebilir</div></div>
+          <div class="tog on" id="tog-siparis" onclick="this.classList.toggle('on')"></div>
+        </div>
+        <div class="toggle-row">
+          <div><div class="toggle-lbl">Yapay zeka önerileri</div><div class="toggle-sub">"Bu akşam ne yesem" aktif</div></div>
+          <div class="tog on" id="tog-ai" onclick="this.classList.toggle('on')"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+var SUPABASE_URL = 'https://xhuvpbzpghazpipaovwt.supabase.co';
+var SUPABASE_ANON_KEY = 'sb_publishable_vR5mtSCXn0nxd-_I0TzLfw_jQrT_KZK';
+var sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+var YON_SIFRE = '9999';  // Yönetim şifresi — değiştirebilirsiniz
+
+var dilListesi = [
+  {kod:'tr', ad:'Türkçe', bayrak:'🇹🇷', aktif:true},
+  {kod:'en', ad:'English', bayrak:'🇬🇧', aktif:true},
+  {kod:'de', ad:'Deutsch', bayrak:'🇩🇪', aktif:false},
+  {kod:'ru', ad:'Русский', bayrak:'🇷🇺', aktif:false},
+  {kod:'ar', ad:'عربي', bayrak:'🇸🇦', aktif:false},
+  {kod:'fr', ad:'Français', bayrak:'🇫🇷', aktif:false},
+];
+
+var oneriSablonlar = [
+  {id:'hafif-h', mood:'Hafif', pref:'Hepsi', metin:'Zeytinyağlı Yaprak Sarma (₺175) + Konya Tarhun Çorbası (₺220). Hafif, ferahlatıcı ve yalnızca bu topraklara özgü.'},
+  {id:'hafif-v', mood:'Hafif', pref:'Vejetaryen', metin:'Humus (₺95) + Mütebbel (₺95) + Biber Dolması (₺175). Tamamen bitkisel, dengeli sofra.'},
+  {id:'doyurucu-h', mood:'Doyurucu', pref:'Hepsi', metin:'Kuzu Pirzola (₺750) + Konya Pirinç Pilavı. Şefin en doyurucu kombinasyonu.'},
+  {id:'doyurucu-v', mood:'Doyurucu', pref:'Vejetaryen', metin:'Güveçte Tandır Çorbası (₺240) + Zeytinyağlı Fasulye. Bol proteinli bitkisel sofra.'},
+  {id:'balik-h', mood:'Deniz ürünü', pref:'Hepsi', metin:'Levrek Izgara (₺560) + Ezineli Roka Salatası. Bugün taze geldi.'},
+  {id:'tatli-h', mood:'Tatlı', pref:'Hepsi', metin:'Fırın Sütlaç (₺140) + Türk kahvesi. Hafif kapanış, çok ağır değil.'},
+];
+
+var menuItems = [];
+
+function doLogin(){
+  var pw = document.getElementById('pw-inp').value;
+  var saved = localStorage.getItem('yon_sifre') || YON_SIFRE;
+  if(pw === saved){
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    loadAll();
+  } else {
+    document.getElementById('login-err').style.display = 'block';
+    document.getElementById('pw-inp').value = '';
+  }
+}
+
+function doLogout(){
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('pw-inp').value = '';
+}
+
+function showPg(id, btn){
+  document.querySelectorAll('.pg').forEach(function(p){p.classList.remove('on');});
+  document.querySelectorAll('.nav-btn').forEach(function(b){b.classList.remove('on');});
+  document.getElementById(id).classList.add('on');
+  btn.classList.add('on');
+}
+
+function showNotif(msg){
+  var n = document.getElementById('notif');
+  n.textContent = msg; n.classList.add('on');
+  setTimeout(function(){n.classList.remove('on');}, 3000);
+}
+
+async function loadAll(){
+  await loadMenu();
+  loadOneri();
+  loadDil();
+  sefYukle();
+  garsonYukle();
+}
+
+// ===== MENÜ =====
+async function loadMenu(){
+  var {data} = await sb.from('menu').select('*').order('kategori').order('id');
+  if(data) menuItems = data;
+  else menuItems = [];
+  renderMenu();
+}
+
+function renderMenu(){
+  var kategoriler = {};
+  menuItems.forEach(function(it){
+    if(!kategoriler[it.kategori]) kategoriler[it.kategori] = [];
+    kategoriler[it.kategori].push(it);
+  });
+
+  var html = '';
+  Object.keys(kategoriler).forEach(function(kat){
+    html += '<div class="card"><div class="card-head"><div class="card-title">' + kat + '</div></div><div class="card-body">';
+    kategoriler[kat].forEach(function(it){
+      html += '<div class="menu-item" id="mi-'+it.id+'">';
+      html += '<div class="menu-item-head"><div><div class="menu-item-name">'+it.isim+'</div>';
+      if(it.badge) html += '<span class="badge-pill">'+it.badge+'</span>';
+      html += '</div><div class="menu-item-price">₺'+it.fiyat+'</div></div>';
+      html += '<div class="field-row">';
+      html += '<div class="field"><label>FİYAT</label><input type="number" value="'+it.fiyat+'" id="fiyat-'+it.id+'" onchange="fiyatGuncelle(\''+it.id+'\',this.value)"></div>';
+      html += '<div class="field"><label>STOK</label><div class="toggle-row" style="padding:6px 0;border:none;"><div class="tog '+(it.stok_var?'on':'')+'" id="stok-'+it.id+'" onclick="stokToggle(\''+it.id+'\',this)"></div><span style="font-size:11px;color:#888;margin-left:8px;">'+(it.stok_var?'Var':'Yok')+'</span></div></div>';
+      html += '</div>';
+      html += '<div class="field"><label>AÇIKLAMA</label><textarea id="acik-'+it.id+'" onchange="acikGuncelle(\''+it.id+'\',this.value)">'+it.aciklama+'</textarea></div>';
+      html += '<div style="display:flex;gap:6px;"><button class="save-btn" onclick="itemKaydet(\''+it.id+'\')">Kaydet</button>';
+      html += '<button class="del-btn" onclick="itemSil(\''+it.id+'\')">Sil</button></div>';
+      html += '</div>';
+    });
+    html += '</div></div>';
+  });
+
+  if(!html) html = '<div style="text-align:center;padding:2rem;color:#999;font-size:13px;">Henüz menü ürünü yok. "Yeni Ürün Ekle" ile başlayın.</div>';
+  document.getElementById('menu-liste').innerHTML = html;
+}
+
+function fiyatGuncelle(id, val){ var it = menuItems.find(function(x){return x.id==id;}); if(it) it.fiyat = parseInt(val); }
+function acikGuncelle(id, val){ var it = menuItems.find(function(x){return x.id==id;}); if(it) it.aciklama = val; }
+
+function stokToggle(id, el){
+  el.classList.toggle('on');
+  var it = menuItems.find(function(x){return x.id==id;});
+  if(it) it.stok_var = el.classList.contains('on');
+  el.nextElementSibling.textContent = el.classList.contains('on') ? 'Var' : 'Yok';
+}
+
+async function itemKaydet(id){
+  var it = menuItems.find(function(x){return x.id==id;});
+  if(!it) return;
+  await sb.from('menu').update({fiyat:it.fiyat, aciklama:it.aciklama, stok_var:it.stok_var}).eq('id', id);
+  showNotif(it.isim + ' güncellendi! Çeviri yapılıyor...');
+  // Açıklamayı otomatik çevir
+  otoCevir(it.isim, it.aciklama, id);
+}
+
+async function otoCevir(isim, aciklama, itemId) {
+  if(!aciklama || aciklama.length < 3) return;
+  try {
+    var response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 500,
+        messages: [{
+          role: 'user',
+          content: 'Translate this Turkish restaurant menu item description into English, German, Arabic, and French. Return ONLY a valid JSON object with keys: en, de, ar, fr. No markdown, no explanation. Turkish: "' + aciklama + '"'
+        }]
+      })
+    });
+    var data = await response.json();
+    if(data.content && data.content[0]) {
+      var txt = data.content[0].text.replace(/```json|```/g,'').trim();
+      var trans = JSON.parse(txt);
+      // Supabase'e çevirileri kaydet
+      await sb.from('menu').update({
+        aciklama_en: trans.en,
+        aciklama_de: trans.de,
+        aciklama_ar: trans.ar,
+        aciklama_fr: trans.fr
+      }).eq('id', itemId);
+      showNotif('✓ ' + isim + ' — çeviri tamamlandı (EN/DE/AR/FR)');
+    }
+  } catch(e) {
+    showNotif('Çeviri hatası: ' + e.message);
+  }
+}
+
+async function itemSil(id){
+  var it = menuItems.find(function(x){return x.id==id;});
+  if(!it || !confirm((it.isim||'Bu ürün') + ' silinsin mi?')) return;
+  var res = await sb.from('menu').delete().eq('id', id);
+  if(res.error){ showNotif('Hata: ' + res.error.message); return; }
+  menuItems = menuItems.filter(function(x){return x.id!=id;});
+  renderMenu();
+  showNotif('✓ Ürün silindi.');
+}
+
+function yeniUrunEkle(){
+  var kat = prompt('Kategori:\n- Soğuk Başlangıçlar\n- Çorbalar\n- Ana Yemekler\n- Tatlılar\n- İçecekler\n\nKategori adını yazın:');
+  if(!kat) return;
+  var isim = prompt('Yemek adı:');
+  if(!isim) return;
+  var fiyat = prompt('Fiyat (sadece rakam, örn: 150):');
+  if(!fiyat) return;
+  var acik = prompt('Açıklama (boş bırakabilirsiniz):') || '';
+  var badge = prompt('Etiket (boş bırakabilirsiniz):\nVEGETARİYEN / VEGAN / ACILI / GLÜTENSİZ / KONYA / SEF / KLASIK') || '';
+
+  sb.from('menu').insert([{
+    kategori: kat,
+    isim: isim,
+    fiyat: parseInt(fiyat),
+    aciklama: acik,
+    badge: badge,
+    aktif: true,
+    stok: true,
+    sira: 99
+  }]).then(function(res){
+    if(res.error){ showNotif('Hata: ' + res.error.message); return; }
+    loadMenu();
+    showNotif('✓ ' + isim + ' eklendi!');
+  });
+}
+
+// ===== ÖNERİLER =====
+function loadOneri(){
+  var saved = localStorage.getItem('oneri_metinler');
+  if(saved) oneriSablonlar = JSON.parse(saved);
+  renderOneri();
+}
+
+function renderOneri(){
+  var html = '';
+  oneriSablonlar.forEach(function(o, i){
+    html += '<div class="oneri-card">';
+    html += '<div class="oneri-head"><div class="oneri-title">'+o.mood+' — '+o.pref+'</div></div>';
+    html += '<div class="field"><label>ÖNERİ METNİ</label>';
+    html += '<textarea id="oneri-'+i+'" style="min-height:70px;">'+o.metin+'</textarea></div>';
+    html += '</div>';
+  });
+  document.getElementById('oneri-liste').innerHTML = html;
+}
+
+function oneriKaydet(){
+  oneriSablonlar.forEach(function(o, i){
+    var el = document.getElementById('oneri-'+i);
+    if(el) o.metin = el.value;
+  });
+  localStorage.setItem('oneri_metinler', JSON.stringify(oneriSablonlar));
+  showNotif('Öneriler kaydedildi!');
+}
+
+// ===== DİLLER =====
+function loadDil(){
+  var saved = localStorage.getItem('aktif_diller');
+  if(saved) {
+    var aktifler = JSON.parse(saved);
+    dilListesi.forEach(function(d){d.aktif = aktifler.indexOf(d.kod) > -1;});
+  }
+  renderDil();
+}
+
+function renderDil(){
+  var html = '';
+  dilListesi.forEach(function(d, i){
+    html += '<div class="dil-row">';
+    html += '<div style="display:flex;align-items:center;"><span class="dil-flag">'+d.bayrak+'</span><span class="dil-name">'+d.ad+'</span></div>';
+    html += '<div class="tog '+(d.aktif?'on':'')+'" id="dil-'+i+'" onclick="dilToggle('+i+',this)"></div>';
+    html += '</div>';
+  });
+  document.getElementById('dil-liste').innerHTML = html;
+}
+
+function dilToggle(i, el){
+  el.classList.toggle('on');
+  dilListesi[i].aktif = el.classList.contains('on');
+}
+
+function dilKaydet(){
+  var aktifler = dilListesi.filter(function(d){return d.aktif;}).map(function(d){return d.kod;});
+  localStorage.setItem('aktif_diller', JSON.stringify(aktifler));
+  showNotif('Dil ayarları kaydedildi!');
+}
+
+// ===== ŞİFRELER =====
+function sifreKaydet(){
+  var yon = document.getElementById('new-pw-yonetim').value;
+  var mut = document.getElementById('new-pw-mutfak').value;
+  var gar = document.getElementById('new-pw-garson').value;
+  if(yon) localStorage.setItem('yon_sifre', yon);
+  if(mut) localStorage.setItem('mutfak_sifre', mut);
+  if(gar) localStorage.setItem('garson_sifre', gar);
+  document.getElementById('new-pw-yonetim').value = '';
+  document.getElementById('new-pw-mutfak').value = '';
+  document.getElementById('new-pw-garson').value = '';
+  showNotif('Şifreler güncellendi!');
+}
+
+// ══ ŞEFİN MENÜSÜ ══
+var SEF_ONERI_VARSAYILAN = [
+  {ikon:'🥗', baslik:'Zeytinyağlı Başlangıç', acik:'Mevsim yeşillikleri ve özel sos', fiyat:''},
+  {ikon:'🍖', baslik:'Ana Yemek Önerisi', acik:'Şefin günlük seçkisi', fiyat:''}
+];
+
+function sefYukle(){
+  var saved = localStorage.getItem('sef_oneri');
+  var oneri = saved ? JSON.parse(saved) : SEF_ONERI_VARSAYILAN;
+  
+  var tabTr = localStorage.getItem('sef_tab_tr') || 'Şefin Menüsü';
+  var tabEn = localStorage.getItem('sef_tab_en') || "Chef's Selection";
+  var baslikTr = localStorage.getItem('sef_baslik_tr') || 'Şefin Seçkileri';
+  var altTr = localStorage.getItem('sef_alt_tr') || '';
+  
+  document.getElementById('sef-tab-tr').value = tabTr;
+  document.getElementById('sef-tab-en').value = tabEn;
+  document.getElementById('sef-baslik-tr').value = baslikTr;
+  document.getElementById('sef-alt-tr').value = altTr;
+  
+  renderSefOneri(oneri);
+}
+
+function renderSefOneri(oneri){
+  var html = '';
+  oneri.forEach(function(o, i){
+    html += '<div style="background:#f9f6f0;border:0.5px solid #e8e0d0;border-radius:6px;padding:12px;margin-bottom:8px;">';
+    html += '<div class="field-row">';
+    html += '<div class="field"><label>İKON (emoji)</label><input type="text" id="sef-ikon-'+i+'" value="'+o.ikon+'" style="font-size:20px;text-align:center;"></div>';
+    html += '<div class="field"><label>FİYAT (boş bırakılabilir)</label><input type="text" id="sef-fiyat-'+i+'" value="'+o.fiyat+'" placeholder="₺250"></div>';
+    html += '</div>';
+    html += '<div class="field"><label>BAŞLIK</label><input type="text" id="sef-b-'+i+'" value="'+o.baslik+'"></div>';
+    html += '<div class="field"><label>AÇIKLAMA</label><textarea id="sef-a-'+i+'">'+o.acik+'</textarea></div>';
+    html += '<button class="del-btn" onclick="sefOneriSil('+i+')">Sil</button>';
+    html += '</div>';
+  });
+  document.getElementById('sef-oneri-liste').innerHTML = html;
+  document.getElementById('sef-oneri-liste').setAttribute('data-count', oneri.length);
+}
+
+function sefOneriEkle(){
+  var saved = localStorage.getItem('sef_oneri');
+  var oneri = saved ? JSON.parse(saved) : SEF_ONERI_VARSAYILAN;
+  oneri.push({ikon:'⭐', baslik:'Yeni Öneri', acik:'Açıklama yazın', fiyat:''});
+  localStorage.setItem('sef_oneri', JSON.stringify(oneri));
+  renderSefOneri(oneri);
+}
+
+function sefOneriSil(i){
+  var saved = localStorage.getItem('sef_oneri');
+  var oneri = saved ? JSON.parse(saved) : [];
+  oneri.splice(i, 1);
+  localStorage.setItem('sef_oneri', JSON.stringify(oneri));
+  renderSefOneri(oneri);
+  showNotif('Öneri silindi.');
+}
+
+function sefOneriKaydet(){
+  var n = parseInt(document.getElementById('sef-oneri-liste').getAttribute('data-count') || 0);
+  var oneri = [];
+  for(var i=0; i<n; i++){
+    oneri.push({
+      ikon: document.getElementById('sef-ikon-'+i) ? document.getElementById('sef-ikon-'+i).value : '⭐',
+      baslik: document.getElementById('sef-b-'+i) ? document.getElementById('sef-b-'+i).value : '',
+      acik: document.getElementById('sef-a-'+i) ? document.getElementById('sef-a-'+i).value : '',
+      fiyat: document.getElementById('sef-fiyat-'+i) ? document.getElementById('sef-fiyat-'+i).value : ''
+    });
+  }
+  localStorage.setItem('sef_oneri', JSON.stringify(oneri));
+  showNotif('✓ Şefin önerileri kaydedildi!');
+}
+
+function sefTabKaydet(){
+  localStorage.setItem('sef_tab_tr', document.getElementById('sef-tab-tr').value);
+  localStorage.setItem('sef_tab_en', document.getElementById('sef-tab-en').value);
+  showNotif('✓ Tab adı kaydedildi!');
+}
+
+function sefBaslikKaydet(){
+  localStorage.setItem('sef_baslik_tr', document.getElementById('sef-baslik-tr').value);
+  localStorage.setItem('sef_alt_tr', document.getElementById('sef-alt-tr').value);
+  showNotif('✓ Başlık kaydedildi!');
+}
+
+// ══ GARSON KARTLARI ══
+var GARSON_VARSAYILAN = [
+  {ikon:'💳', ad:'HESAP', alt:'Ödeme yapmak istiyorum'},
+  {ikon:'💧', ad:'SU', alt:'Su getirir misiniz?'},
+  {ikon:'🧻', ad:'PEÇETE', alt:'Peçete bitti'},
+  {ikon:'🫓', ad:'EKMEK', alt:'Lavaş lazım'},
+  {ikon:'🙋', ad:'YARDIM', alt:'Genel talebim var'},
+  {ikon:'⭐', ad:'GERİ BİLDİRİM', alt:'Deneyimimi paylaşayım'}
+];
+
+function garsonYukle(){
+  var saved = localStorage.getItem('garson_kartlar');
+  var kartlar = saved ? JSON.parse(saved) : GARSON_VARSAYILAN;
+  renderGarsonKartlar(kartlar);
+}
+
+function renderGarsonKartlar(kartlar){
+  var html = '';
+  kartlar.forEach(function(k, i){
+    html += '<div style="background:#f9f6f0;border:0.5px solid #e8e0d0;border-radius:6px;padding:12px;margin-bottom:8px;">';
+    html += '<div class="field-row">';
+    html += '<div class="field"><label>İKON (emoji)</label><input type="text" id="g-ikon-'+i+'" value="'+k.ikon+'" style="font-size:20px;text-align:center;"></div>';
+    html += '<div class="field"><label>BAŞLIK</label><input type="text" id="g-ad-'+i+'" value="'+k.ad+'"></div>';
+    html += '</div>';
+    html += '<div class="field"><label>ALT METİN</label><input type="text" id="g-alt-'+i+'" value="'+k.alt+'"></div>';
+    html += '<button class="del-btn" onclick="garsonKartSil('+i+')">Sil</button>';
+    html += '</div>';
+  });
+  document.getElementById('garson-kart-liste').innerHTML = html;
+  document.getElementById('garson-kart-liste').setAttribute('data-count', kartlar.length);
+}
+
+function garsonKartEkle(){
+  var saved = localStorage.getItem('garson_kartlar');
+  var kartlar = saved ? JSON.parse(saved) : GARSON_VARSAYILAN;
+  kartlar.push({ikon:'🔔', ad:'YENİ', alt:'Açıklama yazın'});
+  localStorage.setItem('garson_kartlar', JSON.stringify(kartlar));
+  renderGarsonKartlar(kartlar);
+}
+
+function garsonKartSil(i){
+  var saved = localStorage.getItem('garson_kartlar');
+  var kartlar = saved ? JSON.parse(saved) : [];
+  kartlar.splice(i, 1);
+  localStorage.setItem('garson_kartlar', JSON.stringify(kartlar));
+  renderGarsonKartlar(kartlar);
+  showNotif('Kart silindi.');
+}
+
+function garsonKartKaydet(){
+  var n = parseInt(document.getElementById('garson-kart-liste').getAttribute('data-count') || 0);
+  var kartlar = [];
+  for(var i=0; i<n; i++){
+    kartlar.push({
+      ikon: document.getElementById('g-ikon-'+i) ? document.getElementById('g-ikon-'+i).value : '🔔',
+      ad: document.getElementById('g-ad-'+i) ? document.getElementById('g-ad-'+i).value : '',
+      alt: document.getElementById('g-alt-'+i) ? document.getElementById('g-alt-'+i).value : ''
+    });
+  }
+  localStorage.setItem('garson_kartlar', JSON.stringify(kartlar));
+  showNotif('✓ Garson kartları kaydedildi! Menüye yansıması için sayfayı yenileyin.');
+}
+
+</script>
+</body>
+</html>
