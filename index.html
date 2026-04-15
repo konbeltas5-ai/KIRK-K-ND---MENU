@@ -2,129 +2,228 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>Kırkikindi Restoran — Menü</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Cormorant:ital,wght@0,300;0,400;1,400&family=Cinzel:wght@400;500&display=swap" rel="stylesheet">
+<link rel="manifest" href="../manifest-menu.json">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="40 Menü">
+<link rel="apple-touch-icon" href="../icon-192.png">
+<meta name="theme-color" content="#FAF3E0">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Cinzel:wght@400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
-:root{--g:#C9A84C;--g2:#E8C97A;--g3:#8B6914;--ink:#0F0D09;--ink2:#3D3020;--ink3:#7A6645;--paper:#FDFAF4;--black:#120E08;}
-body{font-family:'Cormorant',serif;background:var(--paper);max-width:430px;margin:0 auto;}
+:root{
+  --g:#B8962E;--g2:#C9A84C;--g3:#8B6914;--g4:#F5E6B8;
+  --bg:#FDFAF5;--bg2:#F5EFE0;--bg3:#EBE0C8;
+  --ink:#1A1208;--ink2:#2E200A;--ink3:#5C4020;--ink4:#8B6835;
+  --card:#FFFFFF;--card2:#FAF6EE;
+  --border:rgba(139,105,20,0.15);--border2:rgba(139,105,20,0.3);
+  --dark:#1A1208;--dark2:#2E200A;
+  --red-badge:#7A1515;--red-bg:#FDF0F0;--red-border:#C06060;
+  --green-badge:#1A4A10;--green-bg:#EAF5E4;--green-border:#60A040;
+  --gold-badge:#5A3D08;--gold-bg:#FDF5E0;--gold-border:#C9A84C;
+}
+body{font-family:'Cormorant Garamond',serif;background:var(--bg);max-width:430px;margin:0 auto;color:var(--ink);-webkit-font-smoothing:antialiased;}
 
-.header{background:var(--black);padding:1.5rem 1.5rem 1.25rem;text-align:center;position:relative;}
-.header::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--g),var(--g2),var(--g),transparent);}
-.header::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(201,168,76,0.35),transparent);}
-.logo{font-family:'Cinzel',serif;color:var(--g);font-size:22px;}
-.logo span{font-family:'Playfair Display',serif;font-size:44px;display:block;line-height:1;}
-.hero-sub{font-family:'Cormorant',serif;font-style:italic;font-size:11px;color:rgba(255,255,255,0.35);letter-spacing:3px;margin-top:8px;}
-.divider{display:flex;align-items:center;gap:10px;margin-top:12px;}
-.divider-line{flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(201,168,76,0.3));}
-.divider-line.r{background:linear-gradient(270deg,transparent,rgba(201,168,76,0.3));}
-.gem{width:5px;height:5px;background:var(--g);transform:rotate(45deg);}
+/* ══ MASA GİRİŞ ══ */
+#masa-secim{position:fixed;top:0;left:0;right:0;bottom:0;background:linear-gradient(160deg,#FAF3E0 0%,#F0E6C8 60%,#E8D8B0 100%);z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem;max-width:430px;margin:0 auto;}
+.ms-top-line{width:60px;height:3px;background:linear-gradient(90deg,transparent,var(--g2),transparent);margin:0 auto 1.5rem;}
+.ms-logo{width:160px;height:160px;object-fit:contain;margin-bottom:1rem;}
+.ms-sub{font-family:'Cinzel',serif;font-style:italic;font-size:12px;color:var(--ink3);letter-spacing:3px;margin-top:3px;text-align:center;}
+.ms-orn{display:flex;align-items:center;gap:10px;margin:1.25rem 0;width:100%;max-width:260px;}
+.ms-orn-line{flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(139,105,20,0.4));}
+.ms-orn-line.r{background:linear-gradient(270deg,transparent,rgba(139,105,20,0.4));}
+.ms-orn-gem{width:6px;height:6px;background:var(--g2);transform:rotate(45deg);}
+.ms-label{font-family:'Cinzel',serif;font-size:9px;letter-spacing:3px;color:var(--g3);text-align:center;margin-bottom:14px;}
+.ms-input{width:100%;max-width:260px;display:block;margin:0 auto;padding:18px;font-size:36px;text-align:center;background:#fff;border:1.5px solid var(--border2);border-radius:4px;color:var(--ink);outline:none;font-family:'Cinzel',serif;letter-spacing:8px;transition:border-color .2s;}
+.ms-input:focus{border-color:var(--g2);}
+.ms-btn{display:block;width:100%;max-width:260px;margin:12px auto 0;padding:15px;background:var(--g2);color:var(--ink);font-family:'Cinzel',serif;font-size:11px;letter-spacing:3px;border:none;border-radius:3px;cursor:pointer;font-weight:600;}
+.ms-hata{color:#C03030;font-size:12px;text-align:center;margin-top:8px;font-style:italic;display:none;}
+.ms-foot{font-family:'Cinzel',serif;font-size:9px;letter-spacing:1.5px;color:var(--ink4);margin-top:1.5rem;text-align:center;}
 
-.masa-badge{display:inline-block;font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;color:rgba(201,168,76,0.7);margin-top:6px;}
+/* ══ HEADER ══ */
+.header{background:#FDFAF5;text-align:center;position:relative;border-bottom:1px solid rgba(139,105,20,0.2);}
+.header-gold-top{height:5px;background:linear-gradient(90deg,var(--g3),var(--g2),var(--g),var(--g2),var(--g3));}
+.header-pattern{display:none;}
+.header-inner{position:relative;z-index:1;padding:2rem 1.5rem 1.75rem;}
+.h-logo{width:200px;height:200px;object-fit:contain;display:block;margin:0 auto 1rem;}
+.h-sub{font-family:'Cinzel',serif;letter-spacing:4px;font-size:13px;color:var(--ink2);margin-top:0;font-weight:500;}
+.h-masa-wrap{margin-top:12px;display:none;}
+.h-masa{font-family:'Cinzel',serif;font-size:14px;letter-spacing:4px;color:var(--g3);font-weight:600;background:var(--gold-bg);padding:7px 22px;border-radius:20px;border:1.5px solid var(--gold-border);display:inline-block;}
+.h-div{display:flex;align-items:center;gap:8px;margin-top:14px;}
+.h-line{flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(139,105,20,0.3));}
+.h-line.r{background:linear-gradient(270deg,transparent,rgba(139,105,20,0.3));}
+.h-gem{width:6px;height:6px;background:var(--g2);transform:rotate(45deg);}
+.header-gold-bottom{height:3px;background:linear-gradient(90deg,var(--g3),var(--g2),var(--g),var(--g2),var(--g3));}
 
-.order-status{background:var(--black);margin:0;padding:0.875rem 1rem;display:none;}
+/* ══ SİPARİŞ DURUMU ══ */
+.order-status{background:#FAF3E0;padding:1rem 1.25rem;border-bottom:1px solid rgba(139,105,20,0.2);display:none;}
 .order-status.on{display:block;}
-.os-title{font-family:'Cinzel',serif;font-size:8px;letter-spacing:2px;color:var(--g);margin-bottom:8px;}
+.os-title{font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;color:var(--g3);margin-bottom:10px;}
 .os-steps{display:flex;align-items:center;}
 .os-step{flex:1;display:flex;flex-direction:column;align-items:center;}
-.os-dot{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);}
-.os-dot.done{background:var(--g);border-color:var(--g);}
-.os-dot.active{border:2px solid var(--g);background:transparent;}
-.os-line{flex:1;height:1px;background:rgba(255,255,255,0.1);}
-.os-line.done{background:var(--g);}
-.os-lbl{font-family:'Cinzel',serif;font-size:7px;color:rgba(255,255,255,0.3);margin-top:4px;text-align:center;}
-.os-lbl.done{color:var(--g);}
-.os-eta{font-family:'Cormorant',serif;font-style:italic;font-size:12px;color:rgba(255,255,255,0.55);margin-top:6px;text-align:center;}
-.os-eta span{color:var(--g);font-size:15px;}
+.os-dot{width:10px;height:10px;border-radius:50%;background:var(--bg3);border:1px solid rgba(139,105,20,0.3);}
+.os-dot.done{background:var(--g2);border-color:var(--g2);}
+.os-dot.active{border:2px solid var(--g2);background:transparent;}
+.os-line{flex:1;height:1px;background:rgba(139,105,20,0.2);}
+.os-line.done{background:var(--g2);}
+.os-lbl{font-family:'Cinzel',serif;font-size:7.5px;color:var(--ink4);margin-top:4px;text-align:center;}
+.os-lbl.done{color:var(--g3);}
+.os-eta{font-style:italic;font-size:13px;color:var(--ink3);margin-top:8px;text-align:center;}
+.os-eta span{color:var(--g3);font-size:15px;font-weight:600;}
 
-.tabs{display:flex;background:var(--black);border-top:1px solid rgba(201,168,76,0.1);}
-.tab{flex:1;padding:11px 2px;font-family:'Cinzel',serif;font-size:8px;letter-spacing:1px;color:rgba(255,255,255,0.3);cursor:pointer;text-align:center;border-top:2px solid transparent;}
-.tab.on{color:var(--g);border-top-color:var(--g);}
+/* ══ TABS ══ */
+.tabs{display:flex;background:#FDFAF5;border-bottom:2px solid rgba(139,105,20,0.2);border-top:1px solid rgba(139,105,20,0.1);position:sticky;top:0;z-index:10;}
+.tab{flex:1;padding:13px 2px 12px;font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.5px;color:var(--ink3);cursor:pointer;text-align:center;border-bottom:2.5px solid transparent;margin-bottom:-2px;transition:all .2s;line-height:1.4;font-weight:500;}
+.tab.on{color:var(--g3);border-bottom-color:var(--g2);font-weight:700;}
+.tab:hover:not(.on){color:var(--ink);}
+.tab-lang{display:flex;flex-direction:column;align-items:center;gap:1px;}
+.tab-lang-flag{font-size:16px;line-height:1;}
+.tab-lang-txt{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.3px;color:var(--g3);font-weight:600;}
 
 .pg{display:none;}
 .pg.on{display:block;}
 
-.cat{display:flex;align-items:center;padding:1.25rem 1rem 0.6rem;}
-.cat-line{flex:1;height:1px;background:linear-gradient(90deg,rgba(201,168,76,0.3),transparent);}
-.cat-line.r{background:linear-gradient(270deg,rgba(201,168,76,0.3),transparent);}
-.cat-lbl{font-family:'Cinzel',serif;font-size:8px;letter-spacing:2.5px;color:var(--g3);padding:0 10px;white-space:nowrap;}
+/* ══ KATEGORİ ══ */
+.cat{display:flex;align-items:center;padding:1.75rem 1rem 1rem;}
+.cat-line{flex:1;height:1px;background:linear-gradient(90deg,var(--g3),transparent);opacity:0.4;}
+.cat-line.r{background:linear-gradient(270deg,var(--g3),transparent);}
+.cat-lbl{font-family:'Cinzel',serif;font-size:9.5px;letter-spacing:3.5px;color:var(--g3);padding:0 14px;white-space:nowrap;}
 
-.dish{margin:0 0.875rem 0.4rem;background:#fff;border:1px solid rgba(201,168,76,0.12);border-radius:2px;display:flex;overflow:hidden;cursor:pointer;}
-.dish-acc{width:3px;background:linear-gradient(180deg,var(--g),var(--g3));flex-shrink:0;}
-.dish-body{flex:1;padding:0.75rem 0.875rem;}
-.dish-top{display:flex;justify-content:space-between;align-items:flex-start;}
-.dish-name{font-family:'Playfair Display',serif;font-size:13px;color:var(--ink);flex:1;margin-right:6px;}
-.dish-price{font-family:'Cinzel',serif;font-size:12px;color:var(--g);}
-.dish-desc{font-family:'Cormorant',serif;font-style:italic;font-size:11.5px;color:var(--ink3);margin-top:3px;line-height:1.5;}
-.dish-foot{display:flex;justify-content:flex-end;align-items:center;margin-top:7px;gap:6px;}
-.badge{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.8px;padding:2px 7px;border-radius:1px;}
-.bv{background:#EAF3DE;color:#27500A;border:0.5px solid #639922;}
-.bs{background:rgba(201,168,76,0.12);color:var(--g3);border:0.5px solid rgba(201,168,76,0.4);}
-.bh{background:#FCEBEB;color:#A32D2D;border:0.5px solid #E24B4A;}
-.addbtn{font-family:'Cinzel',serif;font-size:8px;letter-spacing:1px;padding:5px 12px;background:var(--black);color:var(--g);border:1px solid rgba(201,168,76,0.35);cursor:pointer;border-radius:1px;}
-.addbtn.done{background:var(--g);color:#000;}
+/* ══ YEMEK KARTI ══ */
+.dish{margin:0 0.875rem 0.75rem;background:var(--card);border:1px solid var(--border);border-radius:6px;overflow:hidden;cursor:pointer;transition:all .2s;}
+.dish:hover{border-color:var(--border2);}
+.dish-photo-placeholder{width:100%;height:100px;background:linear-gradient(135deg,var(--bg3),var(--bg2));display:flex;flex-direction:column;align-items:center;justify-content:center;border-bottom:1px solid var(--border);cursor:pointer;transition:background .2s;}
+.dish-photo-placeholder:hover{background:var(--bg3);}
+.dish-photo-placeholder-ico{font-size:22px;opacity:0.35;margin-bottom:4px;}
+.dish-photo-placeholder-txt{font-family:'Cinzel',serif;font-size:8px;letter-spacing:1.5px;color:var(--ink4);opacity:0.6;}
+.dish-body{padding:0.875rem 1rem 0.75rem;}
+.dish-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;}
+.dish-name{font-family:'Playfair Display',serif;font-size:15.5px;color:var(--ink);flex:1;font-weight:500;line-height:1.3;}
+.dish-price{font-family:'Cinzel',serif;font-size:14px;color:var(--g3);white-space:nowrap;font-weight:600;background:var(--gold-bg);padding:3px 10px;border-radius:2px;border:0.5px solid var(--gold-border);}
+.dish-desc{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:14px;color:var(--ink2);font-weight:500;margin-top:7px;line-height:1.6;border-left:2px solid rgba(201,168,76,0.35);padding-left:10px;}
+.dish-foot{display:flex;justify-content:space-between;align-items:center;margin-top:10px;padding-top:8px;border-top:1px solid var(--border);}
+.dish-badges{display:flex;gap:5px;flex-wrap:wrap;}
 
-.aibox{background:var(--black);margin:0 0.875rem 0.5rem;border-radius:2px;padding:0.875rem;display:none;}
+/* ══ BADGE ══ */
+.badge{font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.8px;padding:3px 9px;border-radius:2px;font-weight:500;}
+.bv{background:var(--green-bg);color:var(--green-badge);border:0.5px solid var(--green-border);}
+.bs{background:var(--gold-bg);color:var(--gold-badge);border:0.5px solid var(--gold-border);}
+.bh{background:var(--red-bg);color:var(--red-badge);border:0.5px solid var(--red-border);}
+
+/* ══ EKLE BUTONU ══ */
+.addbtn{font-family:'Cinzel',serif;font-size:9px;letter-spacing:1.5px;padding:8px 16px;background:var(--ink);color:var(--g2);border:1px solid rgba(184,146,42,0.4);cursor:pointer;border-radius:2px;transition:all .2s;white-space:nowrap;}
+.addbtn:hover{background:var(--ink2);}
+.addbtn.done{background:var(--g2);color:var(--ink);border-color:var(--g2);font-weight:600;}
+
+/* ══ MUTFAK NOTU ══ */
+.aibox{background:#FDF5E0;margin:0 0.875rem 0.75rem;border-radius:6px;padding:0.875rem 1rem;border-left:3px solid var(--g2);display:none;}
 .aibox.on{display:block;}
-.ai-eye{font-family:'Cinzel',serif;font-size:7px;letter-spacing:2px;color:var(--g);margin-bottom:5px;}
-.ai-txt{font-family:'Cormorant',serif;font-style:italic;font-size:12px;color:rgba(255,255,255,0.68);line-height:1.65;}
+.ai-eye{font-family:'Cinzel',serif;font-size:8px;letter-spacing:2.5px;color:var(--g3);margin-bottom:7px;display:flex;align-items:center;gap:8px;}
+.ai-eye::after{content:'';flex:1;height:1px;background:rgba(139,105,20,0.2);}
+.ai-txt{font-style:italic;font-size:13.5px;color:var(--ink2);line-height:1.65;}
 
-.mood-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin:0 0.875rem 0.875rem;}
-.mood-card{background:#fff;border:1px solid rgba(201,168,76,0.15);border-radius:2px;padding:0.875rem;cursor:pointer;text-align:center;}
-.mood-card.on{border:1px solid var(--g);background:rgba(201,168,76,0.06);}
-.mood-icon{font-size:18px;margin-bottom:4px;display:block;}
-.mood-lbl{font-family:'Cinzel',serif;font-size:8px;letter-spacing:1px;color:var(--ink2);}
-.pref-row{display:flex;gap:5px;margin:0 0.875rem 0.875rem;}
-.pref-btn{font-family:'Cinzel',serif;font-size:8px;padding:5px 11px;border-radius:1px;border:1px solid rgba(201,168,76,0.2);background:#fff;color:var(--ink3);cursor:pointer;}
-.pref-btn.on{background:var(--black);color:var(--g);border-color:var(--g);}
-.rec-box{background:var(--black);border-radius:2px;padding:1rem;display:none;margin:0 0.875rem 0.875rem;}
+/* ══ BÖLÜM ══ */
+.sec-lbl{font-family:'Cinzel',serif;font-size:9px;letter-spacing:2.5px;color:var(--g3);padding:0 0.875rem;margin-bottom:10px;display:block;}
+
+/* ══ MOOD ══ */
+.mood-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:0 0.875rem 1rem;}
+.mood-card{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:1.1rem;cursor:pointer;text-align:center;transition:all .2s;}
+.mood-card:hover{border-color:var(--border2);}
+.mood-card.on{border:1.5px solid var(--g);background:var(--bg2);}
+.mood-icon{font-size:24px;margin-bottom:6px;display:block;}
+.mood-lbl{font-family:'Playfair Display',serif;font-size:15px;color:var(--ink);font-weight:500;margin-bottom:3px;}
+.mood-sub{font-style:italic;font-size:12px;color:var(--ink3);}
+
+/* ══ PREF ══ */
+.pref-row{display:flex;gap:6px;flex-wrap:wrap;}
+.pref-btn{font-family:'Cinzel',serif;font-size:9px;letter-spacing:1px;padding:8px 14px;border-radius:2px;border:1px solid var(--border2);background:var(--card);color:var(--ink3);cursor:pointer;transition:all .2s;font-weight:500;}
+.pref-btn.on{background:var(--ink);color:var(--g2);border-color:var(--ink);}
+
+/* ══ REC BOX ══ */
+.rec-box{background:#FDF5E0;border-radius:8px;overflow:hidden;border-left:4px solid var(--g2);margin:0 0.875rem 1rem;display:none;}
 .rec-box.on{display:block;}
 
-.call-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin:0 0.875rem;}
-.call-card{background:#fff;border:1px solid rgba(201,168,76,0.12);border-radius:2px;padding:0.875rem;cursor:pointer;text-align:center;}
-.call-card:hover{border-color:var(--g);}
-.call-ico{font-size:20px;margin-bottom:5px;}
-.call-nm{font-family:'Cinzel',serif;font-size:9px;letter-spacing:1.5px;color:var(--ink);}
-.call-sb{font-family:'Cormorant',serif;font-style:italic;font-size:11px;color:var(--ink3);margin-top:2px;}
+/* ══ GARSON ══ */
+.call-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:0 0.875rem;}
+.call-card{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:1.1rem;cursor:pointer;text-align:center;transition:all .2s;}
+.call-card:hover{border-color:var(--border2);}
+.call-card:active{background:var(--bg2);}
+.call-ico{font-size:22px;margin-bottom:7px;}
+.call-nm{font-family:'Cinzel',serif;font-size:11px;letter-spacing:1.5px;color:var(--ink);font-weight:600;}
+.call-sb{font-style:italic;font-size:12.5px;color:var(--ink3);margin-top:3px;}
 
-.cart-panel{margin:0 0.875rem 0.6rem;background:#fff;border:1px solid rgba(201,168,76,0.18);border-radius:2px;padding:1rem;}
-.cart-item-row{display:flex;justify-content:space-between;font-family:'Cormorant',serif;font-size:13px;color:var(--ink2);padding:4px 0;border-bottom:1px solid rgba(201,168,76,0.08);}
+/* ══ SEPET ══ */
+.cart-panel{margin:0 0.875rem 0.75rem;background:var(--card);border:1px solid var(--border);border-radius:6px;padding:1.125rem;}
+.cart-item-row{display:flex;justify-content:space-between;font-size:14.5px;color:var(--ink2);padding:7px 0;border-bottom:1px solid var(--border);}
 .cart-item-row:last-child{border-bottom:none;}
-.cart-total-row{display:flex;justify-content:space-between;margin-top:8px;padding-top:8px;border-top:1px solid rgba(201,168,76,0.2);}
-.cart-total-lbl{font-family:'Cinzel',serif;font-size:9px;letter-spacing:1.5px;color:var(--ink2);}
-.cart-total-val{font-family:'Cinzel',serif;font-size:15px;color:var(--g);}
-.note-panel{background:var(--black);border-radius:2px;padding:0.875rem;margin:0 0.875rem 0.6rem;}
-.note-lbl{font-family:'Cinzel',serif;font-size:7px;letter-spacing:2px;color:var(--g);margin-bottom:5px;}
-.note-inp{width:100%;background:transparent;border:none;border-bottom:1px solid rgba(201,168,76,0.25);color:rgba(255,255,255,0.7);font-family:'Cormorant',serif;font-style:italic;font-size:13px;padding:3px 0;outline:none;}
-.cta{display:block;width:calc(100% - 1.75rem);margin:0 0.875rem 0.875rem;padding:12px;background:var(--black);color:var(--g);font-family:'Cinzel',serif;font-size:9px;letter-spacing:2.5px;border:1px solid rgba(201,168,76,0.35);border-radius:2px;cursor:pointer;text-align:center;}
-.cta:hover{background:var(--g);color:#000;}
-.notif{background:var(--g);color:#000;border-radius:2px;padding:9px 12px;font-family:'Cinzel',serif;font-size:8px;letter-spacing:1.5px;text-align:center;margin:0 0.875rem 0.875rem;display:none;}
+.cart-total-row{display:flex;justify-content:space-between;margin-top:10px;padding-top:10px;border-top:1px solid var(--border2);}
+.cart-total-lbl{font-family:'Cinzel',serif;font-size:10px;letter-spacing:1.5px;color:var(--ink3);}
+.cart-total-val{font-family:'Cinzel',serif;font-size:18px;color:var(--g3);font-weight:600;}
+.note-panel{background:var(--bg2);border-radius:4px;padding:0.875rem 1rem;margin:0 0.875rem 0.75rem;border:1px solid var(--border);}
+.note-lbl{font-family:'Cinzel',serif;font-size:8px;letter-spacing:2px;color:var(--g3);margin-bottom:6px;}
+.note-inp{width:100%;background:transparent;border:none;border-bottom:1px solid var(--border2);color:var(--ink);font-style:italic;font-size:14px;padding:4px 0;outline:none;font-family:'Cormorant Garamond',serif;}
+.note-inp::placeholder{color:var(--ink4);}
+.empty-cart{text-align:center;padding:2.5rem;font-style:italic;font-size:16px;color:var(--ink3);}
+
+/* ══ CTA ══ */
+.cta{display:block;width:calc(100% - 1.75rem);margin:0 0.875rem 1rem;padding:15px;background:var(--g2);color:var(--ink);font-family:'Cinzel',serif;font-size:11px;letter-spacing:2.5px;border:none;border-radius:3px;cursor:pointer;text-align:center;transition:all .2s;font-weight:600;}
+.cta:hover{background:var(--g);}
+
+/* ══ BİLDİRİM ══ */
+.notif{background:var(--g2);color:var(--ink);border-radius:3px;padding:11px 14px;font-family:'Cinzel',serif;font-size:10px;letter-spacing:1.5px;text-align:center;margin:0 0.875rem 1rem;display:none;font-weight:500;}
 .notif.on{display:block;}
-.empty-cart{text-align:center;padding:2rem;font-family:'Cormorant',serif;font-style:italic;font-size:14px;color:var(--ink3);}
-.foot{padding:1rem;text-align:center;border-top:1px solid rgba(201,168,76,0.12);}
-.foot-txt{font-family:'Cinzel',serif;font-size:7px;letter-spacing:1.5px;color:var(--ink3);}
+
+/* ══ DİL ══ */
+.dil-kart{background:var(--card);border:1.5px solid var(--border);border-radius:8px;padding:18px 14px;cursor:pointer;text-align:center;transition:all .2s;position:relative;}
+.dil-kart:hover{border-color:var(--g2);background:var(--bg2);}
+.dil-kart.on{border:2.5px solid var(--g2);background:var(--bg2);}
+.dil-kart.on::after{content:'✓';position:absolute;top:8px;right:10px;font-size:13px;color:var(--g3);font-weight:700;}
+.dil-kart-flag{font-size:32px;margin-bottom:8px;display:block;}
+.dil-kart-name{font-family:'Cinzel',serif;font-size:12px;letter-spacing:1px;color:var(--ink);font-weight:600;}
+.dil-kart-native{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:12px;color:var(--ink3);margin-top:3px;}
+
+/* ══ FOOTER ══ */
+.foot{padding:1.5rem;text-align:center;border-top:1px solid var(--border);background:var(--bg2);}
+.foot-txt{font-family:'Cinzel',serif;font-size:9px;letter-spacing:1.5px;color:var(--ink4);}
 </style>
 </head>
 <body>
 
-<div class="header">
-  <div class="logo">
-    <span>40</span>
-    KIRKİKİNDİ
-  </div>
-  <div class="hero-sub">Akyokuş Kasrı · Konya</div>
-  <div id="masa-badge" class="masa-badge">MASA —</div>
-  <div class="divider">
-    <div class="divider-line"></div>
-    <div class="gem"></div>
-    <div class="divider-line r"></div>
-  </div>
+<!-- MASA GİRİŞ -->
+<div id="masa-secim">
+  <div class="ms-top-line"></div>
+  <img src="data:image/png;base64,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" alt="Kırkikindi" class="ms-logo">
+  <div class="ms-sub">Akyokuş Kasrı · Konya</div>
+  <div class="ms-orn"><div class="ms-orn-line"></div><div class="ms-orn-gem"></div><div class="ms-orn-line r"></div></div>
+  <div class="ms-label" id="masa-label-txt">MASA NUMARANIZI GİRİN</div>
+  <input id="masa-input" class="ms-input" type="number" min="1" max="99" placeholder="7"
+    oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+  <button class="ms-btn" id="masa-btn-txt" onclick="masaGir()">◆ MENÜYE GEÇ</button>
+  <div id="masa-hata" class="ms-hata">Geçerli bir masa numarası giriniz.</div>
+  <div class="ms-foot" id="masa-footer-txt">KONEVİ MH. BEYŞEHİR CD. NO:258 · MERAM, KONYA</div>
 </div>
 
+<!-- HEADER -->
+<div class="header">
+  <div class="header-gold-top"></div>
+  <div class="header-pattern"></div>
+  <div class="header-inner">
+    <img src="data:image/png;base64,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" alt="Kırkikindi" class="h-logo">
+    <div class="h-sub">Akyokuş Kasrı · Konya</div>
+    <div class="h-masa-wrap" id="masa-badge-wrap">
+      <div id="masa-badge" class="h-masa">MASA —</div>
+    </div>
+    <div class="h-div"><div class="h-line"></div><div class="h-gem"></div><div class="h-line r"></div></div>
+  </div>
+  <div class="header-gold-bottom"></div>
+</div>
+
+<!-- SİPARİŞ DURUMU -->
 <div id="order-status" class="order-status">
-  <div class="os-title">◆ SİPARİŞ DURUMU</div>
+  <div class="os-title" id="os-title-txt">◆ SİPARİŞ DURUMU</div>
   <div class="os-steps">
     <div class="os-step"><div id="d1" class="os-dot done"></div><div id="l1" class="os-lbl done">ALINDI</div></div>
     <div id="ln1" class="os-line done"></div>
@@ -137,203 +236,444 @@ body{font-family:'Cormorant',serif;background:var(--paper);max-width:430px;margi
   <div class="os-eta">Tahmini süre: <span id="eta">—</span></div>
 </div>
 
-
-<div id="masa-secim" style="position:fixed;top:0;left:0;right:0;bottom:0;background:var(--black);z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem;">
-  <div style="text-align:center;margin-bottom:2rem;">
-    <div style="font-family:Georgia,serif;font-size:48px;color:var(--g);line-height:1;">40</div>
-    <div style="font-family:'Cinzel',serif;font-size:16px;letter-spacing:4px;color:#fff;margin-top:4px;">KIRKİKİNDİ</div>
-    <div style="font-family:'Cormorant',serif;font-style:italic;font-size:12px;color:rgba(255,255,255,0.4);letter-spacing:2px;margin-top:6px;">Akyokuş Kasrı · Konya</div>
-  </div>
-  <div style="width:100%;max-width:280px;">
-    <div style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;color:rgba(201,168,76,0.6);text-align:center;margin-bottom:12px;">MASA NUMARANIZI GİRİN</div>
-    <input id="masa-input" type="number" min="1" max="99" placeholder="Örn: 7" 
-      style="width:100%;padding:16px;font-size:28px;text-align:center;background:rgba(255,255,255,0.06);border:1px solid rgba(201,168,76,0.3);color:#fff;border-radius:4px;outline:none;font-family:'Cinzel',serif;letter-spacing:4px;"
-      oninput="this.value=this.value.replace(/[^0-9]/g,'')">
-    <button onclick="masaGir()" 
-      style="width:100%;margin-top:12px;padding:14px;background:var(--g);color:#000;font-family:'Cinzel',serif;font-size:10px;letter-spacing:3px;border:none;border-radius:2px;cursor:pointer;">
-      ◆ MENÜYE GEÇ
-    </button>
-    <div id="masa-hata" style="color:#E24B4A;font-size:11px;text-align:center;margin-top:8px;font-family:'Cormorant',serif;font-style:italic;display:none;">Lütfen geçerli bir masa numarası girin.</div>
-  </div>
-  <div style="margin-top:2rem;font-family:'Cormorant',serif;font-style:italic;font-size:11px;color:rgba(255,255,255,0.2);">Hoş geldiniz · Afiyet olsun</div>
-</div>
-
+<!-- TABS -->
 <div class="tabs">
-  <div class="tab on" onclick="showPg('menu',0)">MENÜ</div>
-  <div class="tab" onclick="showPg('aksam',1)">NE YESEM</div>
-  <div class="tab" onclick="showPg('garson',2)">GARSON</div>
-  <div class="tab" onclick="showPg('sepet',3)">SEPETİM</div>
+  <div class="tab on" id="tab0" onclick="showPg('menu',0)">MENÜ</div>
+  <div class="tab" id="tab1" onclick="showPg('aksam',1)">NE YESEM</div>
+  <div class="tab" id="tab2" onclick="showPg('garson',2)">GARSON</div>
+  <div class="tab" id="tab3" onclick="showPg('sepet',3)">SEPETİM</div>
+  <div class="tab" id="tab4" onclick="showPg('dil',4)">
+    <div class="tab-lang">
+      <span class="tab-lang-flag" id="aktif-dil-flag">🌐</span>
+      <span class="tab-lang-txt">LANGUAGE</span>
+    </div>
+  </div>
 </div>
 
 <div id="pg-menu" class="pg on">
-  <!-- SOĞUK BAŞLANGIÇLAR -->
-  <div class="cat"><div class="cat-line"></div><div class="cat-lbl">SOĞUK BAŞLANGIÇLAR</div><div class="cat-line r"></div></div>
-  <div class="dish" onclick="aiToggle('a1')"><div class="dish-acc"></div><div class="dish-body"><div class="dish-top"><div class="dish-name">Zeytinyağlı Yaprak Sarma</div><div class="dish-price">₺175</div></div><div class="dish-desc">İnce asma yapraklarına sarılmış pirinç ve baharat</div><div class="dish-foot"><span class="badge bv">VEGETARİYEN</span><button class="addbtn" onclick="addCart('Yaprak Sarma',175,this);event.stopPropagation()">+ EKLE</button></div></div></div>
-  <div id="a1" class="aibox"><div class="ai-eye">MUTFAK NOTU</div><div class="ai-txt">Osmanlı sofralarının vazgeçilmezi. Soğuk servis, tamamen bitkisel. ~5 dk hazırlanma.</div></div>
 
-  <div class="dish" onclick="aiToggle('a2')"><div class="dish-acc"></div><div class="dish-body"><div class="dish-top"><div class="dish-name">Humus</div><div class="dish-price">₺95</div></div><div class="dish-desc">Nohut, tahin, zeytinyağı ve limon sosu ile</div><div class="dish-foot"><span class="badge bv">VEGAN</span><button class="addbtn" onclick="addCart('Humus',95,this);event.stopPropagation()">+ EKLE</button></div></div></div>
-  <div id="a2" class="aibox"><div class="ai-eye">MUTFAK NOTU</div><div class="ai-txt">Protein açısından zengin, glütensiz. Lavaşla harika gider.</div></div>
+<div class="cat"><div class="cat-line"></div><div class="cat-lbl">SOĞUK BAŞLANGIÇLAR</div><div class="cat-line r"></div></div>
 
-  <div class="dish" onclick="aiToggle('a3')"><div class="dish-acc"></div><div class="dish-body"><div class="dish-top"><div class="dish-name">Mütebbel</div><div class="dish-price">₺95</div></div><div class="dish-desc">Közlenmiş patlıcan, tahin, yoğurt ve nar taneleri</div><div class="dish-foot"><button class="addbtn" onclick="addCart('Mütebbel',95,this);event.stopPropagation()">+ EKLE</button></div></div></div>
-  <div id="a3" class="aibox"><div class="ai-eye">MUTFAK NOTU</div><div class="ai-txt">Dumanlı aroma + nar ekşisi mükemmel denge. Humus ile birlikte sipariş tavsiye edilir.</div></div>
-
-  <div class="dish" onclick="aiToggle('a4')"><div class="dish-acc"></div><div class="dish-body"><div class="dish-top"><div class="dish-name">Acılı Ezme</div><div class="dish-price">₺95</div></div><div class="dish-desc">Domates, soğan, maydanoz ve zeytinyağlı sos</div><div class="dish-foot"><span class="badge bh">ACILI</span><button class="addbtn" onclick="addCart('Acılı Ezme',95,this);event.stopPropagation()">+ EKLE</button></div></div></div>
-  <div id="a4" class="aibox"><div class="ai-eye">MUTFAK NOTU</div><div class="ai-txt">Acı sevmeyenler "sos ayrı" notu düşebilir. Izgara yemeklerle iyi uyum.</div></div>
-
-  <div class="dish"><div class="dish-acc"></div><div class="dish-body"><div class="dish-top"><div class="dish-name">Bal Kabaklı Tarator</div><div class="dish-price">₺95</div></div><div class="dish-desc">Bal kabağı ve yoğurt ile hazırlanmaktadır</div><div class="dish-foot"><button class="addbtn" onclick="addCart('Bal Kabaklı Tarator',95,this);event.stopPropagation()">+ EKLE</button></div></div></div>
-
-  <div class="dish"><div class="dish-acc"></div><div class="dish-body"><div class="dish-top"><div class="dish-name">Semizotlu Yoğurt</div><div class="dish-price">₺95</div></div><div class="dish-desc">Süzme yoğurt, semizotu ve zeytinyağı ile</div><div class="dish-foot"><span class="badge bv">VEGETARİYEN</span><button class="addbtn" onclick="addCart('Semizotlu Yoğurt',95,this);event.stopPropagation()">+ EKLE</button></div></div></div>
-
-  <div class="dish"><div class="dish-acc"></div><div class="dish-body"><div class="dish-top"><div class="dish-name">Zeytinyağlı Biber Dolması</div><div class="dish-price">₺175</div></div><div class="dish-desc">Pirinç, kuş üzümü ve çeşitli baharatlarla</div><div class="dish-foot"><button class="addbtn" onclick="addCart('Biber Dolması',175,this);event.stopPropagation()">+ EKLE</button></div></div></div>
-
-  <div class="dish"><div class="dish-acc"></div><div class="dish-body"><div class="dish-top"><div class="dish-name">Zeytinyağlı Köz Patlıcan</div><div class="dish-price">₺175</div></div><div class="dish-desc">Közlenmiş patlıcan, domates, kapya biber</div><div class="dish-foot"><button class="addbtn" onclick="addCart('Köz Patlıcan',175,this);event.stopPropagation()">+ EKLE</button></div></div></div>
-
-  <!-- ÇORBALAR -->
-  <div class="cat"><div class="cat-line"></div><div class="cat-lbl">ÇORBALAR</div><div class="cat-line r"></div></div>
-  <div class="dish" onclick="aiToggle('a5')"><div class="dish-acc"></div><div class="dish-body"><div class="dish-top"><div class="dish-name">Konya Tarhun Çorbası</div><div class="dish-price">₺220</div></div><div class="dish-desc">Tarhun otu, kuzu eti, yoğurt mayanesi ve tereyağı</div><div class="dish-foot"><span class="badge bs">KONYA'YA ÖZGÜ</span><button class="addbtn" onclick="addCart('Tarhun Çorbası',220,this);event.stopPropagation()">+ EKLE</button></div></div></div>
-  <div id="a5" class="aibox"><div class="ai-eye">MUTFAK NOTU</div><div class="ai-txt">Sadece Konya mutfağına ait nadir tarif. Tarhunun ferahlatıcı aroması + yoğurt kremamsı doku. ~12 dk.</div></div>
-
-  <div class="dish" onclick="aiToggle('a6')"><div class="dish-acc"></div><div class="dish-body"><div class="dish-top"><div class="dish-name">Konya Bamya Çorbası</div><div class="dish-price">₺270</div></div><div class="dish-desc">Çiçek bamya, kuzu eti ve salçalı sos</div><div class="dish-foot"><button class="addbtn" onclick="addCart('Bamya Çorbası',270,this);event.stopPropagation()">+ EKLE</button></div></div></div>
-  <div id="a6" class="aibox"><div class="ai-eye">MUTFAK NOTU</div><div class="ai-txt">Konya'nın imza çorbası. ~10 dk.</div></div>
-
-  <div class="dish"><div class="dish-acc"></div><div class="dish-body"><div class="dish-top"><div class="dish-name">Güveçte Tandır Çorbası</div><div class="dish-price">₺240</div></div><div class="dish-desc">Nohut, fasulye ve bulgur güveçte odun ateşinde</div><div class="dish-foot"><button class="addbtn" onclick="addCart('Tandır Çorbası',240,this);event.stopPropagation()">+ EKLE</button></div></div></div>
-
-  <div class="dish"><div class="dish-acc"></div><div class="dish-body"><div class="dish-top"><div class="dish-name">Mercimek Çorbası</div><div class="dish-price">₺150</div></div><div class="dish-desc">Klasik kırmızı mercimek çorbası</div><div class="dish-foot"><span class="badge bv">VEGETARİYEN</span><button class="addbtn" onclick="addCart('Mercimek Çorbası',150,this);event.stopPropagation()">+ EKLE</button></div></div></div>
-
-  <!-- ANA YEMEKLER -->
-  <div class="cat"><div class="cat-line"></div><div class="cat-lbl">ANA YEMEKLER</div><div class="cat-line r"></div></div>
-  <div class="dish" onclick="aiToggle('a8')"><div class="dish-acc"></div><div class="dish-body"><div class="dish-top"><div class="dish-name">Kuzu Şiş</div><div class="dish-price">₺550</div></div><div class="dish-desc">Pirinç pilavı, lavaş, köz domates, sumaklı soğan — 135g</div><div class="dish-foot"><span class="badge bs">ŞEFİN TAVSİYESİ</span><button class="addbtn" onclick="addCart('Kuzu Şiş',550,this);event.stopPropagation()">+ EKLE</button></div></div></div>
-  <div id="a8" class="aibox"><div class="ai-eye">MUTFAK NOTU</div><div class="ai-txt">En çok sipariş edilen yemek. Marine edilmiş kuzu, ızgara. ~18 dk.</div></div>
-
-  <div class="dish"><div class="dish-acc"></div><div class="dish-body"><div class="dish-top"><div class="dish-name">Kuzu Pirzola</div><div class="dish-price">₺750</div></div><div class="dish-desc">Pirinç pilavı, lavaş, köz domates — 185g</div><div class="dish-foot"><button class="addbtn" onclick="addCart('Kuzu Pirzola',750,this);event.stopPropagation()">+ EKLE</button></div></div></div>
-
-  <div class="dish"><div class="dish-acc"></div><div class="dish-body"><div class="dish-top"><div class="dish-name">Beyti</div><div class="dish-price">₺520</div></div><div class="dish-desc">Baharatlı kıyma lavaşa sarılı, yoğurt sosu — 110g</div><div class="dish-foot"><button class="addbtn" onclick="addCart('Beyti',520,this);event.stopPropagation()">+ EKLE</button></div></div></div>
-
-  <div class="dish"><div class="dish-acc"></div><div class="dish-body"><div class="dish-top"><div class="dish-name">Levrek Izgara</div><div class="dish-price">₺560</div></div><div class="dish-desc">Röştı patates, Kaliforniya biber özel sos — 130g</div><div class="dish-foot"><button class="addbtn" onclick="addCart('Levrek Izgara',560,this);event.stopPropagation()">+ EKLE</button></div></div></div>
-
-  <div class="dish"><div class="dish-acc"></div><div class="dish-body"><div class="dish-top"><div class="dish-name">Karışık Izgara</div><div class="dish-price">₺750</div></div><div class="dish-desc">120g kırmızı et + 70g tavuk, pirinç pilavı, lavaş</div><div class="dish-foot"><button class="addbtn" onclick="addCart('Karışık Izgara',750,this);event.stopPropagation()">+ EKLE</button></div></div></div>
-
-  <div class="dish"><div class="dish-acc"></div><div class="dish-body"><div class="dish-top"><div class="dish-name">Çöpleme</div><div class="dish-price">₺550</div></div><div class="dish-desc">Kuzu eti, patlıcan, kapya biber, arpacık soğan — 150g</div><div class="dish-foot"><button class="addbtn" onclick="addCart('Çöpleme',550,this);event.stopPropagation()">+ EKLE</button></div></div></div>
-
-  <div class="dish"><div class="dish-acc"></div><div class="dish-body"><div class="dish-top"><div class="dish-name">Tirit (Köfte)</div><div class="dish-price">₺530</div></div><div class="dish-desc">Köfte eti, tandır ekmeği ve süzme yoğurt — 110g</div><div class="dish-foot"><button class="addbtn" onclick="addCart('Tirit',530,this);event.stopPropagation()">+ EKLE</button></div></div></div>
-
-  <!-- TATLILAR -->
-  <div class="cat"><div class="cat-line"></div><div class="cat-lbl">TATLILAR</div><div class="cat-line r"></div></div>
-  <div class="dish"><div class="dish-acc"></div><div class="dish-body"><div class="dish-top"><div class="dish-name">Fırın Sütlaç</div><div class="dish-price">₺140</div></div><div class="dish-desc">Taze inek sütünden el yapımı sütlaç</div><div class="dish-foot"><span class="badge bv">GLÜTENSİZ</span><button class="addbtn" onclick="addCart('Fırın Sütlaç',140,this);event.stopPropagation()">+ EKLE</button></div></div></div>
-
-  <div class="dish"><div class="dish-acc"></div><div class="dish-body"><div class="dish-top"><div class="dish-name">Havuç Dilim Baklava</div><div class="dish-price">₺220</div></div><div class="dish-desc">Antep fıstıklı geleneksel baklava</div><div class="dish-foot"><button class="addbtn" onclick="addCart('Baklava',220,this);event.stopPropagation()">+ EKLE</button></div></div></div>
-
-  <div class="dish"><div class="dish-acc"></div><div class="dish-body"><div class="dish-top"><div class="dish-name">Dondumalı Höşmerim</div><div class="dish-price">₺250</div></div><div class="dish-desc">Konya geleneksel peynir tatlısı, dondurma ile</div><div class="dish-foot"><span class="badge bs">KLASİK</span><button class="addbtn" onclick="addCart('Höşmerim',250,this);event.stopPropagation()">+ EKLE</button></div></div></div>
-
-  <div class="dish"><div class="dish-acc"></div><div class="dish-body"><div class="dish-top"><div class="dish-name">Nevzine</div><div class="dish-price">₺210</div></div><div class="dish-desc">Tereyağında un, ceviz ve şerbet, tahin eşliğinde</div><div class="dish-foot"><button class="addbtn" onclick="addCart('Nevzine',210,this);event.stopPropagation()">+ EKLE</button></div></div></div>
-
-  <!-- İÇECEKLER -->
-  <div class="cat"><div class="cat-line"></div><div class="cat-lbl">İÇECEKLER</div><div class="cat-line r"></div></div>
-  <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px;margin:0 0.875rem 1.5rem;">
-    <div class="dish" style="margin:0;"><div class="dish-acc"></div><div class="dish-body"><div class="dish-top"><div class="dish-name" style="font-size:11px;">Sirkencubin Şerbeti</div><div class="dish-price">₺95</div></div></div></div>
-    <div class="dish" style="margin:0;"><div class="dish-acc"></div><div class="dish-body"><div class="dish-top"><div class="dish-name" style="font-size:11px;">Nar Çiçeği Şerbeti</div><div class="dish-price">₺95</div></div></div></div>
-    <div class="dish" style="margin:0;"><div class="dish-acc"></div><div class="dish-body"><div class="dish-top"><div class="dish-name" style="font-size:11px;">Reyhan Şerbeti</div><div class="dish-price">₺95</div></div></div></div>
-    <div class="dish" style="margin:0;"><div class="dish-acc"></div><div class="dish-body"><div class="dish-top"><div class="dish-name" style="font-size:11px;">Ayran</div><div class="dish-price">₺65</div></div></div></div>
+<div class="dish" onclick="aiToggle('a1')">
+  <div class="dish-photo-placeholder" onclick="fotoSec('foto1');event.stopPropagation()">
+    <img id="foto1-img" style="display:none;width:100%;height:100%;object-fit:cover;border-bottom:1px solid var(--border);" alt="">
+    <div id="foto1-ph"><div class="dish-photo-placeholder-ico">📷</div><div class="dish-photo-placeholder-txt">FOTOĞRAF EKLE</div></div>
+    <input type="file" id="foto1" accept="image/*" style="display:none" onchange="fotoYukle('foto1')">
   </div>
-  <div class="foot"><div class="foot-txt">FİYATLARA KDV DAHİLDİR · 16.01.2026 İTİBARIYLA GEÇERLİDİR</div></div>
+  <div class="dish-body">
+    <div class="dish-top"><div class="dish-name" data-dish="Zeytinyağlı Yaprak Sarma">Zeytinyağlı Yaprak Sarma</div><div class="dish-price">₺175</div></div>
+    <div class="dish-desc" data-aciklama="Zeytinyağlı Yaprak Sarma">İnce asma yapraklarına sarılmış pirinç ve baharat</div>
+    <div class="dish-foot"><div class="dish-badges"><span class="badge bv">VEGETARİYEN</span></div><button class="addbtn" onclick="addCart('Yaprak Sarma',175,this);event.stopPropagation()">+ EKLE</button></div>
+  </div>
+</div>
+<div id="a1" class="aibox"><div class="ai-eye"><span class="ai-baslik">◆ MUTFAK NOTU</span></div><div class="ai-txt" data-ai-id="a1">Osmanlı sofralarının vazgeçilmezi. Soğuk servis, tamamen bitkisel. Glütensiz. ~5 dk hazırlanma.</div></div>
+
+<div class="dish" onclick="aiToggle('a2')">
+  <div class="dish-photo-placeholder" onclick="fotoSec('foto2');event.stopPropagation()">
+    <img id="foto2-img" style="display:none;width:100%;height:100%;object-fit:cover;border-bottom:1px solid var(--border);" alt="">
+    <div id="foto2-ph"><div class="dish-photo-placeholder-ico">📷</div><div class="dish-photo-placeholder-txt">FOTOĞRAF EKLE</div></div>
+    <input type="file" id="foto2" accept="image/*" style="display:none" onchange="fotoYukle('foto2')">
+  </div>
+  <div class="dish-body">
+    <div class="dish-top"><div class="dish-name" data-dish="Humus">Humus</div><div class="dish-price">₺95</div></div>
+    <div class="dish-desc" data-aciklama="Humus">Nohut, tahin, zeytinyağı ve limon sosu ile hazırlanmaktadır</div>
+    <div class="dish-foot"><div class="dish-badges"><span class="badge bv">VEGAN</span></div><button class="addbtn" onclick="addCart('Humus',95,this);event.stopPropagation()">+ EKLE</button></div>
+  </div>
+</div>
+<div id="a2" class="aibox"><div class="ai-eye"><span class="ai-baslik">◆ MUTFAK NOTU</span></div><div class="ai-txt" data-ai-id="a2">Protein açısından zengin, glütensiz. Lavaşla harika gider. Acılı ezme ile birlikte sipariş önerilir.</div></div>
+
+<div class="dish" onclick="aiToggle('a3')">
+  <div class="dish-photo-placeholder" onclick="fotoSec('foto3');event.stopPropagation()">
+    <img id="foto3-img" style="display:none;width:100%;height:100%;object-fit:cover;border-bottom:1px solid var(--border);" alt="">
+    <div id="foto3-ph"><div class="dish-photo-placeholder-ico">📷</div><div class="dish-photo-placeholder-txt">FOTOĞRAF EKLE</div></div>
+    <input type="file" id="foto3" accept="image/*" style="display:none" onchange="fotoYukle('foto3')">
+  </div>
+  <div class="dish-body">
+    <div class="dish-top"><div class="dish-name" data-dish="Mütebbel">Mütebbel</div><div class="dish-price">₺95</div></div>
+    <div class="dish-desc" data-aciklama="Mütebbel">Közlenmiş patlıcan, tahin, süzme yoğurt ve nar taneleri ile</div>
+    <div class="dish-foot"><div class="dish-badges"></div><button class="addbtn" onclick="addCart('Mütebbel',95,this);event.stopPropagation()">+ EKLE</button></div>
+  </div>
+</div>
+<div id="a3" class="aibox"><div class="ai-eye"><span class="ai-baslik">◆ MUTFAK NOTU</span></div><div class="ai-txt">Közlenmiş patlıcanın dumanlı aroması + nar tanesinin ekşiliği mükemmel denge kurar. Humus ile birlikte önerilir.</div></div>
+
+<div class="dish" onclick="aiToggle('a4')">
+  <div class="dish-photo-placeholder" onclick="fotoSec('foto4');event.stopPropagation()">
+    <img id="foto4-img" style="display:none;width:100%;height:100%;object-fit:cover;border-bottom:1px solid var(--border);" alt="">
+    <div id="foto4-ph"><div class="dish-photo-placeholder-ico">📷</div><div class="dish-photo-placeholder-txt">FOTOĞRAF EKLE</div></div>
+    <input type="file" id="foto4" accept="image/*" style="display:none" onchange="fotoYukle('foto4')">
+  </div>
+  <div class="dish-body">
+    <div class="dish-top"><div class="dish-name" data-dish="Acılı Ezme">Acılı Ezme</div><div class="dish-price">₺95</div></div>
+    <div class="dish-desc" data-aciklama="Acılı Ezme">Domates, soğan, maydanoz ve zeytinyağlı sos ile hazırlanmaktadır</div>
+    <div class="dish-foot"><div class="dish-badges"><span class="badge bh">ACILI</span></div><button class="addbtn" onclick="addCart('Acılı Ezme',95,this);event.stopPropagation()">+ EKLE</button></div>
+  </div>
+</div>
+<div id="a4" class="aibox"><div class="ai-eye"><span class="ai-baslik">◆ MUTFAK NOTU</span></div><div class="ai-txt">Baharatlı ve ferahlatıcı. Acı sevmeyenler "sos ayrı" notu düşebilir. Izgara yemeklerle mükemmel uyum.</div></div>
+
+<div class="dish" onclick="aiToggle('a5b')">
+  <div class="dish-photo-placeholder" onclick="fotoSec('foto5b');event.stopPropagation()"><img id="foto5b-img" style="display:none;width:100%;height:100%;object-fit:cover;" alt=""><div id="foto5b-ph"><div class="dish-photo-placeholder-ico">📷</div><div class="dish-photo-placeholder-txt">FOTOĞRAF EKLE</div></div><input type="file" id="foto5b" accept="image/*" style="display:none" onchange="fotoYukle('foto5b')"></div>
+  <div class="dish-body">
+    <div class="dish-top"><div class="dish-name" data-dish="Bal Kabaklı Tarator">Bal Kabaklı Tarator</div><div class="dish-price">₺95</div></div>
+    <div class="dish-desc">Bal kabağı ve yoğurt ile hazırlanmaktadır</div>
+    <div class="dish-foot"><div class="dish-badges"><span class="badge bv">VEGETARİYEN</span></div><button class="addbtn" onclick="addCart('Bal Kabaklı Tarator',95,this);event.stopPropagation()">+ EKLE</button></div>
+  </div>
+</div>
+<div id="a5b" class="aibox"><div class="ai-eye"><span class="ai-baslik">◆ MUTFAK NOTU</span></div><div class="ai-txt">Selçuklu mutfağından gelen nadir tarif. Bal kabağının hafif tatlılığı yoğurtla mükemmel dengelenir.</div></div>
+
+<div class="dish" onclick="aiToggle('a5c')">
+  <div class="dish-photo-placeholder" onclick="fotoSec('foto5c');event.stopPropagation()"><img id="foto5c-img" style="display:none;width:100%;height:100%;object-fit:cover;" alt=""><div id="foto5c-ph"><div class="dish-photo-placeholder-ico">📷</div><div class="dish-photo-placeholder-txt">FOTOĞRAF EKLE</div></div><input type="file" id="foto5c" accept="image/*" style="display:none" onchange="fotoYukle('foto5c')"></div>
+  <div class="dish-body">
+    <div class="dish-top"><div class="dish-name" data-dish="Semizotlu Yoğurt">Semizotlu Yoğurt</div><div class="dish-price">₺95</div></div>
+    <div class="dish-desc">Süzme yoğurt, semizotu ve zeytinyağı ile hazırlanmaktadır</div>
+    <div class="dish-foot"><div class="dish-badges"><span class="badge bv">VEGETARİYEN</span></div><button class="addbtn" onclick="addCart('Semizotlu Yoğurt',95,this);event.stopPropagation()">+ EKLE</button></div>
+  </div>
+</div>
+<div id="a5c" class="aibox"><div class="ai-eye"><span class="ai-baslik">◆ MUTFAK NOTU</span></div><div class="ai-txt">Taze semizotu, sağlıklı ve ferahlatıcı. Zeytinyağı ile servis edilir. Tamamen bitkisel.</div></div>
+
+<div class="dish" onclick="aiToggle('a5d')">
+  <div class="dish-photo-placeholder" onclick="fotoSec('foto5d');event.stopPropagation()"><img id="foto5d-img" style="display:none;width:100%;height:100%;object-fit:cover;" alt=""><div id="foto5d-ph"><div class="dish-photo-placeholder-ico">📷</div><div class="dish-photo-placeholder-txt">FOTOĞRAF EKLE</div></div><input type="file" id="foto5d" accept="image/*" style="display:none" onchange="fotoYukle('foto5d')"></div>
+  <div class="dish-body">
+    <div class="dish-top"><div class="dish-name" data-dish="Zeytinyağlı Biber Dolması">Zeytinyağlı Biber Dolması</div><div class="dish-price">₺175</div></div>
+    <div class="dish-desc">Pirinç, soğan, kuş üzümü ve çeşitli baharatlarla</div>
+    <div class="dish-foot"><div class="dish-badges"><span class="badge bv">VEGETARİYEN</span></div><button class="addbtn" onclick="addCart('Biber Dolması',175,this);event.stopPropagation()">+ EKLE</button></div>
+  </div>
+</div>
+<div id="a5d" class="aibox"><div class="ai-eye"><span class="ai-baslik">◆ MUTFAK NOTU</span></div><div class="ai-txt">Osmanlı saray mutfağından ilham. Kuş üzümü ince bir tatlılık katıyor. Soğuk servis edilir.</div></div>
+
+<div class="dish" onclick="aiToggle('a5e')">
+  <div class="dish-photo-placeholder" onclick="fotoSec('foto5e');event.stopPropagation()"><img id="foto5e-img" style="display:none;width:100%;height:100%;object-fit:cover;" alt=""><div id="foto5e-ph"><div class="dish-photo-placeholder-ico">📷</div><div class="dish-photo-placeholder-txt">FOTOĞRAF EKLE</div></div><input type="file" id="foto5e" accept="image/*" style="display:none" onchange="fotoYukle('foto5e')"></div>
+  <div class="dish-body">
+    <div class="dish-top"><div class="dish-name" data-dish="Zeytinyağlı Köz Patlıcan">Zeytinyağlı Köz Patlıcan</div><div class="dish-price">₺175</div></div>
+    <div class="dish-desc">Közlenmiş patlıcan, domates, kapya biber ve özel baharatlar</div>
+    <div class="dish-foot"><div class="dish-badges"><span class="badge bv">VEGETARİYEN</span></div><button class="addbtn" onclick="addCart('Köz Patlıcan',175,this);event.stopPropagation()">+ EKLE</button></div>
+  </div>
+</div>
+<div id="a5e" class="aibox"><div class="ai-eye"><span class="ai-baslik">◆ MUTFAK NOTU</span></div><div class="ai-txt">Közleme tekniği patlıcana eşsiz dumanlı aroma katar. Soğuk servis, zeytinyağı ile.</div></div>
+
+<div class="cat"><div class="cat-line"></div><div class="cat-lbl">ÇORBALAR</div><div class="cat-line r"></div></div>
+
+<div class="dish" onclick="aiToggle('a5')">
+  <div class="dish-photo-placeholder" onclick="fotoSec('foto5');event.stopPropagation()"><img id="foto5-img" style="display:none;width:100%;height:100%;object-fit:cover;" alt=""><div id="foto5-ph"><div class="dish-photo-placeholder-ico">📷</div><div class="dish-photo-placeholder-txt">FOTOĞRAF EKLE</div></div><input type="file" id="foto5" accept="image/*" style="display:none" onchange="fotoYukle('foto5')"></div>
+  <div class="dish-body">
+    <div class="dish-top"><div class="dish-name" data-dish="Konya Tarhun Çorbası">Konya Tarhun Çorbası</div><div class="dish-price">₺220</div></div>
+    <div class="dish-desc" data-aciklama="Konya Tarhun Çorbası">Tarhun otu, kuzu eti, yoğurt mayanesi ve tereyağı ile</div>
+    <div class="dish-foot"><div class="dish-badges"><span class="badge bs">KONYA'YA ÖZGÜ</span></div><button class="addbtn" onclick="addCart('Tarhun Çorbası',220,this);event.stopPropagation()">+ EKLE</button></div>
+  </div>
+</div>
+<div id="a5" class="aibox"><div class="ai-eye"><span class="ai-baslik">◆ MUTFAK NOTU</span></div><div class="ai-txt" data-ai-id="a5">Sadece Konya mutfağına ait nadir tarif. Tarhunun ferahlatıcı aroması + yoğurt kremamsı doku. ~12 dk.</div></div>
+
+<div class="dish" onclick="aiToggle('a6')">
+  <div class="dish-photo-placeholder" onclick="fotoSec('foto6');event.stopPropagation()"><img id="foto6-img" style="display:none;width:100%;height:100%;object-fit:cover;" alt=""><div id="foto6-ph"><div class="dish-photo-placeholder-ico">📷</div><div class="dish-photo-placeholder-txt">FOTOĞRAF EKLE</div></div><input type="file" id="foto6" accept="image/*" style="display:none" onchange="fotoYukle('foto6')"></div>
+  <div class="dish-body">
+    <div class="dish-top"><div class="dish-name" data-dish="Konya Bamya Çorbası">Konya Bamya Çorbası</div><div class="dish-price">₺270</div></div>
+    <div class="dish-desc" data-aciklama="Konya Bamya Çorbası">Çiçek bamya, kuzu eti ve salçalı sos ile hazırlanmaktadır</div>
+    <div class="dish-foot"><div class="dish-badges"></div><button class="addbtn" onclick="addCart('Bamya Çorbası',270,this);event.stopPropagation()">+ EKLE</button></div>
+  </div>
+</div>
+<div id="a6" class="aibox"><div class="ai-eye"><span class="ai-baslik">◆ MUTFAK NOTU</span></div><div class="ai-txt">Konya'nın imza çorbası. Derin et suyunda pişen bamya. Doyurucu ve özgün. ~10 dk.</div></div>
+
+<div class="dish" onclick="aiToggle('a6b')">
+  <div class="dish-photo-placeholder" onclick="fotoSec('foto6b');event.stopPropagation()"><img id="foto6b-img" style="display:none;width:100%;height:100%;object-fit:cover;" alt=""><div id="foto6b-ph"><div class="dish-photo-placeholder-ico">📷</div><div class="dish-photo-placeholder-txt">FOTOĞRAF EKLE</div></div><input type="file" id="foto6b" accept="image/*" style="display:none" onchange="fotoYukle('foto6b')"></div>
+  <div class="dish-body">
+    <div class="dish-top"><div class="dish-name" data-dish="Güveçte Tandır Çorbası">Güveçte Tandır Çorbası</div><div class="dish-price">₺240</div></div>
+    <div class="dish-desc" data-aciklama="Güveçte Tandır Çorbası">Nohut, fasulye ve bulgurun güveçte ve odun ateşinde pişirilmesiyle</div>
+    <div class="dish-foot"><div class="dish-badges"></div><button class="addbtn" onclick="addCart('Tandır Çorbası',240,this);event.stopPropagation()">+ EKLE</button></div>
+  </div>
+</div>
+<div id="a6b" class="aibox"><div class="ai-eye"><span class="ai-baslik">◆ MUTFAK NOTU</span></div><div class="ai-txt">Saatlerce odun ateşinde pişirilir. Dumanlı aroması ve baklagillerin doyuruculuğuyla kışın vazgeçilmezi.</div></div>
+
+<div class="dish" onclick="aiToggle('a6c')">
+  <div class="dish-photo-placeholder" onclick="fotoSec('foto6c');event.stopPropagation()"><img id="foto6c-img" style="display:none;width:100%;height:100%;object-fit:cover;" alt=""><div id="foto6c-ph"><div class="dish-photo-placeholder-ico">📷</div><div class="dish-photo-placeholder-txt">FOTOĞRAF EKLE</div></div><input type="file" id="foto6c" accept="image/*" style="display:none" onchange="fotoYukle('foto6c')"></div>
+  <div class="dish-body">
+    <div class="dish-top"><div class="dish-name" data-dish="Mercimek Çorbası">Mercimek Çorbası</div><div class="dish-price">₺150</div></div>
+    <div class="dish-desc" data-aciklama="Mercimek Çorbası">Klasik Türk mutfağından kırmızı mercimek çorbası</div>
+    <div class="dish-foot"><div class="dish-badges"><span class="badge bv">VEGETARİYEN</span></div><button class="addbtn" onclick="addCart('Mercimek Çorbası',150,this);event.stopPropagation()">+ EKLE</button></div>
+  </div>
+</div>
+<div id="a6c" class="aibox"><div class="ai-eye"><span class="ai-baslik">◆ MUTFAK NOTU</span></div><div class="ai-txt">Asırlık Türk klasiği. Hafif ve besleyici. Limon ile servis edilir, vejetaryen dostu.</div></div>
+
+<div class="cat"><div class="cat-line"></div><div class="cat-lbl">ANA YEMEKLER</div><div class="cat-line r"></div></div>
+
+<div class="dish" onclick="aiToggle('a8')">
+  <div class="dish-photo-placeholder" onclick="fotoSec('foto8');event.stopPropagation()"><img id="foto8-img" style="display:none;width:100%;height:100%;object-fit:cover;" alt=""><div id="foto8-ph"><div class="dish-photo-placeholder-ico">📷</div><div class="dish-photo-placeholder-txt">FOTOĞRAF EKLE</div></div><input type="file" id="foto8" accept="image/*" style="display:none" onchange="fotoYukle('foto8')"></div>
+  <div class="dish-body">
+    <div class="dish-top"><div class="dish-name" data-dish="Kuzu Şiş">Kuzu Şiş</div><div class="dish-price">₺550</div></div>
+    <div class="dish-desc" data-aciklama="Kuzu Şiş">Pirinç pilavı, lavaş, köz domates, köz biber ve sumaklı soğan ile servis — 135g</div>
+    <div class="dish-foot"><div class="dish-badges"><span class="badge bs">ŞEFİN TAVSİYESİ</span></div><button class="addbtn" onclick="addCart('Kuzu Şiş',550,this);event.stopPropagation()">+ EKLE</button></div>
+  </div>
+</div>
+<div id="a8" class="aibox"><div class="ai-eye"><span class="ai-baslik">◆ MUTFAK NOTU</span></div><div class="ai-txt" data-ai-id="a8">En çok sipariş edilen yemek. Marine edilmiş kuzu ızgara ateşinde pişirilir. Sumaklı soğan keskin denge sağlar. ~18 dk.</div></div>
+
+<div class="dish" onclick="aiToggle('a9')">
+  <div class="dish-photo-placeholder" onclick="fotoSec('foto9');event.stopPropagation()"><img id="foto9-img" style="display:none;width:100%;height:100%;object-fit:cover;" alt=""><div id="foto9-ph"><div class="dish-photo-placeholder-ico">📷</div><div class="dish-photo-placeholder-txt">FOTOĞRAF EKLE</div></div><input type="file" id="foto9" accept="image/*" style="display:none" onchange="fotoYukle('foto9')"></div>
+  <div class="dish-body">
+    <div class="dish-top"><div class="dish-name" data-dish="Kuzu Pirzola">Kuzu Pirzola</div><div class="dish-price">₺750</div></div>
+    <div class="dish-desc" data-aciklama="Kuzu Pirzola">Pirinç pilavı, lavaş, köz domates ve sumaklı soğan ile servis — 185g</div>
+    <div class="dish-foot"><div class="dish-badges"></div><button class="addbtn" onclick="addCart('Kuzu Pirzola',750,this);event.stopPropagation()">+ EKLE</button></div>
+  </div>
+</div>
+<div id="a9" class="aibox"><div class="ai-eye"><span class="ai-baslik">◆ MUTFAK NOTU</span></div><div class="ai-txt">Menünün en premium eti. 185g porsiyonuyla son derece doyurucu. ~20 dk hazırlanma süresi.</div></div>
+
+<div class="dish" onclick="aiToggle('a10')">
+  <div class="dish-photo-placeholder" onclick="fotoSec('foto10');event.stopPropagation()"><img id="foto10-img" style="display:none;width:100%;height:100%;object-fit:cover;" alt=""><div id="foto10-ph"><div class="dish-photo-placeholder-ico">📷</div><div class="dish-photo-placeholder-txt">FOTOĞRAF EKLE</div></div><input type="file" id="foto10" accept="image/*" style="display:none" onchange="fotoYukle('foto10')"></div>
+  <div class="dish-body">
+    <div class="dish-top"><div class="dish-name" data-dish="Beyti">Beyti</div><div class="dish-price">₺520</div></div>
+    <div class="dish-desc" data-aciklama="Beyti">Baharatlı iç harçla hazırlanıp lavaşa sarılan et, yoğurt ve sos eşliğinde — 110g</div>
+    <div class="dish-foot"><div class="dish-badges"></div><button class="addbtn" onclick="addCart('Beyti',520,this);event.stopPropagation()">+ EKLE</button></div>
+  </div>
+</div>
+<div id="a10" class="aibox"><div class="ai-eye"><span class="ai-baslik">◆ MUTFAK NOTU</span></div><div class="ai-txt">Türk mutfağının ikonik sarma kebabı. Yoğurt sosuyla servis edilir, tam anlamıyla doyurucu. ~16 dk.</div></div>
+
+<div class="dish" onclick="aiToggle('a11')">
+  <div class="dish-photo-placeholder" onclick="fotoSec('foto11');event.stopPropagation()"><img id="foto11-img" style="display:none;width:100%;height:100%;object-fit:cover;" alt=""><div id="foto11-ph"><div class="dish-photo-placeholder-ico">📷</div><div class="dish-photo-placeholder-txt">FOTOĞRAF EKLE</div></div><input type="file" id="foto11" accept="image/*" style="display:none" onchange="fotoYukle('foto11')"></div>
+  <div class="dish-body">
+    <div class="dish-top"><div class="dish-name" data-dish="Levrek Izgara">Levrek Izgara</div><div class="dish-price">₺560</div></div>
+    <div class="dish-desc" data-aciklama="Levrek Izgara">Röştı patates, baby mısır, Kaliforniya biber ve özel sos eşliğinde — 130g</div>
+    <div class="dish-foot"><div class="dish-badges"></div><button class="addbtn" onclick="addCart('Levrek Izgara',560,this);event.stopPropagation()">+ EKLE</button></div>
+  </div>
+</div>
+<div id="a11" class="aibox"><div class="ai-eye"><span class="ai-baslik">◆ MUTFAK NOTU</span></div><div class="ai-txt">Bugün taze geldi. Hafif ve lezzetli; Kaliforniya biber sosu özgün bir Akdeniz dokunuşu katıyor. ~15 dk.</div></div>
+
+<div class="dish" onclick="aiToggle('a12')">
+  <div class="dish-photo-placeholder" onclick="fotoSec('foto12');event.stopPropagation()"><img id="foto12-img" style="display:none;width:100%;height:100%;object-fit:cover;" alt=""><div id="foto12-ph"><div class="dish-photo-placeholder-ico">📷</div><div class="dish-photo-placeholder-txt">FOTOĞRAF EKLE</div></div><input type="file" id="foto12" accept="image/*" style="display:none" onchange="fotoYukle('foto12')"></div>
+  <div class="dish-body">
+    <div class="dish-top"><div class="dish-name" data-dish="Karışık Izgara">Karışık Izgara</div><div class="dish-price">₺750</div></div>
+    <div class="dish-desc" data-aciklama="Karışık Izgara">120g kırmızı et + 70g tavuk, pirinç pilavı, lavaş, köz domates ve biber</div>
+    <div class="dish-foot"><div class="dish-badges"></div><button class="addbtn" onclick="addCart('Karışık Izgara',750,this);event.stopPropagation()">+ EKLE</button></div>
+  </div>
+</div>
+<div id="a12" class="aibox"><div class="ai-eye"><span class="ai-baslik">◆ MUTFAK NOTU</span></div><div class="ai-txt">Hem kırmızı et hem tavuk isteyenler için ideal kombinasyon. Zengin ve doyurucu. ~20 dk.</div></div>
+
+<div class="dish" onclick="aiToggle('a13b')">
+  <div class="dish-photo-placeholder" onclick="fotoSec('foto13b');event.stopPropagation()"><img id="foto13b-img" style="display:none;width:100%;height:100%;object-fit:cover;" alt=""><div id="foto13b-ph"><div class="dish-photo-placeholder-ico">📷</div><div class="dish-photo-placeholder-txt">FOTOĞRAF EKLE</div></div><input type="file" id="foto13b" accept="image/*" style="display:none" onchange="fotoYukle('foto13b')"></div>
+  <div class="dish-body">
+    <div class="dish-top"><div class="dish-name" data-dish="Çöpleme">Çöpleme</div><div class="dish-price">₺550</div></div>
+    <div class="dish-desc" data-aciklama="Çöpleme">Kuzu eti, patlıcan, kapya biber, arpacık soğan ve tereyağı ile — 150g</div>
+    <div class="dish-foot"><div class="dish-badges"></div><button class="addbtn" onclick="addCart('Çöpleme',550,this);event.stopPropagation()">+ EKLE</button></div>
+  </div>
+</div>
+<div id="a13b" class="aibox"><div class="ai-eye"><span class="ai-baslik">◆ MUTFAK NOTU</span></div><div class="ai-txt">Geleneksel güveç tekniği ile pişirilir. Etin tüm aroması içinde hapsedilir. Konya'nın sevilen yemeği.</div></div>
+
+<div class="dish" onclick="aiToggle('a13c')">
+  <div class="dish-photo-placeholder" onclick="fotoSec('foto13c');event.stopPropagation()"><img id="foto13c-img" style="display:none;width:100%;height:100%;object-fit:cover;" alt=""><div id="foto13c-ph"><div class="dish-photo-placeholder-ico">📷</div><div class="dish-photo-placeholder-txt">FOTOĞRAF EKLE</div></div><input type="file" id="foto13c" accept="image/*" style="display:none" onchange="fotoYukle('foto13c')"></div>
+  <div class="dish-body">
+    <div class="dish-top"><div class="dish-name" data-dish="Tirit (Köfte)">Tirit (Köfte)</div><div class="dish-price">₺530</div></div>
+    <div class="dish-desc" data-aciklama="Tirit (Köfte)">Köfte eti, soğan, domates, tandır ekmeği ve süzme yoğurt ile — 110g</div>
+    <div class="dish-foot"><div class="dish-badges"></div><button class="addbtn" onclick="addCart('Tirit',530,this);event.stopPropagation()">+ EKLE</button></div>
+  </div>
+</div>
+<div id="a13c" class="aibox"><div class="ai-eye"><span class="ai-baslik">◆ MUTFAK NOTU</span></div><div class="ai-txt">Konya'nın sevilen köfte tarifi. Tandır ekmeği üzerinde yoğurt sosuyla servis edilir. ~16 dk.</div></div>
+
+<div class="cat"><div class="cat-line"></div><div class="cat-lbl">TATLILAR</div><div class="cat-line r"></div></div>
+
+<div class="dish" onclick="aiToggle('a13')">
+  <div class="dish-photo-placeholder" onclick="fotoSec('foto13');event.stopPropagation()"><img id="foto13-img" style="display:none;width:100%;height:100%;object-fit:cover;" alt=""><div id="foto13-ph"><div class="dish-photo-placeholder-ico">📷</div><div class="dish-photo-placeholder-txt">FOTOĞRAF EKLE</div></div><input type="file" id="foto13" accept="image/*" style="display:none" onchange="fotoYukle('foto13')"></div>
+  <div class="dish-body">
+    <div class="dish-top"><div class="dish-name" data-dish="Fırın Sütlaç">Fırın Sütlaç</div><div class="dish-price">₺140</div></div>
+    <div class="dish-desc" data-aciklama="Fırın Sütlaç">Taze inek sütünden hazırlanan geleneksel el yapımı sütlaç</div>
+    <div class="dish-foot"><div class="dish-badges"><span class="badge bv">GLÜTENSİZ</span></div><button class="addbtn" onclick="addCart('Fırın Sütlaç',140,this);event.stopPropagation()">+ EKLE</button></div>
+  </div>
+</div>
+<div id="a13" class="aibox"><div class="ai-eye"><span class="ai-baslik">◆ MUTFAK NOTU</span></div><div class="ai-txt" data-ai-id="a13">Hafif tatlı sevenler için ideal. Taze sütle yapılan el yapımı — çok ağır değil. Glütensiz, hazır.</div></div>
+
+<div class="dish" onclick="aiToggle('a14')">
+  <div class="dish-photo-placeholder" onclick="fotoSec('foto14');event.stopPropagation()"><img id="foto14-img" style="display:none;width:100%;height:100%;object-fit:cover;" alt=""><div id="foto14-ph"><div class="dish-photo-placeholder-ico">📷</div><div class="dish-photo-placeholder-txt">FOTOĞRAF EKLE</div></div><input type="file" id="foto14" accept="image/*" style="display:none" onchange="fotoYukle('foto14')"></div>
+  <div class="dish-body">
+    <div class="dish-top"><div class="dish-name" data-dish="Havuç Dilim Baklava">Havuç Dilim Baklava</div><div class="dish-price">₺220</div></div>
+    <div class="dish-desc" data-aciklama="Havuç Dilim Baklava">Antep fıstıklı, geleneksel yöntemle hazırlanmış dilim baklava</div>
+    <div class="dish-foot"><div class="dish-badges"></div><button class="addbtn" onclick="addCart('Baklava',220,this);event.stopPropagation()">+ EKLE</button></div>
+  </div>
+</div>
+<div id="a14" class="aibox"><div class="ai-eye"><span class="ai-baslik">◆ MUTFAK NOTU</span></div><div class="ai-txt">İnce yufkalar arasında bol antep fıstığı. Şerbeti yerinde, ne çok tatlı ne az. Hazır, hemen servis.</div></div>
+
+<div class="dish" onclick="aiToggle('a15')">
+  <div class="dish-photo-placeholder" onclick="fotoSec('foto15');event.stopPropagation()"><img id="foto15-img" style="display:none;width:100%;height:100%;object-fit:cover;" alt=""><div id="foto15-ph"><div class="dish-photo-placeholder-ico">📷</div><div class="dish-photo-placeholder-txt">FOTOĞRAF EKLE</div></div><input type="file" id="foto15" accept="image/*" style="display:none" onchange="fotoYukle('foto15')"></div>
+  <div class="dish-body">
+    <div class="dish-top"><div class="dish-name" data-dish="Dondumalı Höşmerim">Dondumalı Höşmerim</div><div class="dish-price">₺250</div></div>
+    <div class="dish-desc">Konya'nın geleneksel peynir tatlısı, dondurma ile servis edilmektedir</div>
+    <div class="dish-foot"><div class="dish-badges"><span class="badge bs">KONYA KLASİĞİ</span></div><button class="addbtn" onclick="addCart('Höşmerim',250,this);event.stopPropagation()">+ EKLE</button></div>
+  </div>
+</div>
+<div id="a15" class="aibox"><div class="ai-eye"><span class="ai-baslik">◆ MUTFAK NOTU</span></div><div class="ai-txt">Sadece Konya mutfağına özgü. Taze peynirden yapılır, dondurmayla sıcak-soğuk kontrast. Eşsiz lezzet.</div></div>
+
+<div class="dish" onclick="aiToggle('a16')">
+  <div class="dish-photo-placeholder" onclick="fotoSec('foto16');event.stopPropagation()"><img id="foto16-img" style="display:none;width:100%;height:100%;object-fit:cover;" alt=""><div id="foto16-ph"><div class="dish-photo-placeholder-ico">📷</div><div class="dish-photo-placeholder-txt">FOTOĞRAF EKLE</div></div><input type="file" id="foto16" accept="image/*" style="display:none" onchange="fotoYukle('foto16')"></div>
+  <div class="dish-body">
+    <div class="dish-top"><div class="dish-name" data-dish="Nevzine">Nevzine</div><div class="dish-price">₺210</div></div>
+    <div class="dish-desc" data-aciklama="Nevzine">Tereyağında kavrulmuş un, ceviz ve şerbet, tahin eşliğinde servis</div>
+    <div class="dish-foot"><div class="dish-badges"></div><button class="addbtn" onclick="addCart('Nevzine',210,this);event.stopPropagation()">+ EKLE</button></div>
+  </div>
+</div>
+<div id="a16" class="aibox"><div class="ai-eye"><span class="ai-baslik">◆ MUTFAK NOTU</span></div><div class="ai-txt">Selçuklu mutfağından gelen köklü tarif. Tereyağının nefis kokusu ve cevizin dolgunluğu. Türk kahvesiyle içilir.</div></div>
+
+<div class="cat"><div class="cat-line"></div><div class="cat-lbl">İÇECEKLER</div><div class="cat-line r"></div></div>
+<div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin:0 0.875rem 2rem;">
+  <div class="dish" style="margin:0;" onclick="aiToggle('ic1')"><div class="dish-body"><div class="dish-top"><div class="dish-name" style="font-size:13px;" data-dish="Sirkencubin Şerbeti">Sirkencubin Şerbeti</div><div class="dish-price" style="font-size:12px;">₺95</div></div><div class="dish-desc" style="font-size:12px;">Osmanlı saray içeceği</div><div class="dish-foot" style="margin-top:8px;"><button class="addbtn" onclick="addCart('Sirkencubin',95,this);event.stopPropagation()" style="padding:5px 10px;font-size:8px;">+ EKLE</button></div></div></div>
+  <div id="ic1" class="aibox" style="margin:0 0 0 0;grid-column:span 2;display:none;"><div class="ai-eye"><span class="ai-baslik">◆ MUTFAK NOTU</span></div><div class="ai-txt">Osmanlı saray mutfağından. Sirke ve bal karışımı, hem serinletici hem sindirim dostu.</div></div>
+  <div class="dish" style="margin:0;" onclick="aiToggle('ic2')"><div class="dish-body"><div class="dish-top"><div class="dish-name" style="font-size:13px;" data-dish="Nar Çiçeği Şerbeti">Nar Çiçeği Şerbeti</div><div class="dish-price" style="font-size:12px;">₺95</div></div><div class="dish-desc" style="font-size:12px;">Geleneksel şerbet</div><div class="dish-foot" style="margin-top:8px;"><button class="addbtn" onclick="addCart('Nar Şerbeti',95,this);event.stopPropagation()" style="padding:5px 10px;font-size:8px;">+ EKLE</button></div></div></div>
+  <div class="dish" style="margin:0;" onclick="aiToggle('ic3')"><div class="dish-body"><div class="dish-top"><div class="dish-name" style="font-size:13px;" data-dish="Reyhan Şerbeti">Reyhan Şerbeti</div><div class="dish-price" style="font-size:12px;">₺95</div></div><div class="dish-desc" style="font-size:12px;">Taze reyhan aromalı</div><div class="dish-foot" style="margin-top:8px;"><button class="addbtn" onclick="addCart('Reyhan Şerbeti',95,this);event.stopPropagation()" style="padding:5px 10px;font-size:8px;">+ EKLE</button></div></div></div>
+  <div class="dish" style="margin:0;"><div class="dish-body"><div class="dish-top"><div class="dish-name" style="font-size:13px;" data-dish="Ayran">Ayran</div><div class="dish-price" style="font-size:12px;">₺65</div></div><div class="dish-desc" style="font-size:12px;">El yapımı, taze</div><div class="dish-foot" style="margin-top:8px;"><button class="addbtn" onclick="addCart('Ayran',65,this);event.stopPropagation()" style="padding:5px 10px;font-size:8px;">+ EKLE</button></div></div></div>
 </div>
 
+<div class="foot"><div class="foot-txt" id="kdv-txt">FİYATLARA KDV DAHİLDİR · 16.01.2026 İTİBARIYLA GEÇERLİDİR</div></div>
+</div>
+
+<!-- ════ NE YESEM ════ -->
 <div id="pg-aksam" class="pg">
-  <div class="cat"><div class="cat-line"></div><div class="cat-lbl">BU AKŞAM NE YESEYİM?</div><div class="cat-line r"></div></div>
-  <div class="aibox on" style="margin:0 0.875rem 0.75rem;"><div class="ai-eye">KIRKİKİNDİ YAPAY ZEKA AŞÇISI</div><div class="ai-txt">Selçuklu ve Osmanlı mutfağından ruh halinize özel tavsiye sunuyoruz.</div></div>
-  <div style="font-family:'Cinzel',serif;font-size:8px;letter-spacing:2px;color:var(--g3);padding:0 0.875rem;margin-bottom:8px;">NASIL HİSSEDİYORSUNUZ?</div>
-  <div class="mood-grid">
-    <div class="mood-card" onclick="setMood('hafif',0)"><span class="mood-icon">🍃</span><div class="mood-lbl">HAFİF BİR ŞEYLER</div></div>
-    <div class="mood-card" onclick="setMood('doyurucu',1)"><span class="mood-icon">🔥</span><div class="mood-lbl">ÇOK ACIKTIM</div></div>
-    <div class="mood-card" onclick="setMood('balik',2)"><span class="mood-icon">🐟</span><div class="mood-lbl">DENİZ ÜRÜNÜ</div></div>
-    <div class="mood-card" onclick="setMood('tatli',3)"><span class="mood-icon">🍮</span><div class="mood-lbl">TATLI CAN ATIYOR</div></div>
+
+  <div style="background:#FAF3E0;padding:1.5rem;text-align:center;border-bottom:2px solid rgba(139,105,20,0.15);">
+    <div style="font-family:'Cinzel',serif;font-size:8px;letter-spacing:3px;color:var(--g3);margin-bottom:0.75rem;">◆ ◆ ◆</div>
+    <div id="ne-yesem-baslik" style="font-family:'Playfair Display',serif;font-size:22px;color:var(--ink);font-style:italic;line-height:1.3;">Bu Akşam Ne Yesem?</div>
+    <div id="ne-yesem-sub" style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:14px;color:var(--ink3);margin-top:8px;line-height:1.6;">Selçuklu ve Osmanlı mutfağından<br>ruh halinize özel tavsiye</div>
   </div>
-  <div style="font-family:'Cinzel',serif;font-size:8px;letter-spacing:2px;color:var(--g3);padding:0 0.875rem;margin-bottom:6px;">TERCİHİNİZ?</div>
-  <div class="pref-row">
-    <div class="pref-btn on" id="p1" onclick="setPref('p1','H')">HERŞEYİ YERİM</div>
-    <div class="pref-btn" id="p2" onclick="setPref('p2','V')">VEGETARİYEN</div>
-    <div class="pref-btn" id="p3" onclick="setPref('p3','L')">DÜŞÜK KALORİ</div>
+
+  <div style="padding:1.5rem 0.875rem 0;">
+    <div id="nasil-hissediyorsunuz" style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:3px;color:var(--g3);margin-bottom:12px;">NASIL HİSSEDİYORSUNUZ?</div>
   </div>
-  <button class="cta" onclick="showRec()">◆ TAVSİYE GÖSTER</button>
-  <div id="rec" class="rec-box">
-    <div class="ai-eye" style="font-family:'Cinzel',serif;font-size:7px;letter-spacing:2px;color:var(--g);margin-bottom:6px;">◆ SIZE ÖZEL TAVSİYE</div>
-    <div id="rec-t" style="font-family:'Cormorant',serif;font-style:italic;font-size:13px;color:rgba(255,255,255,0.8);line-height:1.75;"></div>
+
+  <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:0 0.875rem 1.25rem;">
+    <div class="mood-card" onclick="setMood('hafif',0)" style="padding:1.25rem;">
+      <span style="font-size:28px;display:block;margin-bottom:8px;">🍃</span>
+      <div id="mood-hafif-name" style="font-family:'Playfair Display',serif;font-size:15px;color:var(--ink);font-weight:500;margin-bottom:3px;">Hafif</div>
+      <div id="mood-hafif-sub" style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:12px;color:var(--ink3);">Ferahlatıcı seçimler</div>
+    </div>
+    <div class="mood-card" onclick="setMood('doyurucu',1)" style="padding:1.25rem;">
+      <span style="font-size:28px;display:block;margin-bottom:8px;">🔥</span>
+      <div id="mood-doyurucu-name" style="font-family:'Playfair Display',serif;font-size:15px;color:var(--ink);font-weight:500;margin-bottom:3px;">Doyurucu</div>
+      <div id="mood-doyurucu-sub" style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:12px;color:var(--ink3);">Tok kalacak seçimler</div>
+    </div>
+    <div class="mood-card" onclick="setMood('balik',2)" style="padding:1.25rem;">
+      <span style="font-size:28px;display:block;margin-bottom:8px;">🐟</span>
+      <div id="mood-balik-name" style="font-family:'Playfair Display',serif;font-size:15px;color:var(--ink);font-weight:500;margin-bottom:3px;">Deniz Ürünü</div>
+      <div id="mood-balik-sub" style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:12px;color:var(--ink3);">Taze deniz lezzetleri</div>
+    </div>
+    <div class="mood-card" onclick="setMood('tatli',3)" style="padding:1.25rem;">
+      <span style="font-size:28px;display:block;margin-bottom:8px;">🍮</span>
+      <div id="mood-tatli-name" style="font-family:'Playfair Display',serif;font-size:15px;color:var(--ink);font-weight:500;margin-bottom:3px;">Tatlı</div>
+      <div id="mood-tatli-sub" style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:12px;color:var(--ink3);">Geleneksel Konya tatlıları</div>
+    </div>
+  </div>
+
+  <div style="padding:0 0.875rem;">
+    <div id="tercihiniz" style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:3px;color:var(--g3);margin-bottom:10px;">TERCİHİNİZ?</div>
+    <div style="display:flex;gap:6px;margin-bottom:1.25rem;flex-wrap:wrap;">
+      <div class="pref-btn on" id="p1" onclick="setPref('p1','H')">HERŞEYİ YERİM</div>
+      <div class="pref-btn" id="p2" onclick="setPref('p2','V')">VEGETARİYEN</div>
+      <div class="pref-btn" id="p3" onclick="setPref('p3','L')">DÜŞÜK KALORİ</div>
+    </div>
+  </div>
+
+  <button class="cta" id="tavsiye-goster-btn" onclick="showRec()">◆ TAVSİYE GÖSTER</button>
+
+  <div id="rec" style="display:none;margin:0 0.875rem 1rem;background:#FDF5E0;border-radius:8px;overflow:hidden;border-left:4px solid var(--g2);">
+    <div style="background:rgba(139,105,20,0.08);padding:10px 14px;border-bottom:1px solid rgba(139,105,20,0.15);">
+      <div style="font-family:'Cinzel',serif;font-size:8px;letter-spacing:2px;color:var(--g3);">◆ SIZE ÖZEL TAVSİYE</div>
+    </div>
+    <div style="padding:14px;">
+      <div id="rec-t" style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:16px;color:var(--ink2);line-height:1.8;"></div>
+    </div>
   </div>
 </div>
 
+<!-- ════ GARSON ════ -->
 <div id="pg-garson" class="pg">
   <div class="cat"><div class="cat-line"></div><div class="cat-lbl">GARSON ÇAĞIR</div><div class="cat-line r"></div></div>
-  <div class="aibox on" style="margin:0 0.875rem 0.75rem;"><div class="ai-eye">MASA <span id="garson-masa-no">—</span></div><div class="ai-txt">Talebinizi seçin, garsonunuz kısa sürede gelecektir.</div></div>
-  <div class="call-grid">
-    <div class="call-card" onclick="callWaiter('Hesap getirir misiniz?')"><div class="call-ico">💳</div><div class="call-nm">HESAP</div><div class="call-sb">Ödeme yapmak istiyorum</div></div>
-    <div class="call-card" onclick="callWaiter('Su getirir misiniz?')"><div class="call-ico">💧</div><div class="call-nm">SU</div><div class="call-sb">Su getirir misiniz?</div></div>
-    <div class="call-card" onclick="callWaiter('Peçete lazım.')"><div class="call-ico">🧻</div><div class="call-nm">PEÇETE</div><div class="call-sb">Peçete bitti</div></div>
-    <div class="call-card" onclick="callWaiter('Lavaş lazım.')"><div class="call-ico">🫓</div><div class="call-nm">EKMEK</div><div class="call-sb">Lavaş lazım</div></div>
-    <div class="call-card" onclick="callWaiter('Genel yardım istiyorum.')"><div class="call-ico">🙋</div><div class="call-nm">YARDIM</div><div class="call-sb">Genel talebim var</div></div>
-    <div class="call-card" onclick="callWaiter('Geri bildirim vermek istiyorum.')"><div class="call-ico">⭐</div><div class="call-nm">GERİ BİLDİRİM</div><div class="call-sb">Deneyimimi paylaşayım</div></div>
+  <div class="aibox on" style="margin:0 0.875rem 1rem;background:#FDF5E0;">
+    <div class="ai-eye">MASA <span id="garson-masa-no">—</span></div>
+    <div class="ai-txt">Talebinizi seçin, garsonunuz kısa sürede masanıza gelecektir.</div>
   </div>
-  <div id="c-notif" class="notif"></div>
+  <div class="call-grid">
+    <div class="call-card" onclick="callWaiter('Hesap getirir misiniz?')"><div class="call-ico">💳</div><div class="call-nm" id="garson-hesap">HESAP</div><div class="call-sb" id="garson-hesap-sub">Ödeme yapmak istiyorum</div></div>
+    <div class="call-card" onclick="callWaiter('Su getirir misiniz?')"><div class="call-ico">💧</div><div class="call-nm" id="garson-su">SU</div><div class="call-sb" id="garson-su-sub">Su getirir misiniz?</div></div>
+    <div class="call-card" onclick="callWaiter('Peçete lazım.')"><div class="call-ico">🧻</div><div class="call-nm" id="garson-pecete">PEÇETE</div><div class="call-sb" id="garson-pecete-sub">Peçete bitti</div></div>
+    <div class="call-card" onclick="callWaiter('Lavaş lazım.')"><div class="call-ico">🫓</div><div class="call-nm" id="garson-ekmek">EKMEK</div><div class="call-sb" id="garson-ekmek-sub">Lavaş lazım</div></div>
+    <div class="call-card" onclick="callWaiter('Genel yardım istiyorum.')"><div class="call-ico">🙋</div><div class="call-nm" id="garson-yardim">YARDIM</div><div class="call-sb" id="garson-yardim-sub">Genel talebim var</div></div>
+    <div class="call-card" onclick="callWaiter('Geri bildirim vermek istiyorum.')"><div class="call-ico">⭐</div><div class="call-nm" id="garson-geribildirim">GERİ BİLDİRİM</div><div class="call-sb" id="garson-geribildirim-sub">Deneyimimi paylaşayım</div></div>
+  </div>
+  <div id="c-notif" class="notif" style="margin-top:1rem;"></div>
 </div>
 
+<!-- ════ SEPET ════ -->
 <div id="pg-sepet" class="pg">
   <div class="cat"><div class="cat-line"></div><div class="cat-lbl">SİPARİŞİM</div><div class="cat-line r"></div></div>
   <div id="cart-empty" class="empty-cart">Sepetiniz boş.<br>Menüden ürün seçiniz.</div>
   <div id="cart-full" style="display:none;">
     <div class="cart-panel">
-      <div style="font-family:'Cinzel',serif;font-size:7px;letter-spacing:2px;color:var(--g3);margin-bottom:8px;">SEPET</div>
+      <div id="sepet-lbl" style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:2.5px;color:var(--g3);margin-bottom:10px;">SEPET</div>
       <div id="cart-items"></div>
-      <div class="cart-total-row"><div class="cart-total-lbl">TOPLAM</div><div id="cart-total" class="cart-total-val">₺0</div></div>
+      <div class="cart-total-row"><div class="cart-total-lbl" id="cart-total-lbl-txt">TOPLAM</div><div id="cart-total" class="cart-total-val">₺0</div></div>
     </div>
-    <div class="note-panel"><div class="note-lbl">◆ ÖZEL NOT</div><input class="note-inp" id="siparis-not" placeholder="Az tuzlu, et az pişmiş, alerji..."></div>
-    <button class="cta" onclick="sendOrder()">◆ SİPARİŞİ MUTFAĞA GÖNDER</button>
+    <div class="note-panel">
+      <div class="note-lbl" id="ozel-not-lbl">◆ ÖZEL NOT</div>
+      <input class="note-inp" id="siparis-not" placeholder="Az tuzlu, et az pişmiş, alerji...">
+    </div>
+    <button class="cta" id="siparis-gonder-btn" onclick="sendOrder()">◆ SİPARİŞİ MUTFAĞA GÖNDER</button>
   </div>
   <div id="o-notif" class="notif"></div>
 </div>
 
+<!-- ════ DİL ════ -->
+<div id="pg-dil" class="pg">
+  <div style="background:linear-gradient(180deg,#FAF3E0,#F5EAD0);padding:1.75rem 1.5rem;text-align:center;border-bottom:1px solid rgba(139,105,20,0.15);">
+    <div style="font-family:'Cinzel',serif;font-size:8px;letter-spacing:4px;color:var(--g3);margin-bottom:10px;">◆ ◆ ◆</div>
+    <div style="font-family:'Playfair Display',serif;font-size:22px;color:var(--ink);font-style:italic;" id="dil-baslik-lbl">Dil Seçin</div>
+    <div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:13px;color:var(--ink3);margin-top:6px;">Select Language · Sprache wählen · اختر اللغة · Choisir la langue</div>
+  </div>
+  <div style="padding:1.25rem 0.875rem 0.5rem;">
+    <div id="dil-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;"></div>
+  </div>
+  <div style="margin:0.75rem 0.875rem 1rem;background:#FDF5E0;border-radius:6px;padding:1rem;border-left:3px solid var(--g2);">
+    <div style="font-family:'Cinzel',serif;font-size:8px;letter-spacing:2px;color:var(--g3);margin-bottom:6px;">◆ BİLGİ</div>
+    <div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:13px;color:var(--ink2);line-height:1.65;">Dil seçtiğinizde menünün tamamı — yemek adları, açıklamalar ve tüm yazılar — seçtiğiniz dile geçer.</div>
+  </div>
+</div>
+
 <script>
-// ==============================
-// AYARLAR — Buraya kendi Supabase bilgilerinizi girin
-// ==============================
-var SUPABASE_URL = 'https://xhuvpbzpghazpipaovwt.supabase.co';
-var SUPABASE_ANON_KEY = 'sb_publishable_vR5mtSCXn0nxd-_I0TzLfw_jQrT_KZK';
-// ==============================
+var SUPABASE_URL='https://xhuvpbzpghazpipaovwt.supabase.co';
+var SUPABASE_ANON_KEY='sb_publishable_vR5mtSCXn0nxd-_I0TzLfw_jQrT_KZK';
+var supabase=null;
+try{supabase=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);}catch(e){}
 
-var supabase = null;
-try { supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY); } catch(e){}
-
-var masaNo = '?';
-
-// Masa numarası kontrolü
-var masaNoUrl = new URLSearchParams(location.search).get('masa');
+var masaNo='?';
+var masaNoUrl=new URLSearchParams(location.search).get('masa');
+// sessionStorage'dan masa kontrolü
+var savedMasa = sessionStorage.getItem('masa_no');
 if(masaNoUrl){
   masaNo = masaNoUrl;
-  document.getElementById('masa-secim').style.display = 'none';
-  document.getElementById('masa-badge').textContent = 'MASA ' + masaNo;
-  document.getElementById('garson-masa-no').textContent = masaNo;
+  sessionStorage.setItem('masa_no', masaNo);
+  document.getElementById('masa-secim').style.display='none';
+  gosterMasaBadge(masaNo);
+  document.getElementById('garson-masa-no').textContent=masaNo;
+} else if(savedMasa){
+  masaNo = savedMasa;
+  document.getElementById('masa-secim').style.display='none';
+  gosterMasaBadge(masaNo);
+  document.getElementById('garson-masa-no').textContent=masaNo;
+} else {
+  // Masa seçilmedi - badge gizli
+  document.getElementById('masa-badge-wrap').style.display='none';
+}
+
+function gosterMasaBadge(no){
+  var u = UI[aktifDil]||UI['tr'];
+  var mb = document.getElementById('masa-badge');
+  mb.textContent = (u.masa||'MASA') + ' ' + no;
+  document.getElementById('masa-badge-wrap').style.display='block';
 }
 
 function masaGir(){
-  var val = document.getElementById('masa-input').value.trim();
-  if(!val || val < 1 || val > 99){
-    document.getElementById('masa-hata').style.display = 'block';
-    return;
-  }
-  masaNo = val;
-  document.getElementById('masa-badge').textContent = 'MASA ' + masaNo;
-  document.getElementById('garson-masa-no').textContent = masaNo;
-  document.getElementById('masa-secim').style.display = 'none';
-  document.getElementById('masa-hata').style.display = 'none';
+  var val=document.getElementById('masa-input').value.trim();
+  if(!val||val<1||val>99){document.getElementById('masa-hata').style.display='block';return;}
+  masaNo=val;
+  sessionStorage.setItem('masa_no', masaNo);
+  gosterMasaBadge(masaNo);
+  document.getElementById('garson-masa-no').textContent=masaNo;
+  document.getElementById('masa-secim').style.display='none';
+  document.getElementById('masa-hata').style.display='none';
 }
+document.getElementById('masa-input').addEventListener('keypress',function(e){if(e.key==='Enter')masaGir();});
 
-document.getElementById('masa-input').addEventListener('keypress', function(e){
-  if(e.key === 'Enter') masaGir();
-});
-
-
-var cart = {};
-var mood = '';
-var pref = 'H';
-var siparisId = null;
+var cart={},mood='',pref='H',siparisId=null;
 
 function showPg(p,i){
   document.querySelectorAll('.pg').forEach(function(x){x.classList.remove('on');});
@@ -343,125 +683,798 @@ function showPg(p,i){
 }
 
 function aiToggle(id){
-  var el = document.getElementById(id);
-  if(!el) return;
-  var open = el.classList.contains('on');
+  var el=document.getElementById(id);
+  if(!el)return;
+  var open=el.classList.contains('on');
   document.querySelectorAll('.aibox').forEach(function(a){
-    if(!a.classList.contains('force-on')) a.classList.remove('on');
+    if(!a.style.margin||a.style.margin!=='0 0.875rem 1rem')a.classList.remove('on');
   });
-  if(!open) el.classList.add('on');
+  if(!open)el.classList.add('on');
 }
 
-function addCart(name, price, btn){
-  cart[name] = {name:name, price:price};
-  btn.textContent = 'EKLENDİ';
+function fotoSec(id){document.getElementById(id).click();}
+function fotoYukle(id){
+  var file=document.getElementById(id).files[0];
+  if(!file)return;
+  var reader=new FileReader();
+  reader.onload=function(e){
+    var img=document.getElementById(id+'-img');
+    var ph=document.getElementById(id+'-ph');
+    img.src=e.target.result;
+    img.style.display='block';
+    if(ph)ph.style.display='none';
+  };
+  reader.readAsDataURL(file);
+}
+
+function addCart(name,price,btn){
+  cart[name]={name:name,price:price};
+  btn.textContent='EKLENDİ';
   btn.classList.add('done');
   renderCart();
 }
 
 function renderCart(){
-  var keys = Object.keys(cart);
-  document.getElementById('cart-empty').style.display = keys.length ? 'none' : 'block';
-  document.getElementById('cart-full').style.display = keys.length ? 'block' : 'none';
-  var total = 0, html = '';
-  keys.forEach(function(k){
-    var it = cart[k]; total += it.price;
-    html += '<div class="cart-item-row"><span>' + it.name + '</span><span>₺' + it.price + '</span></div>';
-  });
-  document.getElementById('cart-items').innerHTML = html;
-  document.getElementById('cart-total').textContent = '₺' + total;
+  var keys=Object.keys(cart);
+  document.getElementById('cart-empty').style.display=keys.length?'none':'block';
+  document.getElementById('cart-full').style.display=keys.length?'block':'none';
+  var total=0,html='';
+  keys.forEach(function(k){var it=cart[k];total+=it.price;html+='<div class="cart-item-row"><span>'+it.name+'</span><span>₺'+it.price+'</span></div>';});
+  document.getElementById('cart-items').innerHTML=html;
+  document.getElementById('cart-total').textContent='₺'+total;
 }
 
 async function sendOrder(){
-  var keys = Object.keys(cart);
-  if(!keys.length) return;
-  var note = document.getElementById('siparis-not').value;
-  var total = keys.reduce(function(s,k){return s+cart[k].price;}, 0);
-  var items = keys.map(function(k){return cart[k].name;});
-
-  // Supabase'e kaydet
+  var keys=Object.keys(cart);
+  if(!keys.length)return;
+  var note=document.getElementById('siparis-not').value;
+  var total=keys.reduce(function(s,k){return s+cart[k].price;},0);
+  var items=keys.map(function(k){return cart[k].name;});
   if(supabase){
-    var res = await supabase.from('siparisler').insert([{
-      masa_no: masaNo,
-      items: items,
-      not: note,
-      toplam: total,
-      durum: 'new',
-      created_at: new Date().toISOString()
-    }]).select();
-    if(res.data && res.data[0]) {
-      siparisId = res.data[0].id;
-      dinleSiparis(siparisId);
-    }
+    var res=await supabase.from('siparisler').insert([{masa_no:masaNo,items:items,siparis_notu:note,toplam:total,durum:'new',created_at:new Date().toISOString()}]).select();
+    if(res.data&&res.data[0]){siparisId=res.data[0].id;dinleSiparis(siparisId);}
   }
-
-  var n = document.getElementById('o-notif');
-  n.textContent = 'Siparişiniz mutfağa iletildi!' + (note ? ' · ' + note : '');
+  var n=document.getElementById('o-notif');
+  n.textContent='Siparişiniz mutfağa iletildi!'+(note?' · '+note:'');
   n.classList.add('on');
   document.getElementById('order-status').classList.add('on');
-  cart = {};
+  cart={};
   document.querySelectorAll('.addbtn').forEach(function(b){b.textContent='+ EKLE';b.classList.remove('done');});
   renderCart();
-  setTimeout(function(){n.classList.remove('on'); showPg('menu',0);}, 2500);
+  setTimeout(function(){n.classList.remove('on');showPg('menu',0);},2500);
 }
 
 function dinleSiparis(id){
-  if(!supabase) return;
-  supabase.channel('siparis-' + id)
-    .on('postgres_changes', {event:'UPDATE', schema:'public', table:'siparisler', filter:'id=eq.'+id}, function(payload){
-      updateStatusBar(payload.new.durum, payload.new.eta_dakika);
-    })
-    .subscribe();
+  if(!supabase)return;
+  supabase.channel('siparis-'+id).on('postgres_changes',{event:'UPDATE',schema:'public',table:'siparisler',filter:'id=eq.'+id},function(p){updateStatusBar(p.new.durum,p.new.eta_dakika);}).subscribe();
 }
 
-function updateStatusBar(durum, eta){
-  var steps = ['new','prep','ready','done'];
-  var idx = steps.indexOf(durum);
+function updateStatusBar(durum,eta){
+  var steps=['new','prep','ready','done'];
+  var idx=steps.indexOf(durum);
   for(var i=1;i<=4;i++){
-    var dot = document.getElementById('d'+i);
-    var lbl = document.getElementById('l'+i);
-    dot.className = 'os-dot' + (i-1 < idx ? ' done' : i-1 === idx ? ' active' : '');
-    lbl.className = 'os-lbl' + (i-1 <= idx ? ' done' : '');
-    if(i<4){
-      var ln = document.getElementById('ln'+i);
-      ln.className = 'os-line' + (i-1 < idx ? ' done' : '');
-    }
+    document.getElementById('d'+i).className='os-dot'+(i-1<idx?' done':i-1===idx?' active':'');
+    document.getElementById('l'+i).className='os-lbl'+(i-1<=idx?' done':'');
+    if(i<4)document.getElementById('ln'+i).className='os-line'+(i-1<idx?' done':'');
   }
-  document.getElementById('eta').textContent = eta ? eta + ' dk' : (durum==='ready' ? 'Hazır!' : '—');
+  document.getElementById('eta').textContent=eta?eta+' dk':(durum==='ready'?'Hazır!':'—');
 }
 
 async function callWaiter(msg){
-  if(supabase){
-    await supabase.from('garson_cagrisi').insert([{masa_no:masaNo, mesaj:msg, created_at:new Date().toISOString()}]);
-  }
-  var n = document.getElementById('c-notif');
-  n.textContent = 'Garsonunuz geliyor — "' + msg + '"';
-  n.classList.add('on');
-  setTimeout(function(){n.classList.remove('on');}, 3000);
+  if(supabase)await supabase.from('garson_cagrisi').insert([{masa_no:masaNo,mesaj:msg,created_at:new Date().toISOString()}]);
+  var n=document.getElementById('c-notif');
+  n.textContent='Garsonunuz geliyor — "'+msg+'"';n.classList.add('on');
+  setTimeout(function(){n.classList.remove('on');},3000);
 }
 
-function setMood(m,idx){
-  mood = m;
-  document.querySelectorAll('.mood-card').forEach(function(c,i){i===idx?c.classList.add('on'):c.classList.remove('on');});
-}
-function setPref(id,val){
-  pref = val;
-  ['p1','p2','p3'].forEach(function(p){document.getElementById(p).classList.remove('on');});
-  document.getElementById(id).classList.add('on');
-}
+function setMood(m,idx){mood=m;document.querySelectorAll('.mood-card').forEach(function(c,i){i===idx?c.classList.add('on'):c.classList.remove('on');});}
+function setPref(id,val){pref=val;['p1','p2','p3'].forEach(function(p){document.getElementById(p).classList.remove('on');});document.getElementById(id).classList.add('on');}
+
 function showRec(){
-  var recs = {
-    hafif:{H:'Zeytinyağlı Yaprak Sarma (₺175) + Konya Tarhun Çorbası (₺220). Hafif, ferahlatıcı.',V:'Humus (₺95) + Mütebbel (₺95) + Biber Dolması (₺175). Tamamen bitkisel.',L:'Semizotlu Yoğurt + Mercimek Çorbası. En düşük kalorili seçim.'},
-    doyurucu:{H:'Kuzu Pirzola (₺750) + Konya Pirinç Pilavı (₺120). Şefin en doyurucu kombinasyonu.',V:'Güveçte Tandır Çorbası (₺240) + Zeytinyağlı Fasulye. Bol proteinli bitkisel.',L:'Beyti (₺520) + Gavurdağı Salatası. Protein zengin ama dengeli.'},
-    balik:{H:'Levrek Izgara (₺560) + Ezineli Roka Salatası. Bugün taze geldi.',V:'Zeytinyağlı tabağımızı öneririz.',L:'Levrek Izgara (₺560) + Çoban Salatası. Omega-3 zengin, hafif.'},
-    tatli:{H:'Fırın Sütlaç (₺140) + Türk kahvesi. Hafif kapanış.',V:'Fırın Sütlaç (₺140) + Nevzine (₺210). Geleneksel Konya tatlıları.',L:'Fırın Sütlaç (₺140). Glütensiz, en hafif seçenek.'}
+  var saved=localStorage.getItem('oneri_metinler');
+  var defaults={
+    hafif:{H:'Zeytinyağlı Yaprak Sarma (₺175) + Konya Tarhun Çorbası (₺220). Hafif, ferahlatıcı ve bu topraklara özgü.',V:'Humus (₺95) + Mütebbel (₺95) + Biber Dolması (₺175). Tamamen bitkisel, dengeli sofra.',L:'Semizotlu Yoğurt (₺95) + Mercimek Çorbası (₺150). En düşük kalorili seçim.'},
+    doyurucu:{H:'Kuzu Pirzola (₺750) + Konya Pirinç Pilavı. Şefin en doyurucu kombinasyonu.',V:'Güveçte Tandır Çorbası (₺240) + Zeytinyağlı Fasulye. Bol proteinli bitkisel sofra.',L:'Beyti (₺520) + Gavurdağı Salatası. Protein zengin ama dengeli.'},
+    balik:{H:'Levrek Izgara (₺560) + Ezineli Roka Salatası. Bugün taze geldi, şefin özel sosuyla.',V:'Zeytinyağlı tabağımızı öneririz.',L:'Levrek Izgara (₺560) + Çoban Salatası. Omega-3 zengin, hafif.'},
+    tatli:{H:'Fırın Sütlaç (₺140) + Türk kahvesi. Hafif kapanış, çok ağır değil.',V:'Fırın Sütlaç (₺140) + Nevzine (₺210). Geleneksel Konya tatlıları.',L:'Fırın Sütlaç (₺140). Glütensiz, en hafif seçenek.'}
   };
-  var r = document.getElementById('rec');
-  var t = document.getElementById('rec-t');
-  if(!mood){r.classList.add('on');t.textContent='Lütfen önce ruh halinizi seçin.';return;}
-  t.textContent = recs[mood][pref] || recs[mood]['H'];
-  r.classList.add('on');
+  var r=document.getElementById('rec');
+  var t=document.getElementById('rec-t');
+  if(!mood){r.style.display='block';t.textContent='Lütfen önce ruh halinizi seçin.';return;}
+  var metin='';
+  if(saved){
+    var recs=JSON.parse(saved);
+    var moodMap={'hafif':'Hafif','doyurucu':'Doyurucu','balik':'Deniz ürünü','tatli':'Tatlı'};
+    var prefMap={'H':'Hepsi','V':'Vejetaryen','L':'Hafif'};
+    var found=recs.find(function(o){return o.mood===moodMap[mood]&&o.pref===prefMap[pref];});
+    if(found)metin=found.metin;
+  }
+  if(!metin)metin=defaults[mood][pref]||defaults[mood]['H'];
+  t.textContent=metin;r.style.display='block';
 }
+
+var aktifDil='tr';
+
+// ══════════════════════════════════
+// ÇEVİRİ SİSTEMİ
+// ══════════════════════════════════
+// Kırkikindi Menü - Çeviri Sistemi
+// Tüm statik metinler ve menü içeriği
+
+var DILLER = {
+  tr: 'Türkçe',
+  en: 'English', 
+  de: 'Deutsch',
+  ar: 'عربي',
+  fr: 'Français'
+};
+
+var UI = {
+  tr: {
+    masa_label: 'MASA NUMARANIZI GİRİN',
+    masa_btn: '◆ MENÜYE GEÇ',
+    masa_hata: 'Geçerli bir masa numarası giriniz.',
+    masa_footer: 'KONEVİ MH. BEYŞEHİR CD. NO:258 · MERAM, KONYA',
+    tab_menu: 'MENÜ',
+    tab_ne_yesem: 'NE YESEM',
+    tab_garson: 'GARSON',
+    tab_sepet: 'SEPETİM',
+    tab_dil: '🌐 DİL',
+    ekle: '+ EKLE',
+    eklendi: 'EKLENDİ',
+    mutfak_notu: '◆ MUTFAK NOTU',
+    siparis_durumu: '◆ SİPARİŞ DURUMU',
+    alindi: 'ALINDI',
+    mutfakta: 'MUTFAKTA',
+    hazir: 'HAZIR',
+    servis: 'SERVİS',
+    tahmini_sure: 'Tahmini süre:',
+    ne_yesem_baslik: 'Bu Akşam Ne Yesem?',
+    ne_yesem_sub: 'Selçuklu ve Osmanlı mutfağından ruh halinize özel tavsiye',
+    nasil_hissediyorsunuz: 'NASIL HİSSEDİYORSUNUZ?',
+    mood_hafif: 'Hafif', mood_hafif_sub: 'Ferahlatıcı seçimler',
+    mood_doyurucu: 'Doyurucu', mood_doyurucu_sub: 'Tok kalacak seçimler',
+    mood_balik: 'Deniz Ürünü', mood_balik_sub: 'Taze deniz lezzetleri',
+    mood_tatli: 'Tatlı', mood_tatli_sub: 'Geleneksel Konya tatlıları',
+    tercihiniz: 'TERCİHİNİZ?',
+    pref_hepsi: 'HERŞEYİ YERİM',
+    pref_veg: 'VEGETARİYEN',
+    pref_light: 'DÜŞÜK KALORİ',
+    tavsiye_goster: '◆ TAVSİYE GÖSTER',
+    ozel_tavsiye: '◆ SIZE ÖZEL TAVSİYE',
+    sec_mood: 'Lütfen önce ruh halinizi seçin.',
+    garson_baslik: 'GARSON ÇAĞIR',
+    garson_info: 'Talebinizi seçin, garsonunuz kısa sürede gelecektir.',
+    hesap: 'HESAP', hesap_sub: 'Ödeme yapmak istiyorum',
+    su: 'SU', su_sub: 'Su getirir misiniz?',
+    pecete: 'PEÇETE', pecete_sub: 'Peçete bitti',
+    ekmek: 'EKMEK', ekmek_sub: 'Lavaş lazım',
+    yardim: 'YARDIM', yardim_sub: 'Genel talebim var',
+    geribildirim: 'GERİ BİLDİRİM', geribildirim_sub: 'Deneyimimi paylaşayım',
+    garson_geliyor: 'Garsonunuz geliyor',
+    siparis_baslik: 'SİPARİŞİM',
+    sepet_bos: 'Sepetiniz boş.\nMenüden ürün seçiniz.',
+    sepet_lbl: 'SEPET',
+    toplam: 'TOPLAM',
+    ozel_not_lbl: '◆ ÖZEL NOT',
+    ozel_not_ph: 'Az tuzlu, et az pişmiş, alerji...',
+    siparis_gonder: '◆ SİPARİŞİ MUTFAĞA GÖNDER',
+    siparis_iletildi: 'Siparişiniz mutfağa iletildi!',
+    dil_baslik: 'DİL SEÇİN',
+    foto_ekle: 'FOTOĞRAF EKLE',
+    kdv: 'FİYATLARA KDV DAHİLDİR · 16.01.2026 İTİBARIYLA GEÇERLİDİR',
+    ai_baslik: 'KIRKİKİNDİ YAPAY ZEKA AŞÇISI',
+    ai_sub: 'Selçuklu ve Osmanlı mutfağından ruh halinize özel tavsiye sunuyoruz.',
+    masa: 'MASA'
+  },
+  en: {
+    masa_label: 'ENTER YOUR TABLE NUMBER',
+    masa_btn: '◆ VIEW MENU',
+    masa_hata: 'Please enter a valid table number.',
+    masa_footer: 'KONEVİ MH. BEYŞEHİR CD. NO:258 · MERAM, KONYA',
+    tab_menu: 'MENU',
+    tab_ne_yesem: 'SUGGEST',
+    tab_garson: 'SERVICE',
+    tab_sepet: 'MY ORDER',
+    tab_dil: '🌐 LANG',
+    ekle: '+ ADD',
+    eklendi: 'ADDED',
+    mutfak_notu: '◆ CHEF\'S NOTE',
+    siparis_durumu: '◆ ORDER STATUS',
+    alindi: 'RECEIVED',
+    mutfakta: 'PREPARING',
+    hazir: 'READY',
+    servis: 'SERVED',
+    tahmini_sure: 'Estimated time:',
+    ne_yesem_baslik: 'What Shall I Eat Tonight?',
+    ne_yesem_sub: 'Personalized recommendations from Seljuk and Ottoman cuisine',
+    nasil_hissediyorsunuz: 'HOW ARE YOU FEELING?',
+    mood_hafif: 'Light', mood_hafif_sub: 'Refreshing choices',
+    mood_doyurucu: 'Hearty', mood_doyurucu_sub: 'Filling choices',
+    mood_balik: 'Seafood', mood_balik_sub: 'Fresh sea flavors',
+    mood_tatli: 'Dessert', mood_tatli_sub: 'Traditional Konya sweets',
+    tercihiniz: 'YOUR PREFERENCE?',
+    pref_hepsi: 'ANYTHING',
+    pref_veg: 'VEGETARIAN',
+    pref_light: 'LOW CALORIE',
+    tavsiye_goster: '◆ SHOW RECOMMENDATION',
+    ozel_tavsiye: '◆ YOUR PERSONAL RECOMMENDATION',
+    sec_mood: 'Please select your mood first.',
+    garson_baslik: 'CALL WAITER',
+    garson_info: 'Select your request, your waiter will come shortly.',
+    hesap: 'BILL', hesap_sub: 'I would like to pay',
+    su: 'WATER', su_sub: 'Can I have some water?',
+    pecete: 'NAPKIN', pecete_sub: 'Napkins are needed',
+    ekmek: 'BREAD', ekmek_sub: 'Need some bread',
+    yardim: 'HELP', yardim_sub: 'General request',
+    geribildirim: 'FEEDBACK', geribildirim_sub: 'Share my experience',
+    garson_geliyor: 'Your waiter is coming',
+    siparis_baslik: 'MY ORDER',
+    sepet_bos: 'Your cart is empty.\nPlease select items from the menu.',
+    sepet_lbl: 'CART',
+    toplam: 'TOTAL',
+    ozel_not_lbl: '◆ SPECIAL NOTE',
+    ozel_not_ph: 'Less salt, medium rare, allergy info...',
+    siparis_gonder: '◆ SEND ORDER TO KITCHEN',
+    siparis_iletildi: 'Your order has been sent to the kitchen!',
+    dil_baslik: 'SELECT LANGUAGE',
+    foto_ekle: 'ADD PHOTO',
+    kdv: 'VAT INCLUDED · VALID AS OF 16.01.2026',
+    ai_baslik: 'KIRKİKİNDİ AI CHEF',
+    ai_sub: 'Personalized recommendations from Seljuk and Ottoman cuisine.',
+    masa: 'TABLE'
+  },
+  de: {
+    masa_label: 'TISCHNUMMER EINGEBEN',
+    masa_btn: '◆ SPEISEKARTE ANZEIGEN',
+    masa_hata: 'Bitte geben Sie eine gültige Tischnummer ein.',
+    masa_footer: 'KONEVİ MH. BEYŞEHİR CD. NO:258 · MERAM, KONYA',
+    tab_menu: 'SPEISEKARTE',
+    tab_ne_yesem: 'EMPFEHLUNG',
+    tab_garson: 'SERVICE',
+    tab_sepet: 'BESTELLUNG',
+    tab_dil: '🌐 SPRACHE',
+    ekle: '+ HINZUFÜGEN',
+    eklendi: 'HINZUGEFÜGT',
+    mutfak_notu: '◆ KÜCHENTIPP',
+    siparis_durumu: '◆ BESTELLSTATUS',
+    alindi: 'ERHALTEN',
+    mutfakta: 'IN ZUBEREITUNG',
+    hazir: 'FERTIG',
+    servis: 'SERVIERT',
+    tahmini_sure: 'Geschätzte Zeit:',
+    ne_yesem_baslik: 'Was soll ich heute Abend essen?',
+    ne_yesem_sub: 'Personalisierte Empfehlungen aus der seldschukischen und osmanischen Küche',
+    nasil_hissediyorsunuz: 'WIE FÜHLEN SIE SICH?',
+    mood_hafif: 'Leicht', mood_hafif_sub: 'Erfrischende Auswahl',
+    mood_doyurucu: 'Herzhaft', mood_doyurucu_sub: 'Sättigende Gerichte',
+    mood_balik: 'Meeresfrüchte', mood_balik_sub: 'Frische Meeresköstlichkeiten',
+    mood_tatli: 'Nachtisch', mood_tatli_sub: 'Traditionelle Konya-Süßspeisen',
+    tercihiniz: 'IHRE PRÄFERENZ?',
+    pref_hepsi: 'ALLES',
+    pref_veg: 'VEGETARISCH',
+    pref_light: 'KALORIENARM',
+    tavsiye_goster: '◆ EMPFEHLUNG ANZEIGEN',
+    ozel_tavsiye: '◆ IHRE PERSÖNLICHE EMPFEHLUNG',
+    sec_mood: 'Bitte wählen Sie zuerst Ihre Stimmung.',
+    garson_baslik: 'KELLNER RUFEN',
+    garson_info: 'Wählen Sie Ihre Anfrage, Ihr Kellner kommt gleich.',
+    hesap: 'RECHNUNG', hesap_sub: 'Ich möchte bezahlen',
+    su: 'WASSER', su_sub: 'Kann ich Wasser haben?',
+    pecete: 'SERVIETTE', pecete_sub: 'Servietten werden benötigt',
+    ekmek: 'BROT', ekmek_sub: 'Brot wird benötigt',
+    yardim: 'HILFE', yardim_sub: 'Allgemeine Anfrage',
+    geribildirim: 'FEEDBACK', geribildirim_sub: 'Erfahrung teilen',
+    garson_geliyor: 'Ihr Kellner kommt',
+    siparis_baslik: 'MEINE BESTELLUNG',
+    sepet_bos: 'Ihr Warenkorb ist leer.\nBitte wählen Sie Artikel aus der Speisekarte.',
+    sepet_lbl: 'WARENKORB',
+    toplam: 'GESAMT',
+    ozel_not_lbl: '◆ BESONDERE NOTIZ',
+    ozel_not_ph: 'Wenig Salz, medium, Allergieinformation...',
+    siparis_gonder: '◆ BESTELLUNG IN DIE KÜCHE SENDEN',
+    siparis_iletildi: 'Ihre Bestellung wurde an die Küche weitergeleitet!',
+    dil_baslik: 'SPRACHE WÄHLEN',
+    foto_ekle: 'FOTO HINZUFÜGEN',
+    kdv: 'INKL. MWST. · GÜLTIG AB 16.01.2026',
+    ai_baslik: 'KIRKİKİNDİ KI-KÜCHENCHEF',
+    ai_sub: 'Personalisierte Empfehlungen aus der seldschukischen und osmanischen Küche.',
+    masa: 'TISCH'
+  },
+  ar: {
+    masa_label: 'أدخل رقم طاولتك',
+    masa_btn: '◆ عرض القائمة',
+    masa_hata: 'يرجى إدخال رقم طاولة صحيح.',
+    masa_footer: 'KONEVİ MH. BEYŞEHİR CD. NO:258 · MERAM, KONYA',
+    tab_menu: 'القائمة',
+    tab_ne_yesem: 'اقتراح',
+    tab_garson: 'خدمة',
+    tab_sepet: 'طلبي',
+    tab_dil: '🌐 اللغة',
+    ekle: '+ أضف',
+    eklendi: 'تمت الإضافة',
+    mutfak_notu: '◆ ملاحظة الطاهي',
+    siparis_durumu: '◆ حالة الطلب',
+    alindi: 'تم الاستلام',
+    mutfakta: 'قيد التحضير',
+    hazir: 'جاهز',
+    servis: 'تم التقديم',
+    tahmini_sure: 'الوقت المقدر:',
+    ne_yesem_baslik: 'ماذا أتناول الليلة؟',
+    ne_yesem_sub: 'توصيات شخصية من المطبخ السلجوقي والعثماني',
+    nasil_hissediyorsunuz: 'كيف تشعر؟',
+    mood_hafif: 'خفيف', mood_hafif_sub: 'اختيارات منعشة',
+    mood_doyurucu: 'شبعان', mood_doyurucu_sub: 'أطباق مشبعة',
+    mood_balik: 'مأكولات بحرية', mood_balik_sub: 'نكهات بحرية طازجة',
+    mood_tatli: 'حلويات', mood_tatli_sub: 'حلويات قونية التقليدية',
+    tercihiniz: 'تفضيلك؟',
+    pref_hepsi: 'كل شيء',
+    pref_veg: 'نباتي',
+    pref_light: 'قليل السعرات',
+    tavsiye_goster: '◆ عرض التوصية',
+    ozel_tavsiye: '◆ توصيتك الشخصية',
+    sec_mood: 'يرجى اختيار مزاجك أولاً.',
+    garson_baslik: 'استدعاء النادل',
+    garson_info: 'اختر طلبك، سيأتي النادل قريباً.',
+    hesap: 'الحساب', hesap_sub: 'أريد الدفع',
+    su: 'ماء', su_sub: 'هل يمكنني الحصول على ماء؟',
+    pecete: 'مناديل', pecete_sub: 'نفدت المناديل',
+    ekmek: 'خبز', ekmek_sub: 'أحتاج خبزاً',
+    yardim: 'مساعدة', yardim_sub: 'طلب عام',
+    geribildirim: 'تقييم', geribildirim_sub: 'مشاركة تجربتي',
+    garson_geliyor: 'النادل في الطريق',
+    siparis_baslik: 'طلبي',
+    sepet_bos: 'سلتك فارغة.\nيرجى اختيار عناصر من القائمة.',
+    sepet_lbl: 'السلة',
+    toplam: 'المجموع',
+    ozel_not_lbl: '◆ ملاحظة خاصة',
+    ozel_not_ph: 'قليل الملح، معلومات الحساسية...',
+    siparis_gonder: '◆ إرسال الطلب للمطبخ',
+    siparis_iletildi: 'تم إرسال طلبك إلى المطبخ!',
+    dil_baslik: 'اختر اللغة',
+    foto_ekle: 'إضافة صورة',
+    kdv: 'شامل ضريبة القيمة المضافة · ساري من 16.01.2026',
+    ai_baslik: 'طاهي الذكاء الاصطناعي - كيركيكيندي',
+    ai_sub: 'توصيات شخصية من المطبخ السلجوقي والعثماني.',
+    masa: 'طاولة'
+  },
+  fr: {
+    masa_label: 'ENTREZ VOTRE NUMÉRO DE TABLE',
+    masa_btn: '◆ VOIR LE MENU',
+    masa_hata: 'Veuillez entrer un numéro de table valide.',
+    masa_footer: 'KONEVİ MH. BEYŞEHİR CD. NO:258 · MERAM, KONYA',
+    tab_menu: 'MENU',
+    tab_ne_yesem: 'SUGGESTION',
+    tab_garson: 'SERVICE',
+    tab_sepet: 'MA COMMANDE',
+    tab_dil: '🌐 LANGUE',
+    ekle: '+ AJOUTER',
+    eklendi: 'AJOUTÉ',
+    mutfak_notu: '◆ NOTE DU CHEF',
+    siparis_durumu: '◆ STATUT DE COMMANDE',
+    alindi: 'REÇUE',
+    mutfakta: 'EN PRÉPARATION',
+    hazir: 'PRÊTE',
+    servis: 'SERVIE',
+    tahmini_sure: 'Temps estimé:',
+    ne_yesem_baslik: 'Que manger ce soir?',
+    ne_yesem_sub: 'Recommandations personnalisées de la cuisine seldjoukide et ottomane',
+    nasil_hissediyorsunuz: 'COMMENT VOUS SENTEZ-VOUS?',
+    mood_hafif: 'Léger', mood_hafif_sub: 'Choix rafraîchissants',
+    mood_doyurucu: 'Copieux', mood_doyurucu_sub: 'Plats nourrissants',
+    mood_balik: 'Fruits de mer', mood_balik_sub: 'Saveurs marines fraîches',
+    mood_tatli: 'Dessert', mood_tatli_sub: 'Douceurs traditionnelles de Konya',
+    tercihiniz: 'VOTRE PRÉFÉRENCE?',
+    pref_hepsi: 'TOUT',
+    pref_veg: 'VÉGÉTARIEN',
+    pref_light: 'FAIBLE EN CALORIES',
+    tavsiye_goster: '◆ VOIR LA RECOMMANDATION',
+    ozel_tavsiye: '◆ VOTRE RECOMMANDATION PERSONNELLE',
+    sec_mood: 'Veuillez d\'abord sélectionner votre humeur.',
+    garson_baslik: 'APPELER LE SERVEUR',
+    garson_info: 'Sélectionnez votre demande, votre serveur viendra bientôt.',
+    hesap: 'ADDITION', hesap_sub: 'Je voudrais payer',
+    su: 'EAU', su_sub: 'Puis-je avoir de l\'eau?',
+    pecete: 'SERVIETTE', pecete_sub: 'Serviettes nécessaires',
+    ekmek: 'PAIN', ekmek_sub: 'Du pain s\'il vous plaît',
+    yardim: 'AIDE', yardim_sub: 'Demande générale',
+    geribildirim: 'AVIS', geribildirim_sub: 'Partager mon expérience',
+    garson_geliyor: 'Votre serveur arrive',
+    siparis_baslik: 'MA COMMANDE',
+    sepet_bos: 'Votre panier est vide.\nVeuillez sélectionner des articles.',
+    sepet_lbl: 'PANIER',
+    toplam: 'TOTAL',
+    ozel_not_lbl: '◆ NOTE SPÉCIALE',
+    ozel_not_ph: 'Peu de sel, saignant, informations allergies...',
+    siparis_gonder: '◆ ENVOYER LA COMMANDE EN CUISINE',
+    siparis_iletildi: 'Votre commande a été envoyée en cuisine!',
+    dil_baslik: 'CHOISIR LA LANGUE',
+    foto_ekle: 'AJOUTER PHOTO',
+    kdv: 'TVA INCLUSE · VALABLE À PARTIR DU 16.01.2026',
+    ai_baslik: 'CHEF IA DE KIRKİKİNDİ',
+    ai_sub: 'Recommandations personnalisées de la cuisine seldjoukide et ottomane.',
+    masa: 'TABLE'
+  }
+};
+
+// Menü içeriği çevirileri
+var MENU_TR = {
+  // Soğuk Başlangıçlar
+  'Zeytinyağlı Yaprak Sarma': {
+    en: 'Olive Oil Stuffed Vine Leaves',
+    de: 'Weinblätter mit Olivenöl',
+    ar: 'ورق عنب بزيت الزيتون',
+    fr: 'Feuilles de vigne à l\'huile d\'olive'
+  },
+  'Humus': { en: 'Hummus', de: 'Hummus', ar: 'حمص', fr: 'Houmous' },
+  'Mütebbel': { en: 'Mütabbal (Smoked Eggplant)', de: 'Mütabbal (Geräucherte Aubergine)', ar: 'متبل', fr: 'Mütabbal (Aubergine fumée)' },
+  'Acılı Ezme': { en: 'Spicy Tomato Dip', de: 'Würzige Tomatenpaste', ar: 'معجون طماطم حار', fr: 'Purée de tomates épicée' },
+  'Bal Kabaklı Tarator': { en: 'Butternut Squash Tarator', de: 'Butternusskürbis Tarator', ar: 'تاراتور القرع', fr: 'Tarator de courge butternut' },
+  'Semizotlu Yoğurt': { en: 'Purslane Yogurt', de: 'Portulak-Joghurt', ar: 'زبادي بالبقلة', fr: 'Yaourt au pourpier' },
+  'Zeytinyağlı Biber Dolması': { en: 'Olive Oil Stuffed Peppers', de: 'Paprika mit Olivenöl gefüllt', ar: 'فلفل محشو بزيت الزيتون', fr: 'Poivrons farcis à l\'huile d\'olive' },
+  'Zeytinyağlı Köz Patlıcan': { en: 'Roasted Eggplant with Olive Oil', de: 'Gegrillte Aubergine mit Olivenöl', ar: 'باذنجان مشوي بزيت الزيتون', fr: 'Aubergine grillée à l\'huile d\'olive' },
+  // Çorbalar
+  'Konya Tarhun Çorbası': { en: 'Konya Tarragon Soup', de: 'Konya Estragonsuppe', ar: 'شوربة طرخون قونية', fr: 'Soupe d\'estragon de Konya' },
+  'Konya Bamya Çorbası': { en: 'Konya Okra Soup', de: 'Konya Okrasuppe', ar: 'شوربة البامية قونية', fr: 'Soupe de gombo de Konya' },
+  'Güveçte Tandır Çorbası': { en: 'Tandoor Soup in Clay Pot', de: 'Tandoor-Suppe im Tontopf', ar: 'شوربة التنور في الطاجن', fr: 'Soupe Tandoor en pot d\'argile' },
+  'Mercimek Çorbası': { en: 'Red Lentil Soup', de: 'Rote Linsensuppe', ar: 'شوربة العدس الأحمر', fr: 'Soupe de lentilles rouges' },
+  // Ana Yemekler
+  'Kuzu Şiş': { en: 'Lamb Shish Kebab', de: 'Lamm-Spieß', ar: 'شيش كباب الضأن', fr: 'Brochette d\'agneau' },
+  'Kuzu Pirzola': { en: 'Lamb Chops', de: 'Lammkoteletts', ar: 'ضلوع الضأن', fr: 'Côtelettes d\'agneau' },
+  'Beyti': { en: 'Beyti Kebab', de: 'Beyti Kebab', ar: 'بيتي كباب', fr: 'Beyti Kebab' },
+  'Levrek Izgara': { en: 'Grilled Sea Bass', de: 'Gegrillter Wolfsbarsch', ar: 'قاروص مشوي', fr: 'Bar grillé' },
+  'Karışık Izgara': { en: 'Mixed Grill', de: 'Gemischter Grill', ar: 'مشاوي مشكلة', fr: 'Grillade mixte' },
+  'Çöpleme': { en: 'Çöpleme (Lamb Casserole)', de: 'Çöpleme (Lammauflauf)', ar: 'چوبلمه (يخنة الضأن)', fr: 'Çöpleme (Ragoût d\'agneau)' },
+  'Tirit (Köfte)': { en: 'Tirit (Meatball with Bread)', de: 'Tirit (Fleischbällchen mit Brot)', ar: 'تيريت (كفتة مع الخبز)', fr: 'Tirit (Boulettes de viande)' },
+  // Tatlılar
+  'Fırın Sütlaç': { en: 'Baked Rice Pudding', de: 'Gebackener Reispudding', ar: 'أرز بالحليب المخبوز', fr: 'Riz au lait cuit au four' },
+  'Havuç Dilim Baklava': { en: 'Carrot Slice Baklava', de: 'Karotten-Baklava', ar: 'بقلاوة شريحة الجزر', fr: 'Baklava tranche de carotte' },
+  'Dondumalı Höşmerim': { en: 'Höşmerim with Ice Cream', de: 'Höşmerim mit Eis', ar: 'حوشمريم مع الآيس كريم', fr: 'Höşmerim avec glace' },
+  'Nevzine': { en: 'Nevzine (Walnut Dessert)', de: 'Nevzine (Walnuss-Dessert)', ar: 'نفزيني (حلوى الجوز)', fr: 'Nevzine (Dessert aux noix)' },
+  // İçecekler
+  'Sirkencubin Şerbeti': { en: 'Sirkengubin Sherbet', de: 'Sirkengübin Sorbet', ar: 'شراب السكنجبين', fr: 'Sorbet Sirkengubin' },
+  'Nar Çiçeği Şerbeti': { en: 'Pomegranate Blossom Sherbet', de: 'Granatapfelblüten-Sorbet', ar: 'شراب زهر الرمان', fr: 'Sorbet fleur de grenade' },
+  'Reyhan Şerbeti': { en: 'Basil Sherbet', de: 'Basilikum-Sorbet', ar: 'شراب الريحان', fr: 'Sorbet au basilic' },
+  'Ayran': { en: 'Ayran (Yogurt Drink)', de: 'Ayran (Joghurtgetränk)', ar: 'عيران (مشروب الزبادي)', fr: 'Ayran (Boisson au yaourt)' }
+};
+
+// Menü açıklamaları çevirileri
+var ACIKLAMA_TR = {
+  'Zeytinyağlı Yaprak Sarma': {
+    tr: 'İnce asma yapraklarına sarılmış pirinç ve baharat',
+    en: 'Rice and spices wrapped in thin vine leaves',
+    de: 'Reis und Gewürze in dünne Weinblätter gerollt',
+    ar: 'أرز وبهارات ملفوفة في أوراق العنب الرقيقة',
+    fr: 'Riz et épices enroulés dans de fines feuilles de vigne'
+  },
+  'Humus': {
+    tr: 'Nohut, tahin, zeytinyağı ve limon sosu ile hazırlanmaktadır',
+    en: 'Prepared with chickpeas, tahini, olive oil and lemon juice',
+    de: 'Zubereitet mit Kichererbsen, Tahini, Olivenöl und Zitronensaft',
+    ar: 'محضر بالحمص والطحينة وزيت الزيتون وعصير الليمون',
+    fr: 'Préparé avec des pois chiches, tahini, huile d\'olive et jus de citron'
+  },
+  'Mütebbel': {
+    tr: 'Közlenmiş patlıcan, tahin, süzme yoğurt ve nar taneleri ile',
+    en: 'Roasted eggplant with tahini, strained yogurt and pomegranate seeds',
+    de: 'Gegrillte Aubergine mit Tahini, Joghurt und Granatapfelkernen',
+    ar: 'باذنجان مشوي مع الطحينة والزبادي وحبات الرمان',
+    fr: 'Aubergine grillée avec tahini, yaourt égoutté et graines de grenade'
+  },
+  'Acılı Ezme': {
+    tr: 'Domates, soğan, maydanoz ve zeytinyağlı sos ile hazırlanmaktadır',
+    en: 'Prepared with tomatoes, onions, parsley and olive oil sauce',
+    de: 'Zubereitet mit Tomaten, Zwiebeln, Petersilie und Olivenölsauce',
+    ar: 'محضر بالطماطم والبصل والبقدونس وصلصة زيت الزيتون',
+    fr: 'Préparé avec tomates, oignons, persil et sauce à l\'huile d\'olive'
+  },
+  'Konya Tarhun Çorbası': {
+    tr: 'Tarhun otu, kuzu eti, yoğurt mayanesi ve tereyağı ile',
+    en: 'Tarragon herb, lamb meat, yogurt culture and butter',
+    de: 'Estragonkraut, Lammfleisch, Joghurtstarter und Butter',
+    ar: 'عشبة الطرخون ولحم الضأن وخميرة الزبادي والزبدة',
+    fr: 'Estragon, viande d\'agneau, culture de yaourt et beurre'
+  },
+  'Konya Bamya Çorbası': {
+    tr: 'Çiçek bamya, kuzu eti ve salçalı sos ile hazırlanmaktadır',
+    en: 'Flower okra, lamb meat prepared with tomato paste sauce',
+    de: 'Blumen-Okra, Lammfleisch mit Tomatenmark-Sauce',
+    ar: 'بامية زهرة ولحم الضأن مع صلصة معجون الطماطم',
+    fr: 'Gombo fleur, viande d\'agneau avec sauce tomate'
+  },
+  'Güveçte Tandır Çorbası': {
+    tr: 'Nohut, fasulye ve bulgurun güveçte ve odun ateşinde pişirilmesiyle',
+    en: 'Chickpeas, beans and bulgur cooked in clay pot over wood fire',
+    de: 'Kichererbsen, Bohnen und Bulgur im Tontopf über Holzfeuer',
+    ar: 'الحمص والفاصوليا والبرغل مطبوخة في الطاجن على نار الحطب',
+    fr: 'Pois chiches, haricots et boulgour cuits en pot d\'argile au feu de bois'
+  },
+  'Mercimek Çorbası': {
+    tr: 'Klasik Türk mutfağından kırmızı mercimek çorbası',
+    en: 'Classic Turkish red lentil soup',
+    de: 'Klassische türkische rote Linsensuppe',
+    ar: 'شوربة العدس الأحمر التركية الكلاسيكية',
+    fr: 'Soupe classique turque aux lentilles rouges'
+  },
+  'Kuzu Şiş': {
+    tr: 'Pirinç pilavı, lavaş, köz domates, köz biber ve sumaklı soğan ile servis — 135g',
+    en: 'Served with rice pilaf, lavash, roasted tomato, roasted pepper and sumac onion — 135g',
+    de: 'Serviert mit Reispilaf, Lavash, Ofentomaten, Ofenpaprika und Sumach-Zwiebeln — 135g',
+    ar: 'يُقدَّم مع بلاو الأرز والخبز الرقيق والطماطم المشوية والفلفل والبصل بالسماق — 135 غ',
+    fr: 'Servi avec riz pilaf, lavash, tomate rôtie, poivron rôti et oignon sumac — 135g'
+  },
+  'Kuzu Pirzola': {
+    tr: 'Pirinç pilavı, lavaş, köz domates ve sumaklı soğan ile servis — 185g',
+    en: 'Served with rice pilaf, lavash, roasted tomato and sumac onion — 185g',
+    de: 'Serviert mit Reispilaf, Lavash, Ofentomaten und Sumach-Zwiebeln — 185g',
+    ar: 'يُقدَّم مع بلاو الأرز والخبز الرقيق والطماطم المشوية والبصل بالسماق — 185 غ',
+    fr: 'Servi avec riz pilaf, lavash, tomate rôtie et oignon sumac — 185g'
+  },
+  'Beyti': {
+    tr: 'Baharatlı iç harçla hazırlanıp lavaşa sarılan et, yoğurt ve sos eşliğinde — 110g',
+    en: 'Spiced minced meat wrapped in lavash, served with yogurt and sauce — 110g',
+    de: 'Gewürztes Hackfleisch in Lavash gerollt, mit Joghurt und Sauce — 110g',
+    ar: 'لحم مفروم متبل ملفوف في الخبز الرقيق، يُقدَّم مع الزبادي والصلصة — 110 غ',
+    fr: 'Viande hachée épicée enroulée dans du lavash, servie avec yaourt et sauce — 110g'
+  },
+  'Levrek Izgara': {
+    tr: 'Röştı patates, baby mısır, Kaliforniya biber ve özel sos eşliğinde — 130g',
+    en: 'With rösti potatoes, baby corn, California pepper and special sauce — 130g',
+    de: 'Mit Röstikartoffeln, Babymais, Californische Paprika und Spezialsauce — 130g',
+    ar: 'مع بطاطس روستي والذرة الصغيرة والفلفل الكاليفورني والصلصة الخاصة — 130 غ',
+    fr: 'Avec pommes rösti, maïs baby, poivron californien et sauce spéciale — 130g'
+  },
+  'Karışık Izgara': {
+    tr: '120g kırmızı et + 70g tavuk, pirinç pilavı, lavaş, köz domates ve biber',
+    en: '120g red meat + 70g chicken, rice pilaf, lavash, roasted tomato and pepper',
+    de: '120g Rindfleisch + 70g Hähnchen, Reispilaf, Lavash, Ofentomaten und Paprika',
+    ar: '120 غ لحم أحمر + 70 غ دجاج، بلاو أرز، خبز رقيق، طماطم وفلفل مشوي',
+    fr: '120g viande rouge + 70g poulet, riz pilaf, lavash, tomate et poivron rôtis'
+  },
+  'Çöpleme': {
+    tr: 'Kuzu eti, patlıcan, kapya biber, arpacık soğan ve tereyağı ile — 150g',
+    en: 'Lamb, eggplant, red pepper, shallots and butter — 150g',
+    de: 'Lamm, Aubergine, rote Paprika, Schalotten und Butter — 150g',
+    ar: 'ضأن وباذنجان وفلفل أحمر وبصل صغير وزبدة — 150 غ',
+    fr: 'Agneau, aubergine, poivron rouge, échalotes et beurre — 150g'
+  },
+  'Tirit (Köfte)': {
+    tr: 'Köfte eti, soğan, domates, tandır ekmeği ve süzme yoğurt ile — 110g',
+    en: 'Meatball, onion, tomato, tandoor bread and strained yogurt — 110g',
+    de: 'Fleischbällchen, Zwiebeln, Tomaten, Tandoor-Brot und Joghurt — 110g',
+    ar: 'كفتة وبصل وطماطم وخبز التنور وزبادي مصفى — 110 غ',
+    fr: 'Boulette de viande, oignon, tomate, pain tandoor et yaourt égoutté — 110g'
+  },
+  'Fırın Sütlaç': {
+    tr: 'Taze inek sütünden hazırlanan geleneksel el yapımı sütlaç',
+    en: 'Traditional handmade rice pudding prepared with fresh cow milk',
+    de: 'Traditioneller handgemachter Reispudding aus frischer Kuhmilch',
+    ar: 'أرز بالحليب التقليدي المصنوع يدوياً من حليب البقر الطازج',
+    fr: 'Riz au lait traditionnel fait main préparé avec du lait de vache frais'
+  },
+  'Havuç Dilim Baklava': {
+    tr: 'Antep fıstıklı, geleneksel yöntemle hazırlanmış dilim baklava',
+    en: 'Pistachio baklava slice prepared with traditional method',
+    de: 'Pistazien-Baklava-Scheibe nach traditioneller Methode',
+    ar: 'شريحة بقلاوة بالفستق الحلبي محضرة بالطريقة التقليدية',
+    fr: 'Tranche de baklava aux pistaches préparée selon la méthode traditionnelle'
+  },
+  'Dondumalı Höşmerim': {
+    tr: 'Konya geleneksel peynir tatlısı, dondurma ile servis edilmektedir',
+    en: 'Traditional Konya cheese dessert served with ice cream',
+    de: 'Traditionelles Konya-Käsedessert mit Eis serviert',
+    ar: 'حلوى الجبن التقليدية من قونية تُقدَّم مع الآيس كريم',
+    fr: 'Dessert traditionnel au fromage de Konya servi avec glace'
+  },
+  'Nevzine': {
+    tr: 'Tereyağında kavrulmuş un, ceviz ve şerbet, tahin eşliğinde servis',
+    en: 'Flour roasted in butter with walnuts and syrup, served with tahini',
+    de: 'In Butter geröstetes Mehl mit Walnüssen und Sirup, mit Tahini serviert',
+    ar: 'دقيق محمص بالزبدة مع الجوز والشراب، يُقدَّم مع الطحينة',
+    fr: 'Farine rôtie au beurre avec noix et sirop, servi avec tahini'
+  }
+};
+
+// Mutfak notları çevirileri
+var MUTFAK_NOTLARI = {
+  'a1': {
+    tr: 'Osmanlı sofralarının vazgeçilmezi. Soğuk servis, tamamen bitkisel. Glütensiz. ~5 dk hazırlanma.',
+    en: 'A staple of Ottoman tables. Cold served, completely plant-based. Gluten-free. ~5 min.',
+    de: 'Ein Grundnahrungsmittel osmanischer Tische. Kalt serviert, komplett pflanzlich. Glutenfrei. ~5 Min.',
+    ar: 'ركيزة في موائد العثمانيين. يُقدَّم بارداً، نباتي تماماً. خالٍ من الغلوتين. ~5 دقائق.',
+    fr: 'Incontournable des tables ottomanes. Servi froid, entièrement végétal. Sans gluten. ~5 min.'
+  },
+  'a2': {
+    tr: 'Protein açısından zengin, glütensiz. Lavaşla harika gider. Acılı ezme ile birlikte sipariş önerilir.',
+    en: 'Rich in protein, gluten-free. Great with lavash. Recommended to order with spicy dip.',
+    de: 'Proteinreich, glutenfrei. Hervorragend mit Lavash. Empfohlen mit würzigem Dip zu bestellen.',
+    ar: 'غني بالبروتين، خالٍ من الغلوتين. رائع مع الخبز الرقيق. يُنصح بطلبه مع المعجون الحار.',
+    fr: 'Riche en protéines, sans gluten. Excellent avec le lavash. Recommandé à commander avec la purée épicée.'
+  },
+  'a5': {
+    tr: 'Sadece Konya mutfağına ait nadir tarif. Tarhunun ferahlatıcı aroması + yoğurt kremamsı doku. ~12 dk.',
+    en: 'A rare recipe unique to Konya cuisine. Refreshing tarragon aroma + creamy yogurt texture. ~12 min.',
+    de: 'Ein seltenes Rezept, einzigartig für die Konya-Küche. Erfrischendes Estragonaroma + cremige Joghurttextur. ~12 Min.',
+    ar: 'وصفة نادرة خاصة بمطبخ قونية. عطر الطرخون المنعش + قوام الزبادي الكريمي. ~12 دقيقة.',
+    fr: 'Une recette rare unique à la cuisine de Konya. Arôme rafraîchissant d\'estragon + texture crémeuse de yaourt. ~12 min.'
+  },
+  'a8': {
+    tr: 'En çok sipariş edilen yemek. Marine edilmiş kuzu ızgara ateşinde pişirilir. Sumaklı soğan keskin denge sağlar. ~18 dk.',
+    en: 'The most ordered dish. Marinated lamb grilled over fire. Sumac onion provides sharp balance. ~18 min.',
+    de: 'Das meistbestellte Gericht. Mariniertes Lamm über Feuer gegrillt. Sumach-Zwiebeln sorgen für scharfes Gleichgewicht. ~18 Min.',
+    ar: 'الطبق الأكثر طلباً. ضأن متبل مشوي على النار. البصل بالسماق يوفر توازناً حاداً. ~18 دقيقة.',
+    fr: 'Le plat le plus commandé. Agneau mariné grillé sur feu. L\'oignon sumac assure un équilibre parfait. ~18 min.'
+  },
+  'a13': {
+    tr: 'Hafif tatlı sevenler için ideal. Taze sütle yapılan el yapımı — çok ağır değil. Glütensiz, hazır.',
+    en: 'Ideal for light dessert lovers. Handmade with fresh milk — not too heavy. Gluten-free, ready.',
+    de: 'Ideal für Liebhaber leichter Desserts. Handgemacht mit frischer Milch — nicht zu schwer. Glutenfrei, fertig.',
+    ar: 'مثالي لمحبي الحلوى الخفيفة. مصنوع يدوياً بالحليب الطازج — غير ثقيل. خالٍ من الغلوتين، جاهز.',
+    fr: 'Idéal pour les amateurs de desserts légers. Fait main avec du lait frais — pas trop lourd. Sans gluten, prêt.'
+  }
+};
+
+if(typeof module !== 'undefined') module.exports = { UI, MENU_TR, ACIKLAMA_TR, MUTFAK_NOTLARI, DILLER };
+
+
+var aktifDil = 'tr';
+var dilBayraklar = {tr:'🇹🇷', en:'🇬🇧', de:'🇩🇪', ar:'🇸🇦', fr:'🇫🇷'};
+var dilNative = {tr:'Türkçe', en:'English', de:'Deutsch', ar:'العربية', fr:'Français'};
+
+function loadDiller(){
+  var html='';
+  ['tr','en','de','ar','fr'].forEach(function(kod){
+    html += '<div class="dil-kart' + (aktifDil===kod?' on':'') + '" onclick="dilSec(\''+kod+'\''+')">';
+    html += '<span class="dil-kart-flag">'+dilBayraklar[kod]+'</span>';
+    html += '<div class="dil-kart-name">'+dilNative[kod]+'</div>';
+    html += '<div class="dil-kart-native">'+DILLER[kod]+'</div>';
+    html += '</div>';
+  });
+  var dg = document.getElementById('dil-grid');
+  if(dg) dg.innerHTML = html;
+  // Aktif bayrak tab'da göster
+  var flag = document.getElementById('aktif-dil-flag');
+  if(flag) flag.textContent = dilBayraklar[aktifDil];
+}
+
+function dilSec(kod){
+  aktifDil = kod;
+  document.body.setAttribute('dir', kod==='ar'?'rtl':'ltr');
+  loadDiller();
+  dilUygula(kod);
+  var notifMesaj = {tr:'🇹🇷 Türkçe seçildi',en:'🇬🇧 English selected',de:'🇩🇪 Deutsch gewählt',ar:'🇸🇦 تم اختيار العربية',fr:'🇫🇷 Français sélectionné'};
+  var n = document.getElementById('o-notif');
+  if(n){n.textContent=notifMesaj[kod];n.classList.add('on');setTimeout(function(){n.classList.remove('on');},2500);}
+}
+
+function dilUygula(dil){
+  var u = UI[dil] || UI['tr'];
+
+  // Masa giriş
+  setText('masa-label-txt', u.masa_label);
+  setText('masa-btn-txt', u.masa_btn);
+  setText('masa-hata', u.masa_hata);
+  setText('masa-footer-txt', u.masa_footer);
+
+  // Tabs
+  setText('tab0', u.tab_menu);
+  setText('tab1', u.tab_ne_yesem);
+  setText('tab2', u.tab_garson);
+  setText('tab3', u.tab_sepet);
+  // tab4 = dil bayrağı, değişmez
+
+  // Masa badge
+  if(masaNo!=='?') gosterMasaBadge(masaNo);
+
+  // Sipariş durumu adımları
+  setText('l1', u.alindi);
+  setText('l2', u.mutfakta);
+  setText('l3', u.hazir);
+  setText('l4', u.servis);
+
+  // Ne yesem sayfası
+  setText('ne-yesem-baslik', u.ne_yesem_baslik);
+  setText('ne-yesem-sub', u.ne_yesem_sub);
+  setText('nasil-hissediyorsunuz', u.nasil_hissediyorsunuz);
+  setText('mood-hafif-name', u.mood_hafif);
+  setText('mood-hafif-sub', u.mood_hafif_sub);
+  setText('mood-doyurucu-name', u.mood_doyurucu);
+  setText('mood-doyurucu-sub', u.mood_doyurucu_sub);
+  setText('mood-balik-name', u.mood_balik);
+  setText('mood-balik-sub', u.mood_balik_sub);
+  setText('mood-tatli-name', u.mood_tatli);
+  setText('mood-tatli-sub', u.mood_tatli_sub);
+  setText('tercihiniz', u.tercihiniz);
+  setText('p1', u.pref_hepsi);
+  setText('p2', u.pref_veg);
+  setText('p3', u.pref_light);
+  setText('tavsiye-goster-btn', u.tavsiye_goster);
+
+  // Garson
+  setText('garson-hesap', u.hesap);
+  setText('garson-hesap-sub', u.hesap_sub);
+  setText('garson-su', u.su);
+  setText('garson-su-sub', u.su_sub);
+  setText('garson-pecete', u.pecete);
+  setText('garson-pecete-sub', u.pecete_sub);
+  setText('garson-ekmek', u.ekmek);
+  setText('garson-ekmek-sub', u.ekmek_sub);
+  setText('garson-yardim', u.yardim);
+  setText('garson-yardim-sub', u.yardim_sub);
+  setText('garson-geribildirim', u.geribildirim);
+  setText('garson-geribildirim-sub', u.geribildirim_sub);
+
+  // Sepet
+  var ce = document.getElementById('cart-empty');
+  if(ce) ce.innerHTML = u.sepet_bos.replace('\n','<br>');
+  setText('sepet-lbl', u.sepet_lbl);
+  setText('cart-total-lbl-txt', u.toplam);
+  var ni = document.getElementById('siparis-not');
+  if(ni) ni.placeholder = u.ozel_not_ph;
+  setText('ozel-not-lbl', u.ozel_not_lbl);
+  setText('siparis-gonder-btn', u.siparis_gonder);
+
+  // Dil başlık
+  setText('dil-baslik-lbl', dil==='tr'?'Dil Seçin':u.dil_baslik);
+
+  // KDV
+  setText('kdv-txt', u.kdv);
+
+  // Yemek adları
+  document.querySelectorAll('[data-dish]').forEach(function(el){
+    var k = el.getAttribute('data-dish');
+    if(MENU_TR[k] && MENU_TR[k][dil]) el.textContent = MENU_TR[k][dil];
+    else el.textContent = k;
+  });
+
+  // Açıklamalar
+  document.querySelectorAll('[data-aciklama]').forEach(function(el){
+    var k = el.getAttribute('data-aciklama');
+    if(ACIKLAMA_TR[k] && ACIKLAMA_TR[k][dil]) el.textContent = ACIKLAMA_TR[k][dil];
+    else if(ACIKLAMA_TR[k] && ACIKLAMA_TR[k].tr) el.textContent = ACIKLAMA_TR[k].tr;
+  });
+
+  // Mutfak notları
+  document.querySelectorAll('[data-ai-id]').forEach(function(el){
+    var k = el.getAttribute('data-ai-id');
+    if(MUTFAK_NOTLARI[k] && MUTFAK_NOTLARI[k][dil]) el.textContent = MUTFAK_NOTLARI[k][dil];
+    else if(MUTFAK_NOTLARI[k] && MUTFAK_NOTLARI[k].tr) el.textContent = MUTFAK_NOTLARI[k].tr;
+  });
+
+  // Ekle butonları
+  document.querySelectorAll('.addbtn').forEach(function(b){
+    if(!b.classList.contains('done')) b.textContent = u.ekle;
+    else b.textContent = u.eklendi;
+  });
+
+  // Fotoğraf placeholder
+  document.querySelectorAll('.dish-photo-placeholder-txt').forEach(function(el){
+    el.textContent = u.foto_ekle;
+  });
+
+  // Mutfak notu başlıkları
+  document.querySelectorAll('.ai-baslik').forEach(function(el){
+    el.textContent = u.mutfak_notu;
+  });
+}
+
+function setText(id, txt){
+  if(!txt) return;
+  var el = document.getElementById(id);
+  if(el) el.textContent = txt;
+}
+
+// Kaydedilmiş çevirileri yükle
+try {
+  var savedTrans = localStorage.getItem('aciklama_ceviriler');
+  if(savedTrans) {
+    var parsed = JSON.parse(savedTrans);
+    Object.keys(parsed).forEach(function(k){ ACIKLAMA_TR[k] = parsed[k]; });
+  }
+} catch(e){}
+
+loadDiller();
+if('serviceWorker' in navigator){navigator.serviceWorker.register('../sw.js').catch(function(){});}
 </script>
 </body>
 </html>
