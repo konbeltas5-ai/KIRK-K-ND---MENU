@@ -185,7 +185,14 @@ body{font-family:system-ui,sans-serif;background:var(--siyah);min-height:100vh;c
 var SB_URL='https://xhuvpbzpghazpipaovwt.supabase.co';
 var SB_KEY='sb_publishable_yRJxY27Pu36bRjcUdWrDWg_kf91VdGL';
 var sb=null;
-try{sb=window.supabase.createClient(SB_URL,SB_KEY);}catch(e){}
+try{
+  if(window.supabase){
+    sb=window.supabase.createClient(SB_URL,SB_KEY);
+    console.log('Supabase baglandi');
+  } else {
+    console.log('Supabase script yuklenmedi');
+  }
+}catch(e){console.log('Supabase hata:',e);}
 
 var SIFRE_MUTFAK='1234';
 var SIFRE_GARSON='5678';
@@ -243,7 +250,7 @@ function cikisYap(){
 
 // S\u0130PAR\u0130\u015ELER
 async function siparisleriYukle(){
-  if(!sb){gosterbos('siparis-liste','Supabase bağlantısı yok.');return;}
+  if(!sb){gosterbos('siparis-liste','Supabase baglantisi yok - yenileyin');console.log('sb null');return;}
   var res=await sb.from('siparisler').select('*').in('durum',['new','prep','ready']).order('created_at',{ascending:true});
   if(res.error){gosterbos('siparis-liste','Yükleme hatası.');return;}
   var data=res.data||[];
@@ -297,10 +304,15 @@ function renderSiparisler(data,tip){
 }
 
 async function durumGuncelle(id,durum){
-  if(!sb)return;
-  await sb.from('siparisler').update({durum:durum}).eq('id',id);
-  siparisleriYukle();
-  if(durum==='ready')bildirimGoster('Sipariş hazır! Masa servis bekliyor.');
+  if(!sb){bildirimGoster('Supabase baglantisi yok!');return;}
+  try{
+    var res=await sb.from('siparisler').update({durum:durum}).eq('id',id);
+    if(res.error){bildirimGoster('Hata: '+res.error.message);return;}
+    siparisleriYukle();
+    if(durum==='ready')bildirimGoster('Sipariş hazır!');
+    if(durum==='done')bildirimGoster('Servis edildi!');
+    if(durum==='prep')bildirimGoster('Hazırlanıyor...');
+  }catch(e){bildirimGoster('Hata: '+e.message);}
 }
 
 // GARSON \u00C7A\u011ERILARI
