@@ -192,7 +192,7 @@ var SIFRE_GARSON='5678';
 var aktifRol='';
 var channel=null;
 
-// Şifreler localStorage'dan al (yönetimden değiştirilince)
+// Şifreler localStorage'dan al (y\u00F6netimden de\u011Fi\u015Ftirilince)
 (function(){
   var s=localStorage.getItem('sifreler');
   if(s){var p=JSON.parse(s);SIFRE_MUTFAK=p.mutfak||'1234';SIFRE_GARSON=p.garson||'5678';}
@@ -241,14 +241,14 @@ function cikisYap(){
   aktifRol='';
 }
 
-// SİPARİŞLER
+// S\u0130PAR\u0130\u015ELER
 async function siparisleriYukle(){
   if(!sb){gosterbos('siparis-liste','Supabase bağlantısı yok.');return;}
   var res=await sb.from('siparisler').select('*').in('durum',['new','prep','ready']).order('created_at',{ascending:true});
   if(res.error){gosterbos('siparis-liste','Yükleme hatası.');return;}
   var data=res.data||[];
   
-  // İstatistikler
+  // \u0130statistikler
   document.getElementById('stat-yeni').textContent=data.filter(function(d){return d.durum==='new';}).length;
   document.getElementById('stat-hazirlaniyor').textContent=data.filter(function(d){return d.durum==='prep';}).length;
   document.getElementById('stat-hazir').textContent=data.filter(function(d){return d.durum==='ready';}).length;
@@ -303,7 +303,7 @@ async function durumGuncelle(id,durum){
   if(durum==='ready')bildirimGoster('Sipariş hazır! Masa servis bekliyor.');
 }
 
-// GARSON ÇAĞRILARI
+// GARSON \u00C7A\u011ERILARI
 async function cagrilariYukle(){
   if(!sb){gosterbos('cagri-liste','Supabase bağlantısı yok.');return;}
   var simdi=new Date();
