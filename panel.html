@@ -2,492 +2,384 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Kırkikindi — Panel</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
-:root{--g:#C9A84C;--g2:#E8C97A;--g3:#8B6914;--black:#120E08;--paper:#FDFAF4;}
-body{font-family:system-ui,sans-serif;background:var(--black);min-height:100vh;}
+:root{--g:#C9A84C;--g2:#E8C97A;--g3:#8B6914;--siyah:#120E08;--koyu:#1C1208;}
+body{font-family:system-ui,sans-serif;background:var(--siyah);min-height:100vh;color:#fff;}
 
-/* GİRİŞ EKRANI */
+/* GİRİŞ */
 #giris{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:2rem;}
-.giris-logo{text-align:center;margin-bottom:2.5rem;}
-.giris-num{font-family:Georgia,serif;font-size:56px;color:var(--g);line-height:1;}
-.giris-ad{font-size:13px;letter-spacing:4px;color:#fff;margin-top:4px;}
-.giris-sub{font-size:11px;color:rgba(255,255,255,0.35);letter-spacing:2px;margin-top:6px;font-style:italic;}
-.giris-title{font-size:11px;letter-spacing:2px;color:rgba(201,168,76,0.6);margin-bottom:1.25rem;text-align:center;}
+.logo-num{font-family:Georgia,serif;font-size:52px;color:var(--g);line-height:1;}
+.logo-ad{font-size:12px;letter-spacing:4px;color:#fff;margin-top:4px;}
+.logo-sub{font-size:10px;color:rgba(255,255,255,0.3);letter-spacing:2px;margin-top:4px;font-style:italic;}
+.rol-sec{font-size:10px;letter-spacing:2px;color:rgba(201,168,76,0.6);margin:1.5rem 0 1rem;text-align:center;}
 .rol-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%;max-width:320px;}
-.rol-btn{background:rgba(255,255,255,0.04);border:1px solid rgba(201,168,76,0.2);border-radius:8px;padding:1.5rem 1rem;cursor:pointer;text-align:center;transition:all .2s;}
-.rol-btn:hover{border-color:var(--g);background:rgba(201,168,76,0.08);}
-.rol-icon{font-size:28px;margin-bottom:8px;}
-.rol-name{font-size:12px;letter-spacing:2px;color:var(--g);}
-.rol-desc{font-size:11px;color:rgba(255,255,255,0.4);margin-top:4px;font-style:italic;}
+.rol-k{background:rgba(255,255,255,0.04);border:1px solid rgba(201,168,76,0.2);border-radius:8px;padding:1.5rem 1rem;cursor:pointer;text-align:center;transition:all .2s;}
+.rol-k:hover{border-color:var(--g);background:rgba(201,168,76,0.08);}
+.rol-ico{font-size:26px;margin-bottom:8px;}
+.rol-nm{font-size:11px;letter-spacing:2px;color:var(--g);}
+.rol-ds{font-size:10px;color:rgba(255,255,255,0.4);margin-top:4px;font-style:italic;}
 
-/* ŞİFRE EKRANI */
+/* ŞİFRE */
 #sifre-ekran{display:none;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:2rem;}
-.sifre-title{font-size:11px;letter-spacing:2px;color:rgba(201,168,76,0.6);margin-bottom:1rem;text-align:center;}
-.sifre-input{width:100%;max-width:280px;padding:14px;font-size:20px;text-align:center;background:rgba(255,255,255,0.06);border:1px solid rgba(201,168,76,0.3);color:#fff;border-radius:4px;outline:none;letter-spacing:4px;margin-bottom:10px;}
-.sifre-btn{width:100%;max-width:280px;padding:12px;background:var(--g);color:#000;font-size:10px;letter-spacing:2px;border:none;border-radius:2px;cursor:pointer;}
-.sifre-hata{color:#E24B4A;font-size:11px;margin-top:8px;font-style:italic;display:none;}
-.geri-btn{margin-top:1rem;font-size:11px;color:rgba(255,255,255,0.35);cursor:pointer;text-decoration:underline;}
+.sifre-lbl{font-size:10px;letter-spacing:2px;color:rgba(201,168,76,0.6);margin-bottom:1rem;text-align:center;}
+.sifre-inp{width:100%;max-width:280px;padding:14px;font-size:22px;text-align:center;background:rgba(255,255,255,0.06);border:1px solid rgba(201,168,76,0.3);color:#fff;border-radius:4px;outline:none;letter-spacing:4px;margin-bottom:10px;}
+.sifre-btn{width:100%;max-width:280px;padding:12px;background:var(--g);color:#000;font-size:10px;letter-spacing:2px;border:none;border-radius:2px;cursor:pointer;font-weight:600;}
+.sifre-hata{color:#E24B4A;font-size:11px;margin-top:8px;font-style:italic;display:none;text-align:center;}
+.geri{margin-top:1rem;font-size:11px;color:rgba(255,255,255,0.35);cursor:pointer;text-decoration:underline;}
 
-/* ÜSTTAB */
+/* UYGULAMA */
 #app{display:none;}
-.topbar{background:var(--black);padding:10px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(201,168,76,0.15);}
+.topbar{background:var(--siyah);padding:10px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(201,168,76,0.15);position:sticky;top:0;z-index:50;}
 .brand{display:flex;align-items:center;gap:8px;}
-.brand-num{font-size:20px;font-weight:700;color:var(--g);font-family:Georgia,serif;}
-.brand-info{}
-.brand-name{font-size:9px;letter-spacing:3px;color:rgba(255,255,255,0.5);}
-.brand-rol{font-size:9px;color:var(--g);letter-spacing:1px;margin-top:1px;}
-.live{display:flex;align-items:center;gap:5px;font-size:10px;color:#22c55e;}
-.live-dot{width:7px;height:7px;border-radius:50%;background:#22c55e;}
-.cikis-btn{font-size:9px;color:rgba(255,255,255,0.3);cursor:pointer;padding:4px 8px;border:1px solid rgba(255,255,255,0.1);border-radius:2px;}
+.brand-num{font-size:18px;font-weight:700;color:var(--g);font-family:Georgia,serif;}
+.brand-nm{font-size:8px;letter-spacing:3px;color:rgba(255,255,255,0.5);}
+.brand-rol{font-size:9px;color:var(--g);letter-spacing:1px;margin-top:2px;}
+.live{display:flex;align-items:center;gap:5px;font-size:9px;color:#22c55e;}
+.live-dot{width:7px;height:7px;border-radius:50%;background:#22c55e;animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.4;}}
+.cikis{font-size:9px;color:rgba(255,255,255,0.3);cursor:pointer;padding:4px 8px;border:1px solid rgba(255,255,255,0.1);border-radius:2px;}
 
-.notif{background:var(--g);color:#000;padding:9px 14px;font-size:11px;font-weight:500;letter-spacing:1px;text-align:center;display:none;}
-.notif.on{display:block;}
+.notif-bar{background:var(--g);color:#000;padding:8px 14px;font-size:11px;font-weight:600;text-align:center;display:none;}
+.notif-bar.on{display:block;}
 
-/* MUTFAK */
-#mutfak-panel{display:none;}
-.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;padding:10px;}
-.stat{background:rgba(255,255,255,0.04);border-radius:4px;padding:10px;border:1px solid rgba(255,255,255,0.06);}
-.stat-val{font-size:22px;font-weight:600;color:var(--g);}
-.stat-lbl{font-size:9px;letter-spacing:1px;color:rgba(255,255,255,0.35);margin-top:2px;}
-.orders{display:flex;flex-direction:column;gap:8px;padding:0 10px 10px;}
-.order-card{border-radius:6px;border:1px solid rgba(255,255,255,0.08);overflow:hidden;}
-.card-head{padding:10px 12px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(255,255,255,0.06);}
-.card-masa{font-size:15px;font-weight:600;color:#fff;letter-spacing:1px;}
-.card-timer{font-size:12px;color:var(--g);font-weight:500;}
-.card-badge{font-size:8px;letter-spacing:1px;padding:3px 8px;border-radius:1px;}
-.b-new{background:#FAEEDA;color:#854F0B;}
-.b-prep{background:#E6F1FB;color:#185FA5;}
-.b-ready{background:#EAF3DE;color:#27500A;}
-.card-items{padding:8px 12px;}
-.card-item{font-size:12px;color:rgba(255,255,255,0.7);padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.04);}
-.card-item:last-child{border-bottom:none;}
-.card-note{font-size:10px;color:var(--g);padding:5px 12px;border-top:1px solid rgba(201,168,76,0.1);font-style:italic;}
-.card-actions{border-top:1px solid rgba(255,255,255,0.05);}
-.card-btn{width:100%;padding:10px;font-size:10px;letter-spacing:1px;border:none;cursor:pointer;font-family:inherit;}
-.btn-next{background:rgba(201,168,76,0.15);color:var(--g);}
-.btn-done{background:rgba(34,197,94,0.1);color:#22c55e;}
-.empty{text-align:center;padding:3rem;color:rgba(255,255,255,0.25);font-size:14px;font-style:italic;}
+/* SEKMELER */
+.tabs{display:flex;border-bottom:1px solid rgba(201,168,76,0.15);}
+.tab{flex:1;padding:12px 8px;font-size:10px;letter-spacing:1px;color:rgba(255,255,255,0.4);cursor:pointer;text-align:center;border-bottom:2px solid transparent;transition:all .2s;}
+.tab.on{color:var(--g);border-bottom-color:var(--g);}
+.pg{display:none;padding:12px;}
+.pg.on{display:block;}
 
-/* GARSON */
-#garson-panel{display:none;background:var(--paper);}
-.g-section{padding:10px 12px 4px;}
-.g-sec-title{font-size:10px;font-weight:500;color:#888;letter-spacing:1.5px;margin-bottom:8px;}
-.masa-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding:0 12px 10px;}
-.masa-card{border-radius:6px;border:0.5px solid #e0d9cc;padding:8px 4px;cursor:pointer;text-align:center;background:#fff;transition:border-color .15s;}
-.masa-card.sel{border:2px solid var(--g);}
-.masa-num{font-size:16px;font-weight:600;color:#1a1208;}
-.masa-badge{font-size:9px;padding:2px 5px;border-radius:8px;margin-top:2px;display:inline-block;}
-.mb-bos{background:#f0ede8;color:#888;}
-.mb-aktif{background:#FAEEDA;color:#854F0B;}
-.mb-hazir{background:#EAF3DE;color:#27500A;}
-.mb-hesap{background:#FCEBEB;color:#A32D2D;}
-.detail{margin:0 12px 10px;background:#fff;border-radius:8px;border:0.5px solid #e0d9cc;overflow:hidden;display:none;}
-.detail.on{display:block;}
-.det-head{background:var(--black);padding:10px 14px;display:flex;justify-content:space-between;}
-.det-masa{font-size:14px;font-weight:600;color:var(--g);}
-.det-durum{font-size:9px;color:rgba(255,255,255,0.4);letter-spacing:1px;}
-.det-body{padding:12px 14px;}
-.det-row{display:flex;justify-content:space-between;font-size:13px;padding:4px 0;border-bottom:0.5px solid #f0ede8;color:#3d3020;}
-.det-row:last-child{border-bottom:none;}
-.det-total{display:flex;justify-content:space-between;font-size:14px;font-weight:600;margin-top:10px;padding-top:10px;border-top:0.5px solid #e0d9cc;}
-.det-total span:last-child{color:var(--g);}
-.det-note{font-size:11px;color:var(--g3);font-style:italic;margin-top:6px;}
-.det-actions{display:flex;gap:6px;padding:10px 14px;border-top:0.5px solid #f0ede8;flex-wrap:wrap;}
-.act{font-size:10px;letter-spacing:1px;padding:8px 14px;border-radius:2px;border:0.5px solid #ccc;background:#fff;cursor:pointer;color:#333;}
-.act.p{background:var(--black);color:var(--g);border-color:var(--black);}
-.act.w{background:#FAEEDA;color:#854F0B;border-color:#EF9F27;}
-.calls-wrap{padding:0 12px 16px;}
-.call-item{background:#fff;border-radius:6px;border:0.5px solid #e0d9cc;padding:10px 12px;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;border-left:3px solid var(--g);}
-.call-masa{font-size:13px;font-weight:600;color:#1a1208;}
-.call-msg{font-size:12px;color:#666;margin-top:2px;}
-.call-ok{font-size:9px;padding:5px 10px;border-radius:2px;border:0.5px solid #ccc;background:#fff;cursor:pointer;white-space:nowrap;}
+/* İSTATİSTİK */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px;}
+.stat{background:rgba(255,255,255,0.04);border-radius:6px;padding:12px;text-align:center;border:1px solid rgba(255,255,255,0.06);}
+.stat-val{font-size:22px;font-weight:700;color:var(--g);}
+.stat-lbl{font-size:8px;letter-spacing:1px;color:rgba(255,255,255,0.4);margin-top:3px;}
+
+/* SİPARİŞ KARTI */
+.sip-kart{background:#1a1005;border-radius:8px;margin-bottom:8px;overflow:hidden;border:1px solid rgba(255,255,255,0.06);}
+.sip-head{padding:10px 12px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(255,255,255,0.06);}
+.sip-masa{font-size:14px;font-weight:700;color:#fff;}
+.sip-sure{font-size:10px;color:rgba(255,255,255,0.4);}
+.sip-badge{font-size:8px;padding:3px 8px;border-radius:2px;font-weight:600;letter-spacing:1px;}
+.badge-yeni{background:#FAEEDA;color:#854F0B;}
+.badge-hazir{background:#EAF3DE;color:#27500A;}
+.badge-hazirlaniyor{background:#E6F1FB;color:#185FA5;}
+.sip-items{padding:8px 12px;}
+.sip-item{font-size:12px;color:rgba(255,255,255,0.7);padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.04);}
+.sip-item:last-child{border-bottom:none;}
+.sip-not{font-size:11px;font-style:italic;color:var(--g2);padding:4px 12px;background:rgba(201,168,76,0.05);}
+.sip-actions{display:flex;gap:1px;}
+.sip-btn{flex:1;padding:10px;font-size:9px;letter-spacing:1px;border:none;cursor:pointer;font-weight:600;transition:all .2s;}
+.btn-hazirla{background:rgba(56,130,221,0.15);color:#85B7EB;}
+.btn-hazirla:hover{background:rgba(56,130,221,0.25);}
+.btn-hazir{background:rgba(30,158,117,0.15);color:#5DCAA5;}
+.btn-hazir:hover{background:rgba(30,158,117,0.25);}
+.btn-servis{background:rgba(201,168,76,0.15);color:var(--g2);}
+.btn-servis:hover{background:rgba(201,168,76,0.25);}
+.btn-iptal{background:rgba(226,75,74,0.1);color:#F09595;}
+
+/* GARSON ÇAĞRI */
+.cagri-kart{background:#1a1005;border-radius:8px;margin-bottom:8px;padding:12px;border:1px solid rgba(201,168,76,0.2);display:flex;justify-content:space-between;align-items:center;}
+.cagri-masa{font-size:14px;font-weight:700;color:var(--g);}
+.cagri-mesaj{font-size:12px;color:rgba(255,255,255,0.7);margin-top:3px;}
+.cagri-sure{font-size:10px;color:rgba(255,255,255,0.3);}
+.cagri-tamam{padding:8px 14px;background:rgba(30,158,117,0.2);color:#5DCAA5;border:1px solid rgba(30,158,117,0.3);border-radius:3px;font-size:9px;cursor:pointer;letter-spacing:1px;}
+
+.bos{text-align:center;padding:3rem;font-size:13px;color:rgba(255,255,255,0.25);font-style:italic;}
+.yenile-btn{width:100%;padding:10px;background:rgba(201,168,76,0.1);color:var(--g);border:1px solid rgba(201,168,76,0.2);border-radius:4px;font-size:10px;letter-spacing:1px;cursor:pointer;margin-bottom:12px;}
 </style>
 </head>
 <body>
 
-<!-- GİRİŞ EKRANI -->
+<!-- GİRİŞ -->
 <div id="giris">
-  <div class="giris-logo">
-    <div class="giris-num">40</div>
-    <div class="giris-ad">KIRKİKİNDİ</div>
-    <div class="giris-sub">Akyokuş Kasrı · Konya</div>
+  <div style="text-align:center;margin-bottom:2rem;">
+    <div class="logo-num">40</div>
+    <div class="logo-ad">KIRKİKİNDİ</div>
+    <div class="logo-sub">Akyokuş Kasrı · Konya</div>
   </div>
-  <div class="giris-title">ROLÜNÜZü SEÇİN</div>
+  <div class="rol-sec">ROLÜNÜZÜ SEÇİN</div>
   <div class="rol-grid">
-    <div class="rol-btn" onclick="rolSec('mutfak')">
-      <div class="rol-icon">🍳</div>
-      <div class="rol-name">MUTFAK</div>
-      <div class="rol-desc">Sipariş ekranı</div>
+    <div class="rol-k" onclick="rolSec('mutfak')">
+      <div class="rol-ico">🍳</div>
+      <div class="rol-nm">MUTFAK</div>
+      <div class="rol-ds">Sipariş ekranı</div>
     </div>
-    <div class="rol-btn" onclick="rolSec('garson')">
-      <div class="rol-icon">🙋</div>
-      <div class="rol-name">GARSON</div>
-      <div class="rol-desc">Masa & çağrı</div>
+    <div class="rol-k" onclick="rolSec('garson')">
+      <div class="rol-ico">🙋</div>
+      <div class="rol-nm">GARSON</div>
+      <div class="rol-ds">Masa ve çağrı</div>
     </div>
   </div>
 </div>
 
-<!-- ŞİFRE EKRANI -->
+<!-- ŞİFRE -->
 <div id="sifre-ekran">
-  <div class="giris-logo">
-    <div class="giris-num">40</div>
-    <div class="giris-ad">KIRKİKİNDİ</div>
+  <div style="text-align:center;margin-bottom:2rem;">
+    <div class="logo-num">40</div>
+    <div class="logo-ad">KIRKİKİNDİ</div>
   </div>
-  <div class="sifre-title" id="sifre-title">MUTFAK ŞİFRESİ</div>
-  <input class="sifre-input" id="sifre-inp" type="password" placeholder="••••" maxlength="6"
-    onkeypress="if(event.key==='Enter')sifreGir()">
-  <button class="sifre-btn" onclick="sifreGir()">◆ GİRİŞ YAP</button>
-  <div class="sifre-hata" id="sifre-hata">Yanlış şifre, tekrar deneyin.</div>
-  
-<div id="install-banner" style="display:none;margin-top:1.5rem;text-align:center;">
-  <button onclick="installApp()" style="background:transparent;border:1px solid rgba(201,168,76,0.4);color:rgba(201,168,76,0.7);font-size:10px;letter-spacing:2px;padding:8px 20px;border-radius:2px;cursor:pointer;">
-    + ANA EKRANA EKLE
-  </button>
-</div>
-<div class="geri-btn" onclick="geriDon()">← Geri dön</div>
+  <div class="sifre-lbl" id="sifre-lbl">ŞİFRE</div>
+  <input class="sifre-inp" id="sifre-inp" type="password" placeholder="••••" maxlength="10">
+  <button class="sifre-btn" onclick="sifreGir()">◆ GİRİŞ</button>
+  <div class="sifre-hata" id="sifre-hata">Yanlış şifre.</div>
+  <div class="geri" onclick="geriDon()">← Geri</div>
 </div>
 
-<!-- ANA UYGULAMA -->
+<!-- UYGULAMA -->
 <div id="app">
   <div class="topbar">
     <div class="brand">
       <div class="brand-num">40</div>
-      <div class="brand-info">
-        <div class="brand-name">KIRKİKİNDİ</div>
-        <div class="brand-rol" id="brand-rol">—</div>
+      <div>
+        <div class="brand-nm">KIRKİKİNDİ</div>
+        <div class="brand-rol" id="rol-lbl">—</div>
       </div>
     </div>
     <div style="display:flex;align-items:center;gap:10px;">
-      <div class="live"><div class="live-dot"></div>CANLI</div>
-      <div class="cikis-btn" onclick="cikisYap()">Çıkış</div>
+      <div class="live"><div class="live-dot"></div><span id="live-txt">CANLI</span></div>
+      <div class="cikis" onclick="cikisYap()">Çıkış</div>
     </div>
   </div>
-  <div class="notif" id="notif"></div>
+  <div class="notif-bar" id="notif-bar"></div>
 
   <!-- MUTFAK PANELİ -->
-  <div id="mutfak-panel">
-    <div class="stats">
-      <div class="stat"><div class="stat-val" id="s-aktif">0</div><div class="stat-lbl">AKTİF SİPARİŞ</div></div>
-      <div class="stat"><div class="stat-val" id="s-hazir">0</div><div class="stat-lbl">HAZIR</div></div>
-      <div class="stat"><div class="stat-val" id="s-bugun">0</div><div class="stat-lbl">BUGÜN TOPLAM</div></div>
-      <div class="stat"><div class="stat-val" id="s-ciro" style="font-size:16px;">₺0</div><div class="stat-lbl">BUGÜN CİRO</div></div>
+  <div id="mutfak-panel" style="display:none;">
+    <div style="padding:12px;">
+      <div class="stats">
+        <div class="stat"><div class="stat-val" id="stat-yeni">0</div><div class="stat-lbl">YENİ</div></div>
+        <div class="stat"><div class="stat-val" id="stat-hazirlaniyor">0</div><div class="stat-lbl">HAZIRLANIYOR</div></div>
+        <div class="stat"><div class="stat-val" id="stat-hazir">0</div><div class="stat-lbl">HAZIR</div></div>
+      </div>
+      <button class="yenile-btn" onclick="siparisleriYukle()">↻ Yenile</button>
+      <div id="siparis-liste"></div>
     </div>
-    <div class="orders" id="k-orders"><div class="empty">Yeni sipariş bekleniyor...</div></div>
   </div>
 
   <!-- GARSON PANELİ -->
-  <div id="garson-panel">
-    <div class="g-section"><div class="g-sec-title">TÜM MASALAR</div></div>
-    <div class="masa-grid" id="masa-grid"></div>
-    <div class="detail" id="det">
-      <div class="det-head">
-        <div class="det-masa" id="det-masa">—</div>
-        <div class="det-durum" id="det-dur">—</div>
-      </div>
-      <div class="det-body">
-        <div id="det-items"></div>
-        <div class="det-total"><span>Toplam</span><span id="det-total">—</span></div>
-        <div class="det-note" id="det-note"></div>
-      </div>
-      <div class="det-actions">
-        <button class="act p" onclick="servisEt()">Servis edildi</button>
-        <button class="act w" onclick="hesapAc()">Hesap getir</button>
-        <button class="act" onclick="masaKapat()">Masayı kapat</button>
-        <button class="act" onclick="detKapat()">Kapat ✕</button>
+  <div id="garson-panel" style="display:none;">
+    <div style="padding:12px 12px 6px;">
+      <div class="tabs">
+        <div class="tab on" id="gt0" onclick="garsonTab('cagriler',0)">ÇAĞRILAR</div>
+        <div class="tab" id="gt1" onclick="garsonTab('siparisler',1)">SİPARİŞLER</div>
       </div>
     </div>
-    <div id="calls-sec" style="display:none;">
-      <div class="g-section"><div class="g-sec-title" id="calls-title">GARSON ÇAĞRILARI</div></div>
-      <div class="calls-wrap" id="calls-wrap"></div>
+    <div style="padding:0 12px 12px;">
+      <div id="pg-cagriler" class="pg on">
+        <button class="yenile-btn" onclick="cagrilariYukle()">↻ Yenile</button>
+        <div id="cagri-liste"></div>
+      </div>
+      <div id="pg-siparisler" class="pg">
+        <button class="yenile-btn" onclick="siparisleriYukle()">↻ Yenile</button>
+        <div id="garson-sip-liste"></div>
+      </div>
     </div>
   </div>
 </div>
 
 <script>
+var SB_URL='https://xhuvpbzpghazpipaovwt.supabase.co';
+var SB_KEY='sb_publishable_yRJxY27Pu36bRjcUdWrDWg_kf91VdGL';
+var sb=null;
+try{sb=window.supabase.createClient(SB_URL,SB_KEY);}catch(e){}
 
-var deferredPrompt;
-window.addEventListener('beforeinstallprompt', function(e){
-  e.preventDefault();
-  deferredPrompt = e;
-  document.getElementById('install-banner').style.display = 'block';
-});
+var SIFRE_MUTFAK='1234';
+var SIFRE_GARSON='5678';
+var aktifRol='';
+var channel=null;
 
-function installApp(){
-  if(deferredPrompt){
-    deferredPrompt.prompt();
-    deferredPrompt.userChoice.then(function(r){
-      deferredPrompt = null;
-      document.getElementById('install-banner').style.display = 'none';
-    });
-  }
-}
-
-window.addEventListener('appinstalled', function(){
-  document.getElementById('install-banner').style.display = 'none';
-});
-
-var SUPABASE_URL = 'https://xhuvpbzpghazpipaovwt.supabase.co';
-var SUPABASE_ANON_KEY = 'sb_publishable_vR5mtSCXn0nxd-_I0TzLfw_jQrT_KZK';
-var sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-// Şifreler — istediğiniz gibi değiştirebilirsiniz
-var SIFRELER = {mutfak: '1234', garson: '5678'};
-
-var aktifRol = null;
-var orders = {};
-var masaData = {};
-var calls = [];
-var selectedMasa = null;
-var MASA_SAYISI = 70;
-
-var statusLabels = {new:'YENİ', prep:'HAZIRLANIYOR', ready:'HAZIR ✓', done:'TESLİM'};
-var statusBadge  = {new:'b-new', prep:'b-prep', ready:'b-ready'};
-var statusBg     = {new:'#110a02', prep:'#02080f', ready:'#021008', done:'#0a0a0a'};
-var nextLabel    = {new:'Hazırlamaya Başla', prep:'Hazır İşaretle ✓', ready:'Servis Edildi'};
-var durumLabel   = {bos:'Boş', aktif:'Aktif', hazir:'Hazır', hesap:'Hesap'};
-var durumBadge   = {bos:'mb-bos', aktif:'mb-aktif', hazir:'mb-hazir', hesap:'mb-hesap'};
+// Şifreler localStorage'dan al (yönetimden değiştirilince)
+(function(){
+  var s=localStorage.getItem('sifreler');
+  if(s){var p=JSON.parse(s);SIFRE_MUTFAK=p.mutfak||'1234';SIFRE_GARSON=p.garson||'5678';}
+})();
 
 function rolSec(rol){
-  aktifRol = rol;
-  document.getElementById('giris').style.display = 'none';
-  document.getElementById('sifre-title').textContent = rol.toUpperCase() + ' ŞİFRESİ';
-  document.getElementById('sifre-ekran').style.display = 'flex';
-  document.getElementById('sifre-inp').value = '';
-  document.getElementById('sifre-hata').style.display = 'none';
-  setTimeout(function(){document.getElementById('sifre-inp').focus();}, 100);
-}
-
-function sifreGir(){
-  var val = document.getElementById('sifre-inp').value;
-  if(val === SIFRELER[aktifRol]){
-    document.getElementById('sifre-ekran').style.display = 'none';
-    document.getElementById('app').style.display = 'block';
-    document.getElementById('brand-rol').textContent = aktifRol === 'mutfak' ? '🍳 MUTFAK' : '🙋 GARSON';
-    if(aktifRol === 'mutfak'){
-      document.getElementById('mutfak-panel').style.display = 'block';
-      document.getElementById('garson-panel').style.display = 'none';
-      document.body.style.background = '#0a0806';
-      loadMutfak();
-    } else {
-      document.getElementById('garson-panel').style.display = 'block';
-      document.getElementById('mutfak-panel').style.display = 'none';
-      document.body.style.background = '#FDFAF4';
-      loadGarson();
-    }
-  } else {
-    document.getElementById('sifre-hata').style.display = 'block';
-    document.getElementById('sifre-inp').value = '';
-  }
+  aktifRol=rol;
+  document.getElementById('giris').style.display='none';
+  document.getElementById('sifre-ekran').style.display='flex';
+  document.getElementById('sifre-lbl').textContent=rol==='mutfak'?'MUTFAK ŞİFRESİ':'GARSON ŞİFRESİ';
+  document.getElementById('sifre-inp').value='';
+  document.getElementById('sifre-hata').style.display='none';
+  setTimeout(function(){document.getElementById('sifre-inp').focus();},100);
 }
 
 function geriDon(){
-  document.getElementById('sifre-ekran').style.display = 'none';
-  document.getElementById('giris').style.display = 'flex';
+  document.getElementById('sifre-ekran').style.display='none';
+  document.getElementById('giris').style.display='flex';
 }
+
+function sifreGir(){
+  var v=document.getElementById('sifre-inp').value;
+  var dogru=aktifRol==='mutfak'?SIFRE_MUTFAK:SIFRE_GARSON;
+  if(v!==dogru){document.getElementById('sifre-hata').style.display='block';return;}
+  document.getElementById('sifre-ekran').style.display='none';
+  document.getElementById('app').style.display='block';
+  document.getElementById('rol-lbl').textContent=aktifRol==='mutfak'?'🍳 MUTFAK':'🙋 GARSON';
+  if(aktifRol==='mutfak'){
+    document.getElementById('mutfak-panel').style.display='block';
+    siparisleriYukle();
+    realtimeBaslat();
+  } else {
+    document.getElementById('garson-panel').style.display='block';
+    cagrilariYukle();
+    siparisleriYukle();
+    realtimeBaslat();
+  }
+}
+
+document.getElementById('sifre-inp').addEventListener('keypress',function(e){if(e.key==='Enter')sifreGir();});
 
 function cikisYap(){
-  aktifRol = null;
-  document.getElementById('app').style.display = 'none';
-  document.getElementById('giris').style.display = 'flex';
-  document.body.style.background = '#120E08';
+  if(channel&&sb)sb.removeChannel(channel);
+  document.getElementById('app').style.display='none';
+  document.getElementById('giris').style.display='flex';
+  aktifRol='';
 }
 
-function showNotif(msg){
-  var n = document.getElementById('notif');
-  n.textContent = msg; n.classList.add('on');
-  setTimeout(function(){n.classList.remove('on');}, 4000);
+// SİPARİŞLER
+async function siparisleriYukle(){
+  if(!sb){gosterbos('siparis-liste','Supabase bağlantısı yok.');return;}
+  var res=await sb.from('siparisler').select('*').in('durum',['new','prep','ready']).order('created_at',{ascending:true});
+  if(res.error){gosterbos('siparis-liste','Yükleme hatası.');return;}
+  var data=res.data||[];
+  
+  // İstatistikler
+  document.getElementById('stat-yeni').textContent=data.filter(function(d){return d.durum==='new';}).length;
+  document.getElementById('stat-hazirlaniyor').textContent=data.filter(function(d){return d.durum==='prep';}).length;
+  document.getElementById('stat-hazir').textContent=data.filter(function(d){return d.durum==='ready';}).length;
+  
+  if(data.length===0){gosterbos('siparis-liste','Bekleyen sipariş yok.');gosterbos('garson-sip-liste','Bekleyen sipariş yok.');return;}
+  
+  var html=renderSiparisler(data,'mutfak');
+  document.getElementById('siparis-liste').innerHTML=html;
+  var html2=renderSiparisler(data,'garson');
+  document.getElementById('garson-sip-liste').innerHTML=html2;
 }
 
-// ===== MUTFAK =====
-async function loadMutfak(){
-  var today = new Date().toISOString().split('T')[0];
-  var {data} = await sb.from('siparisler').select('*').gte('created_at', today).order('created_at', {ascending:false});
-  if(data) data.forEach(function(o){orders[o.id] = o;});
-  renderMutfak();
-
-  sb.channel('mutfak-live')
-    .on('postgres_changes', {event:'INSERT', schema:'public', table:'siparisler'}, function(p){
-      orders[p.new.id] = p.new;
-      showNotif('YENİ SİPARİŞ! Masa ' + p.new.masa_no);
-      renderMutfak();
-    })
-    .on('postgres_changes', {event:'UPDATE', schema:'public', table:'siparisler'}, function(p){
-      orders[p.new.id] = p.new;
-      renderMutfak();
-    })
-    .subscribe();
-
-  sb.channel('garson-cagri-mutfak')
-    .on('postgres_changes', {event:'INSERT', schema:'public', table:'garson_cagrisi'}, function(p){
-      showNotif('GARSON ÇAĞRISI — Masa ' + p.new.masa_no + ': ' + p.new.mesaj);
-    })
-    .subscribe();
-}
-
-function renderMutfak(){
-  var active = Object.values(orders).filter(function(o){return o.durum !== 'done';});
-  var hazir  = active.filter(function(o){return o.durum === 'ready';});
-  var bugun  = Object.values(orders).length;
-  var ciro   = Object.values(orders).reduce(function(s,o){return s+(o.toplam||0);}, 0);
-
-  document.getElementById('s-aktif').textContent = active.length;
-  document.getElementById('s-hazir').textContent = hazir.length;
-  document.getElementById('s-bugun').textContent = bugun;
-  document.getElementById('s-ciro').textContent  = '₺' + ciro.toLocaleString('tr');
-
-  if(!active.length){
-    document.getElementById('k-orders').innerHTML = '<div class="empty">Yeni sipariş bekleniyor...</div>';
-    return;
-  }
-
-  var html = '';
-  active.sort(function(a,b){
-    var pri = {new:0, prep:1, ready:2};
-    return (pri[a.durum]||3) - (pri[b.durum]||3);
-  }).forEach(function(o){
-    if(o.durum === 'done') return;
-    var items = Array.isArray(o.items) ? o.items : JSON.parse(o.items||'[]');
-    var eta   = o.eta_dakika ? o.eta_dakika + ' dk' : (o.durum === 'new' ? 'YENİ' : '—');
-    var btn   = nextLabel[o.durum] ? '<button class="card-btn ' + (o.durum==='ready'?'btn-done':'btn-next') + '" onclick="advOrder(\'' + o.id + '\')">' + nextLabel[o.durum] + '</button>' : '';
-    html += '<div class="order-card" style="background:' + (statusBg[o.durum]||'#111') + ';">';
-    html += '<div class="card-head"><div><div class="card-masa">Masa ' + o.masa_no + '</div>';
-    if(statusBadge[o.durum]) html += '<span class="card-badge ' + statusBadge[o.durum] + '">' + statusLabels[o.durum] + '</span>';
-    html += '</div><div class="card-timer">' + eta + '</div></div>';
-    html += '<div class="card-items">' + items.map(function(it){return '<div class="card-item">' + it + '</div>';}).join('') + '</div>';
-    if(o.siparis_notu) html += '<div class="card-note">Not: ' + o.siparis_notu + '</div>';
-    if(btn) html += '<div class="card-actions">' + btn + '</div>';
-    html += '</div>';
+function renderSiparisler(data,tip){
+  var html='';
+  data.forEach(function(s){
+    var badge='';
+    if(s.durum==='new')badge='<span class="sip-badge badge-yeni">YENİ</span>';
+    else if(s.durum==='prep')badge='<span class="sip-badge badge-hazirlaniyor">HAZIRLANIYOR</span>';
+    else if(s.durum==='ready')badge='<span class="sip-badge badge-hazir">HAZIR</span>';
+    
+    var sure=zamanHesapla(s.created_at);
+    var urunler=Array.isArray(s.items)?s.items.join(', '):(s.items||'');
+    
+    html+='<div class="sip-kart">';
+    html+='<div class="sip-head"><div><div class="sip-masa">Masa '+s.masa_no+'</div></div><div style="display:flex;align-items:center;gap:8px;">'+badge+'<span class="sip-sure">'+sure+'</span></div></div>';
+    html+='<div class="sip-items">';
+    if(Array.isArray(s.items)){s.items.forEach(function(u){html+='<div class="sip-item">• '+u+'</div>';});}
+    else{html+='<div class="sip-item">'+urunler+'</div>';}
+    html+='</div>';
+    if(s.siparis_notu)html+='<div class="sip-not">📝 '+s.siparis_notu+'</div>';
+    
+    if(tip==='mutfak'){
+      html+='<div class="sip-actions">';
+      if(s.durum==='new')html+='<button class="sip-btn btn-hazirla" onclick="durumGuncelle('+s.id+',\'prep\')">▶ HAZIRLAMAYA BAŞLA</button>';
+      if(s.durum==='prep')html+='<button class="sip-btn btn-hazir" onclick="durumGuncelle('+s.id+',\'ready\')">✓ HAZIR</button>';
+      if(s.durum==='ready')html+='<button class="sip-btn btn-servis" onclick="durumGuncelle('+s.id+',\'done\')">✦ SERVİS EDİLDİ</button>';
+      html+='</div>';
+    } else {
+      if(s.durum==='ready'){
+        html+='<div class="sip-actions"><button class="sip-btn btn-servis" onclick="durumGuncelle('+s.id+',\'done\')">✦ SERVİS EDİLDİ</button></div>';
+      }
+    }
+    html+='</div>';
   });
-  document.getElementById('k-orders').innerHTML = html || '<div class="empty">Yeni sipariş bekleniyor...</div>';
+  return html;
 }
 
-async function advOrder(id){
-  var o = orders[id];
-  if(!o) return;
-  var steps = ['new','prep','ready','done'];
-  var next  = steps[steps.indexOf(o.durum)+1] || 'done';
-  var eta   = next === 'prep' ? Math.floor(Math.random()*8+10) : null;
-  await sb.from('siparisler').update({durum:next, eta_dakika:eta}).eq('id', id);
-  orders[id].durum = next;
-  orders[id].eta_dakika = eta;
-  if(next === 'ready') showNotif('Masa ' + o.masa_no + ' HAZIR!');
-  renderMutfak();
+async function durumGuncelle(id,durum){
+  if(!sb)return;
+  await sb.from('siparisler').update({durum:durum}).eq('id',id);
+  siparisleriYukle();
+  if(durum==='ready')bildirimGoster('Sipariş hazır! Masa servis bekliyor.');
 }
 
-// ===== GARSON =====
-async function loadGarson(){
-  var today = new Date().toISOString().split('T')[0];
-  var {data:sis} = await sb.from('siparisler').select('*').gte('created_at',today).neq('durum','done');
-  if(sis) sis.forEach(function(s){masaData[s.masa_no] = s;});
-  var {data:cs} = await sb.from('garson_cagrisi').select('*').gte('created_at',today).eq('tamamlandi',false).order('created_at',{ascending:false});
-  if(cs) calls = cs;
-  renderGarson();
-
-  sb.channel('garson-live')
-    .on('postgres_changes', {event:'*', schema:'public', table:'siparisler'}, function(p){
-      if(p.eventType==='UPDATE'&&p.new.durum==='ready') showNotif('HAZIR! Masa ' + p.new.masa_no);
-      if(p.new.durum !== 'done') masaData[p.new.masa_no] = p.new;
-      else delete masaData[p.new.masa_no];
-      renderGarson();
-    })
-    .on('postgres_changes', {event:'INSERT', schema:'public', table:'garson_cagrisi'}, function(p){
-      calls.unshift(p.new);
-      showNotif('ÇAĞRI! Masa ' + p.new.masa_no + ' — ' + p.new.mesaj);
-      renderGarson();
-    })
-    .subscribe();
-}
-
-function renderGarson(){
-  var html = '';
-  for(var i=1;i<=MASA_SAYISI;i++){
-    var s = masaData[i];
-    var dur = s ? (s.durum==='ready'?'hazir':s.durum==='hesap_istendi'?'hesap':'aktif') : 'bos';
-    var selCls = selectedMasa && selectedMasa.masa_no==i ? ' sel' : '';
-    html += '<div class="masa-card'+selCls+'" onclick="selectMasa('+i+')">';
-    html += '<div class="masa-num">'+i+'</div>';
-    html += '<div class="masa-badge '+durumBadge[dur]+'">'+durumLabel[dur]+'</div></div>';
-  }
-  document.getElementById('masa-grid').innerHTML = html;
-
-  if(selectedMasa && masaData[selectedMasa.masa_no]) renderDet(masaData[selectedMasa.masa_no]);
-
-  if(calls.length){
-    document.getElementById('calls-sec').style.display = 'block';
-    document.getElementById('calls-title').textContent = 'GARSON ÇAĞRILARI (' + calls.length + ')';
-    var ch = '';
-    calls.forEach(function(c){
-      var t = new Date(c.created_at).toLocaleTimeString('tr',{hour:'2-digit',minute:'2-digit'});
-      ch += '<div class="call-item"><div><div class="call-masa">Masa '+c.masa_no+'</div><div class="call-msg">'+c.mesaj+'</div></div>';
-      ch += '<div style="text-align:right;"><div style="font-size:10px;color:#aaa;margin-bottom:4px;">'+t+'</div>';
-      ch += '<button class="call-ok" onclick="callDone(\''+c.id+'\')">Tamam</button></div></div>';
-    });
-    document.getElementById('calls-wrap').innerHTML = ch;
-  } else {
-    document.getElementById('calls-sec').style.display = 'none';
-  }
-}
-
-function selectMasa(no){
-  var s = masaData[no];
-  if(!s){document.getElementById('det').classList.remove('on');selectedMasa=null;renderGarson();return;}
-  selectedMasa = s;
-  renderGarson();
-  renderDet(s);
-  document.getElementById('det').classList.add('on');
-}
-
-function renderDet(s){
-  document.getElementById('det-masa').textContent = 'Masa ' + s.masa_no;
-  document.getElementById('det-dur').textContent = {new:'SİPARİŞ ALINDI',prep:'HAZIRLANIYOR',ready:'HAZIR',done:'TAMAMLANDI'}[s.durum]||s.durum.toUpperCase();
-  var items = Array.isArray(s.items)?s.items:JSON.parse(s.items||'[]');
-  document.getElementById('det-items').innerHTML = items.map(function(it){return '<div class="det-row"><span>'+it+'</span></div>';}).join('');
-  document.getElementById('det-total').textContent = '₺'+(s.toplam||0);
-  document.getElementById('det-note').textContent = s.siparis_notu ? 'Not: '+s.siparis_notu : '';
-}
-
-function detKapat(){document.getElementById('det').classList.remove('on');selectedMasa=null;renderGarson();}
-
-async function servisEt(){
-  if(!selectedMasa)return;
-  await sb.from('siparisler').update({durum:'done'}).eq('id',selectedMasa.id);
-  delete masaData[selectedMasa.masa_no];
-  showNotif('Masa '+selectedMasa.masa_no+' — servis edildi');
-  detKapat();
-}
-async function hesapAc(){
-  if(!selectedMasa)return;
-  await sb.from('siparisler').update({durum:'hesap_istendi'}).eq('id',selectedMasa.id);
-  masaData[selectedMasa.masa_no].durum='hesap_istendi';
-  showNotif('Masa '+selectedMasa.masa_no+' — hesap hazır');
-  detKapat();
-}
-async function masaKapat(){
-  if(!selectedMasa)return;
-  await sb.from('siparisler').update({durum:'done'}).eq('id',selectedMasa.id);
-  delete masaData[selectedMasa.masa_no];
-  showNotif('Masa '+selectedMasa.masa_no+' — kapatıldı');
-  detKapat();
-}
-async function callDone(id){
-  await sb.from('garson_cagrisi').update({tamamlandi:true}).eq('id',id);
-  calls = calls.filter(function(c){return c.id!==id;});
-  renderGarson();
-}
-</script>
-
-<script>
-if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('/sw.js').then(function(r){
-    console.log('SW kayıtlı');
-  }).catch(function(e){
-    console.log('SW hatası', e);
+// GARSON ÇAĞRILARI
+async function cagrilariYukle(){
+  if(!sb){gosterbos('cagri-liste','Supabase bağlantısı yok.');return;}
+  var simdi=new Date();
+  simdi.setHours(simdi.getHours()-1);
+  var res=await sb.from('garson_cagrisi').select('*').gt('created_at',simdi.toISOString()).order('created_at',{ascending:false});
+  if(res.error){gosterbos('cagri-liste','Yükleme hatası.');return;}
+  var data=res.data||[];
+  if(data.length===0){gosterbos('cagri-liste','Son 1 saatte çağrı yok.');return;}
+  var html='';
+  data.forEach(function(c){
+    html+='<div class="cagri-kart">';
+    html+='<div><div class="cagri-masa">Masa '+c.masa_no+'</div><div class="cagri-mesaj">'+c.mesaj+'</div></div>';
+    html+='<div style="text-align:right;"><div class="cagri-sure">'+zamanHesapla(c.created_at)+'</div>';
+    html+='<button class="cagri-tamam" onclick="cagriSil('+c.id+')">✓ TAMAM</button></div>';
+    html+='</div>';
   });
+  document.getElementById('cagri-liste').innerHTML=html;
 }
+
+async function cagriSil(id){
+  if(!sb)return;
+  await sb.from('garson_cagrisi').delete().eq('id',id);
+  cagrilariYukle();
+}
+
+function garsonTab(id,i){
+  document.querySelectorAll('.pg').forEach(function(p){p.classList.remove('on');});
+  document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('on');});
+  document.getElementById('pg-'+id).classList.add('on');
+  document.getElementById('gt'+i).classList.add('on');
+}
+
+// REALTIME
+function realtimeBaslat(){
+  if(!sb)return;
+  try{
+    channel=sb.channel('panel-changes')
+      .on('postgres_changes',{event:'INSERT',schema:'public',table:'siparisler'},function(p){
+        bildirimGoster('🆕 Yeni sipariş! Masa '+p.new.masa_no);
+        siparisleriYukle();
+      })
+      .on('postgres_changes',{event:'UPDATE',schema:'public',table:'siparisler'},function(){
+        siparisleriYukle();
+      })
+      .on('postgres_changes',{event:'INSERT',schema:'public',table:'garson_cagrisi'},function(p){
+        bildirimGoster('🔔 Garson çağrısı! Masa '+p.new.masa_no+' — '+p.new.mesaj);
+        if(aktifRol==='garson')cagrilariYukle();
+      })
+      .subscribe();
+  }catch(e){}
+}
+
+// YARDIMCI
+function zamanHesapla(tarih){
+  if(!tarih)return '';
+  var fark=Math.floor((new Date()-new Date(tarih))/60000);
+  if(fark<1)return 'Az önce';
+  if(fark<60)return fark+' dk önce';
+  return Math.floor(fark/60)+' sa önce';
+}
+
+function gosterbos(id,mesaj){
+  var el=document.getElementById(id);
+  if(el)el.innerHTML='<div class="bos">'+mesaj+'</div>';
+}
+
+function bildirimGoster(mesaj){
+  var el=document.getElementById('notif-bar');
+  el.textContent=mesaj;el.classList.add('on');
+  setTimeout(function(){el.classList.remove('on');},4000);
+}
+
+// Otomatik yenileme - her 30 saniyede
+setInterval(function(){
+  if(aktifRol){siparisleriYukle();if(aktifRol==='garson')cagrilariYukle();}
+},30000);
 </script>
 </body>
 </html>
