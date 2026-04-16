@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
 <title>Kırkikindi — Menü</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;1,400&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Cinzel:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 * {
@@ -1094,6 +1095,11 @@ body {
 <script>var TR_ACIK={"Zeytinyağlı Yaprak Sarma": "İnce asma yapraklarına sarılmış pirinç ve baharat", "Humus": "Nohut, tahin, zeytinyağı ve limon sosu ile", "Mütebbel": "Közlenmiş patlıcan, tahin, süzme yoğurt ve nar taneleri ile", "Acılı Ezme": "Domates, soğan, maydanoz ve zeytinyağlı sos ile", "Bal Kabaklı Tarator": "Bal kabağı ve yoğurt ile hazırlanmaktadır", "Semizotlu Yoğurt": "Süzme yoğurt, semizotu ve zeytinyağı ile", "Zeytinyağlı Biber Dolması": "Pirinç, kuş üzümü ve çeşitli baharatlarla", "Zeytinyağlı Köz Patlıcan": "Közlenmiş patlıcan, domates, kapya biber ve özel baharatlar", "Konya Tarhun Çorbası": "Tarhun otu, kuzu eti, yoğurt mayanesi ve tereyağı ile", "Konya Bamya Çorbası": "Çiçek bamya, kuzu eti ve salçalı sos ile", "Güveçte Tandır Çorbası": "Nohut, fasulye ve bulgur güveçte odun ateşinde", "Mercimek Çorbası": "Klasik Türk mutfağından kırmızı mercimek çorbası", "Kuzu Şiş": "Pirinç pilavı, lavaş, köz domates, köz biber ve sumaklı soğan — 135g", "Kuzu Pirzola": "Pirinç pilavı, lavaş, köz domates ve sumaklı soğan — 185g", "Beyti": "Baharatlı kıyma lavaşa sarılı, yoğurt ve sos eşliğinde — 110g", "Levrek Izgara": "Röştı patates, baby mısır, Kaliforniya biber ve özel sos — 130g", "Karışık Izgara": "120g kırmızı et + 70g tavuk, pirinç pilavı, lavaş, köz domates", "Çöpleme": "Kuzu eti, patlıcan, kapya biber, arpacık soğan ve tereyağı — 150g", "Tirit (Köfte)": "Köfte eti, tandır ekmeği ve süzme yoğurt ile — 110g", "Fırın Sütlaç": "Taze inek sütünden hazırlanan geleneksel el yapımı sütlaç", "Havuç Dilim Baklava": "Antep fıstıklı geleneksel yöntemle hazırlanmış dilim baklava", "Dondumalı Höşmerim": "Konya geleneksel peynir tatlısı, dondurma ile servis edilmektedir", "Nevzine": "Tereyağında kavrulmuş un, ceviz ve şerbet, tahin eşliğinde", "Sirkencubin Şerbeti": "Osmanlı saray içeceği", "Nar Çiçeği Şerbeti": "Geleneksel şerbet", "Reyhan Şerbeti": "Taze reyhan aromalı", "Ayran": "El yapımı, taze"};
 var ACIKLAMA={"Zeytinyağlı Yaprak Sarma": {"en": "Rice and spices wrapped in thin vine leaves", "de": "Reis in Weinblätter gerollt", "ar": "أرز وبهارات في أوراق العنب", "fr": "Riz et épices en feuilles de vigne"}, "Humus": {"en": "Chickpeas, tahini, olive oil and lemon juice", "de": "Kichererbsen, Tahini, Olivenöl und Zitrone", "ar": "حمص وطحينة وزيت زيتون وليمون", "fr": "Pois chiches, tahini, huile olive et citron"}, "Mütebbel": {"en": "Roasted eggplant, tahini, yogurt and pomegranate seeds", "de": "Gegrillte Aubergine, Tahini und Granatapfelkerne", "ar": "باذنجان مشوي وطحينة وزبادي ورمان", "fr": "Aubergine grillée, tahini et grenade"}, "Acılı Ezme": {"en": "Tomatoes, onion, parsley and olive oil sauce", "de": "Tomaten, Zwiebeln, Petersilie und Olivenöl", "ar": "طماطم وبصل وبقدونس وزيت زيتون", "fr": "Tomates, oignons, persil et huile olive"}, "Bal Kabaklı Tarator": {"en": "Butternut squash with yogurt", "de": "Butternusskürbis mit Joghurt", "ar": "قرع وزبادي", "fr": "Courge butternut et yaourt"}, "Semizotlu Yoğurt": {"en": "Strained yogurt with purslane and olive oil", "de": "Joghurt mit Portulak und Olivenöl", "ar": "زبادي وبقلة وزيت زيتون", "fr": "Yaourt, pourpier et huile olive"}, "Zeytinyağlı Biber Dolması": {"en": "Peppers stuffed with rice, currants and spices", "de": "Paprika mit Reis und Johannisbeeren", "ar": "فلفل محشو بالأرز والزبيب", "fr": "Poivrons farcis au riz et groseilles"}, "Zeytinyağlı Köz Patlıcan": {"en": "Roasted eggplant with tomatoes and peppers", "de": "Gegrillte Aubergine mit Tomaten und Paprika", "ar": "باذنجان مشوي مع طماطم وفلفل", "fr": "Aubergine grillée aux tomates et poivrons"}, "Konya Tarhun Çorbası": {"en": "Tarragon, lamb, yogurt and butter soup", "de": "Estragon, Lamm und Joghurtsuppe", "ar": "شوربة طرخون ولحم ضأن وزبادي", "fr": "Soupe estragon, agneau et yaourt"}, "Konya Bamya Çorbası": {"en": "Okra, lamb and tomato paste soup", "de": "Okra und Lammsuppe mit Tomatenmark", "ar": "شوربة بامية ولحم ضأن", "fr": "Soupe de gombo et agneau"}, "Güveçte Tandır Çorbası": {"en": "Chickpeas, beans and bulgur cooked over wood fire", "de": "Kichererbsen, Bohnen und Bulgur am Holzfeuer", "ar": "حمص وفاصوليا وبرغل على نار الحطب", "fr": "Pois chiches, haricots et boulgour au feu de bois"}, "Mercimek Çorbası": {"en": "Classic Turkish red lentil soup", "de": "Klassische türkische rote Linsensuppe", "ar": "شوربة العدس الأحمر التركية الكلاسيكية", "fr": "Soupe classique aux lentilles rouges"}, "Kuzu Şiş": {"en": "Rice pilaf, lavash, roasted tomato, pepper and sumac onion — 135g", "de": "Reispilaf, Lavash, Ofentomaten und Sumach — 135g", "ar": "بلاو أرز ولاواش وطماطم مشوية وبصل بالسماق — 135غ", "fr": "Riz pilaf, lavash, tomate grillée et oignon sumac — 135g"}, "Kuzu Pirzola": {"en": "Rice pilaf, lavash, roasted tomato and sumac onion — 185g", "de": "Reispilaf, Lavash und Ofentomaten — 185g", "ar": "بلاو أرز ولاواش وطماطم مشوية — 185غ", "fr": "Riz pilaf, lavash et tomate grillée — 185g"}, "Beyti": {"en": "Spiced minced meat in lavash with yogurt sauce — 110g", "de": "Gewürztes Hackfleisch in Lavash mit Joghurtsauce — 110g", "ar": "لحم مفروم متبل في خبز مع صلصة زبادي — 110غ", "fr": "Viande hachée épicée en lavash, sauce yaourt — 110g"}, "Levrek Izgara": {"en": "Rösti potatoes, baby corn, California pepper and special sauce — 130g", "de": "Röstikartoffeln, Babymais und Spezialsauce — 130g", "ar": "بطاطس وذرة وصلصة خاصة — 130غ", "fr": "Pommes rösti, maïs et sauce spéciale — 130g"}, "Karışık Izgara": {"en": "120g red meat + 70g chicken, rice pilaf, lavash, roasted tomato", "de": "120g Fleisch + 70g Hähnchen, Reispilaf und Lavash", "ar": "120غ لحم أحمر + 70غ دجاج وبلاو أرز", "fr": "120g viande rouge + 70g poulet, riz pilaf et lavash"}, "Çöpleme": {"en": "Lamb, eggplant, red pepper, shallots and butter — 150g", "de": "Lamm, Aubergine, Paprika und Butter — 150g", "ar": "ضأن وباذنجان وفلفل وزبدة — 150غ", "fr": "Agneau, aubergine, poivron et beurre — 150g"}, "Tirit (Köfte)": {"en": "Meatball on tandoor bread with strained yogurt — 110g", "de": "Fleischbällchen auf Tandoor-Brot mit Joghurt — 110g", "ar": "كفتة على خبز التنور مع زبادي — 110غ", "fr": "Boulettes de viande sur pain tandoor et yaourt — 110g"}, "Fırın Sütlaç": {"en": "Traditional handmade rice pudding with fresh milk", "de": "Traditioneller Reispudding aus frischer Milch", "ar": "أرز بالحليب تقليدي من حليب البقر الطازج", "fr": "Riz au lait traditionnel au lait frais"}, "Havuç Dilim Baklava": {"en": "Pistachio baklava prepared with traditional method", "de": "Pistazien-Baklava nach traditioneller Methode", "ar": "بقلاوة بالفستق الحلبي بالطريقة التقليدية", "fr": "Baklava aux pistaches, méthode traditionnelle"}, "Dondumalı Höşmerim": {"en": "Traditional Konya cheese dessert served with ice cream", "de": "Traditionelles Konya-Käsedessert mit Eis", "ar": "حلوى الجبن التقليدية من قونية مع الآيس كريم", "fr": "Dessert au fromage de Konya avec glace"}, "Nevzine": {"en": "Flour roasted in butter with walnuts, syrup and tahini", "de": "In Butter geröstetes Mehl mit Walnüssen und Tahini", "ar": "دقيق محمص بالزبدة مع الجوز والطحينة", "fr": "Farine rôtie au beurre avec noix et tahini"}, "Sirkencubin Şerbeti": {"en": "Ottoman palace sherbet drink", "de": "Osmanisches Hofgetränk", "ar": "مشروب القصر العثماني", "fr": "Boisson du palais ottoman"}, "Nar Çiçeği Şerbeti": {"en": "Traditional pomegranate blossom sherbet", "de": "Traditionelles Granatapfelblüten-Sorbet", "ar": "شراب زهر الرمان التقليدي", "fr": "Sorbet traditionnel fleur de grenade"}, "Reyhan Şerbeti": {"en": "Fresh basil flavored sherbet", "de": "Erfrischendes Basilikum-Sorbet", "ar": "شراب الريحان الطازج", "fr": "Sorbet au basilic frais"}, "Ayran": {"en": "Handmade fresh yogurt drink", "de": "Handgemachtes frisches Joghurtgetränk", "ar": "عيران مصنوع يدوياً طازج", "fr": "Boisson yaourt fait main"}};
 
+var SB_URL='https://xhuvpbzpghazpipaovwt.supabase.co';
+var SB_KEY='sb_publishable_yRJxY27Pu36bRjcUdWrDWg_kf91VdGL';
+var sb=null;
+try{sb=window.supabase.createClient(SB_URL,SB_KEY);}catch(e){}
+
 var masaNo='?', sepet={}, aktifDil='tr';
 var BAYRAK={tr:'🇹🇷',en:'🇬🇧',de:'🇩🇪',ar:'🇸🇦',fr:'🇫🇷'};
 var DIL={tr:'Türkçe',en:'English',de:'Deutsch',ar:'العربية',fr:'Français'};
@@ -1141,9 +1147,26 @@ function ekle(ad,fiyat,btn){
   document.getElementById('sepet-toplam-val').textContent='₺'+t;
 }
 
-function siparisGonder(){
+async function siparisGonder(){
   var k=Object.keys(sepet);if(!k.length)return;
   var not=document.getElementById('siparis-not').value;
+  var urunler=k.map(function(n){return sepet[n].ad;});
+  var toplam=k.reduce(function(s,n){return s+sepet[n].fiyat;},0);
+  
+  // Supabase'e kaydet
+  if(sb){
+    try{
+      await sb.from('siparisler').insert([{
+        masa_no:masaNo,
+        items:urunler,
+        siparis_notu:not||'',
+        toplam:toplam,
+        durum:'new',
+        created_at:new Date().toISOString()
+      }]);
+    }catch(e){console.log('Sipariş kaydedilemedi:',e);}
+  }
+  
   var n=document.getElementById('sepet-notif');
   n.textContent='Siparişiniz mutfağa iletildi!'+(not?' · '+not:'');n.classList.add('ac');
   sepet={};document.querySelectorAll('.ekle').forEach(function(b){b.textContent='+ EKLE';b.classList.remove('eklendi');});
@@ -1160,7 +1183,14 @@ var _gk=[];
   el.innerHTML=h;
 })();
 
-function garsonCagir(i){var n=document.getElementById('garson-notif');n.textContent='Garsonunuz geliyor — "'+_gk[i].alt+'"';n.classList.add('ac');setTimeout(function(){n.classList.remove('ac');},3000);}
+async function garsonCagir(i){
+    var mesaj=_gk[i].alt;
+    if(sb){
+      try{await sb.from('garson_cagrisi').insert([{masa_no:masaNo,mesaj:mesaj,created_at:new Date().toISOString()}]);}catch(e){}
+    }
+    var n=document.getElementById('garson-notif');
+    n.textContent='Garsonunuz geliyor — "'+mesaj+'"';n.classList.add('ac');
+    setTimeout(function(){n.classList.remove('ac');},3000);}
 
 (function(){
   var oneri=JSON.parse(localStorage.getItem('sef_oneri')||'null')||[{ikon:'🥗',baslik:'Bugünün Önerisi',acik:'Şefimizin günlük seçkisi',fiyat:''},{ikon:'🍖',baslik:'Ana Yemek Seçkisi',acik:'Özel pişirme tekniğiyle hazırlandı',fiyat:''}];
