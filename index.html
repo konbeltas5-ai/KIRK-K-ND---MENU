@@ -1153,19 +1153,16 @@ async function siparisGonder(){
   var urunler=k.map(function(n){return sepet[n].ad;});
   var toplam=k.reduce(function(s,n){return s+sepet[n].fiyat;},0);
   
-  // Supabase'e kaydet
-  if(sb){
-    try{
-      await sb.from('siparisler').insert([{
-        masa_no:masaNo,
-        items:urunler,
-        siparis_notu:not||'',
-        toplam:toplam,
-        durum:'new',
-        created_at:new Date().toISOString()
-      }]);
-    }catch(e){console.log('Sipariş kaydedilemedi:',e);}
-  }
+  // localStorage'a kaydet
+  var sip={id:Date.now(),masa_no:masaNo,items:urunler,siparis_notu:not||'',toplam:toplam,durum:'new',created_at:new Date().toISOString()};
+  try{
+    var mevcut=JSON.parse(localStorage.getItem('siparisler')||'[]');
+    mevcut.push(sip);
+    localStorage.setItem('siparisler',JSON.stringify(mevcut));
+  }catch(e){}
+  
+  // Supabase'e de yaz (bağlantı varsa)
+  if(sb){try{await sb.from('siparisler').insert([{masa_no:masaNo,items:urunler,siparis_notu:not||'',toplam:toplam,durum:'new',created_at:new Date().toISOString()}]);}catch(e){}}
   
   var n=document.getElementById('sepet-notif');
   n.textContent='Siparişiniz mutfağa iletildi!'+(not?' · '+not:'');n.classList.add('ac');
@@ -1185,9 +1182,12 @@ var _gk=[];
 
 async function garsonCagir(i){
     var mesaj=_gk[i].alt;
-    if(sb){
-      try{await sb.from('garson_cagrisi').insert([{masa_no:masaNo,mesaj:mesaj,created_at:new Date().toISOString()}]);}catch(e){}
-    }
+    // localStorage'a kaydet
+    try{
+      var log=JSON.parse(localStorage.getItem('garson_cagrisi_log')||'[]');
+      log.push({id:Date.now(),masa_no:masaNo,mesaj:mesaj,created_at:new Date().toISOString()});
+      localStorage.setItem('garson_cagrisi_log',JSON.stringify(log));
+    }catch(e){}
     var n=document.getElementById('garson-notif');
     n.textContent='Garsonunuz geliyor — "'+mesaj+'"';n.classList.add('ac');
     setTimeout(function(){n.classList.remove('ac');},3000);}

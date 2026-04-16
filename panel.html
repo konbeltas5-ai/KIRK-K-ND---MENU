@@ -4,98 +4,83 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Kırkikindi — Panel</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
-:root{--g:#C9A84C;--g2:#E8C97A;--g3:#8B6914;--siyah:#120E08;--koyu:#1C1208;}
+:root{--g:#C9A84C;--g2:#E8C97A;--g3:#8B6914;--siyah:#120E08;}
 body{font-family:system-ui,sans-serif;background:var(--siyah);min-height:100vh;color:#fff;}
 
-/* GİRİŞ */
 #giris{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:2rem;}
 .logo-num{font-family:Georgia,serif;font-size:52px;color:var(--g);line-height:1;}
 .logo-ad{font-size:12px;letter-spacing:4px;color:#fff;margin-top:4px;}
-.logo-sub{font-size:10px;color:rgba(255,255,255,0.3);letter-spacing:2px;margin-top:4px;font-style:italic;}
+.logo-sub{font-size:10px;color:rgba(255,255,255,0.3);letter-spacing:2px;margin-top:4px;}
 .rol-sec{font-size:10px;letter-spacing:2px;color:rgba(201,168,76,0.6);margin:1.5rem 0 1rem;text-align:center;}
 .rol-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%;max-width:320px;}
 .rol-k{background:rgba(255,255,255,0.04);border:1px solid rgba(201,168,76,0.2);border-radius:8px;padding:1.5rem 1rem;cursor:pointer;text-align:center;transition:all .2s;}
-.rol-k:hover{border-color:var(--g);background:rgba(201,168,76,0.08);}
+.rol-k:hover,.rol-k:active{border-color:var(--g);background:rgba(201,168,76,0.08);}
 .rol-ico{font-size:26px;margin-bottom:8px;}
 .rol-nm{font-size:11px;letter-spacing:2px;color:var(--g);}
-.rol-ds{font-size:10px;color:rgba(255,255,255,0.4);margin-top:4px;font-style:italic;}
+.rol-ds{font-size:10px;color:rgba(255,255,255,0.4);margin-top:4px;}
 
-/* ŞİFRE */
 #sifre-ekran{display:none;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:2rem;}
 .sifre-lbl{font-size:10px;letter-spacing:2px;color:rgba(201,168,76,0.6);margin-bottom:1rem;text-align:center;}
-.sifre-inp{width:100%;max-width:280px;padding:14px;font-size:22px;text-align:center;background:rgba(255,255,255,0.06);border:1px solid rgba(201,168,76,0.3);color:#fff;border-radius:4px;outline:none;letter-spacing:4px;margin-bottom:10px;}
+.sifre-inp{width:100%;max-width:280px;padding:14px;font-size:22px;text-align:center;background:rgba(255,255,255,0.06);border:1px solid rgba(201,168,76,0.3);color:#fff;border-radius:4px;outline:none;letter-spacing:4px;margin-bottom:10px;display:block;}
 .sifre-btn{width:100%;max-width:280px;padding:12px;background:var(--g);color:#000;font-size:10px;letter-spacing:2px;border:none;border-radius:2px;cursor:pointer;font-weight:600;}
-.sifre-hata{color:#E24B4A;font-size:11px;margin-top:8px;font-style:italic;display:none;text-align:center;}
+.sifre-hata{color:#E24B4A;font-size:11px;margin-top:8px;display:none;text-align:center;}
 .geri{margin-top:1rem;font-size:11px;color:rgba(255,255,255,0.35);cursor:pointer;text-decoration:underline;}
 
-/* UYGULAMA */
 #app{display:none;}
 .topbar{background:var(--siyah);padding:10px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(201,168,76,0.15);position:sticky;top:0;z-index:50;}
-.brand{display:flex;align-items:center;gap:8px;}
-.brand-num{font-size:18px;font-weight:700;color:var(--g);font-family:Georgia,serif;}
-.brand-nm{font-size:8px;letter-spacing:3px;color:rgba(255,255,255,0.5);}
-.brand-rol{font-size:9px;color:var(--g);letter-spacing:1px;margin-top:2px;}
+.brand-num{font-size:18px;font-weight:700;color:var(--g);font-family:Georgia,serif;margin-right:8px;}
+.brand-rol{font-size:9px;color:var(--g);letter-spacing:1px;}
 .live{display:flex;align-items:center;gap:5px;font-size:9px;color:#22c55e;}
 .live-dot{width:7px;height:7px;border-radius:50%;background:#22c55e;animation:pulse 2s infinite;}
 @keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.4;}}
-.cikis{font-size:9px;color:rgba(255,255,255,0.3);cursor:pointer;padding:4px 8px;border:1px solid rgba(255,255,255,0.1);border-radius:2px;}
+.cikis-btn{font-size:9px;color:rgba(255,255,255,0.3);cursor:pointer;padding:4px 8px;border:1px solid rgba(255,255,255,0.1);border-radius:2px;}
 
 .notif-bar{background:var(--g);color:#000;padding:8px 14px;font-size:11px;font-weight:600;text-align:center;display:none;}
 .notif-bar.on{display:block;}
 
-/* SEKMELER */
-.tabs{display:flex;border-bottom:1px solid rgba(201,168,76,0.15);}
-.tab{flex:1;padding:12px 8px;font-size:10px;letter-spacing:1px;color:rgba(255,255,255,0.4);cursor:pointer;text-align:center;border-bottom:2px solid transparent;transition:all .2s;}
-.tab.on{color:var(--g);border-bottom-color:var(--g);}
+.gtabs{display:flex;border-bottom:1px solid rgba(201,168,76,0.15);}
+.gtab{flex:1;padding:11px 8px;font-size:10px;letter-spacing:1px;color:rgba(255,255,255,0.4);cursor:pointer;text-align:center;border-bottom:2px solid transparent;}
+.gtab.on{color:var(--g);border-bottom-color:var(--g);}
 .pg{display:none;padding:12px;}
 .pg.on{display:block;}
 
-/* İSTATİSTİK */
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px;}
-.stat{background:rgba(255,255,255,0.04);border-radius:6px;padding:12px;text-align:center;border:1px solid rgba(255,255,255,0.06);}
-.stat-val{font-size:22px;font-weight:700;color:var(--g);}
-.stat-lbl{font-size:8px;letter-spacing:1px;color:rgba(255,255,255,0.4);margin-top:3px;}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:12px;}
+.stat{background:rgba(255,255,255,0.04);border-radius:6px;padding:10px;text-align:center;border:1px solid rgba(255,255,255,0.06);}
+.stat-val{font-size:20px;font-weight:700;color:var(--g);}
+.stat-lbl{font-size:7px;letter-spacing:1px;color:rgba(255,255,255,0.4);margin-top:2px;}
 
-/* SİPARİŞ KARTI */
-.sip-kart{background:#1a1005;border-radius:8px;margin-bottom:8px;overflow:hidden;border:1px solid rgba(255,255,255,0.06);}
+.sip-kart{background:#1a1005;border-radius:8px;margin-bottom:8px;overflow:hidden;border:1px solid rgba(255,255,255,0.08);}
 .sip-head{padding:10px 12px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(255,255,255,0.06);}
-.sip-masa{font-size:14px;font-weight:700;color:#fff;}
-.sip-sure{font-size:10px;color:rgba(255,255,255,0.4);}
-.sip-badge{font-size:8px;padding:3px 8px;border-radius:2px;font-weight:600;letter-spacing:1px;}
-.badge-yeni{background:#FAEEDA;color:#854F0B;}
-.badge-hazir{background:#EAF3DE;color:#27500A;}
-.badge-hazirlaniyor{background:#E6F1FB;color:#185FA5;}
+.sip-masa{font-size:15px;font-weight:700;color:#fff;}
+.sip-sure{font-size:10px;color:rgba(255,255,255,0.35);}
+.badge{font-size:8px;padding:3px 8px;border-radius:2px;font-weight:600;letter-spacing:1px;}
+.b-yeni{background:#FAEEDA;color:#854F0B;}
+.b-prep{background:#E6F1FB;color:#185FA5;}
+.b-hazir{background:#EAF3DE;color:#27500A;}
 .sip-items{padding:8px 12px;}
 .sip-item{font-size:12px;color:rgba(255,255,255,0.7);padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.04);}
 .sip-item:last-child{border-bottom:none;}
-.sip-not{font-size:11px;font-style:italic;color:var(--g2);padding:4px 12px;background:rgba(201,168,76,0.05);}
-.sip-actions{display:flex;gap:1px;}
-.sip-btn{flex:1;padding:10px;font-size:9px;letter-spacing:1px;border:none;cursor:pointer;font-weight:600;transition:all .2s;}
-.btn-hazirla{background:rgba(56,130,221,0.15);color:#85B7EB;}
-.btn-hazirla:hover{background:rgba(56,130,221,0.25);}
-.btn-hazir{background:rgba(30,158,117,0.15);color:#5DCAA5;}
-.btn-hazir:hover{background:rgba(30,158,117,0.25);}
-.btn-servis{background:rgba(201,168,76,0.15);color:var(--g2);}
-.btn-servis:hover{background:rgba(201,168,76,0.25);}
-.btn-iptal{background:rgba(226,75,74,0.1);color:#F09595;}
+.sip-not{font-size:11px;font-style:italic;color:var(--g2);padding:6px 12px;background:rgba(201,168,76,0.06);}
+.sip-actions{display:flex;}
+.sip-btn{flex:1;padding:11px;font-size:9px;letter-spacing:1px;border:none;cursor:pointer;font-weight:600;transition:all .2s;}
+.btn-hazirla{background:rgba(56,130,221,0.2);color:#85B7EB;}
+.btn-hazir{background:rgba(30,158,117,0.2);color:#5DCAA5;}
+.btn-servis{background:rgba(201,168,76,0.2);color:var(--g2);}
 
-/* GARSON ÇAĞRI */
-.cagri-kart{background:#1a1005;border-radius:8px;margin-bottom:8px;padding:12px;border:1px solid rgba(201,168,76,0.2);display:flex;justify-content:space-between;align-items:center;}
+.cagri-kart{background:#1a1005;border-radius:8px;margin-bottom:8px;padding:12px;border:1px solid rgba(201,168,76,0.25);display:flex;justify-content:space-between;align-items:center;}
 .cagri-masa{font-size:14px;font-weight:700;color:var(--g);}
 .cagri-mesaj{font-size:12px;color:rgba(255,255,255,0.7);margin-top:3px;}
-.cagri-sure{font-size:10px;color:rgba(255,255,255,0.3);}
-.cagri-tamam{padding:8px 14px;background:rgba(30,158,117,0.2);color:#5DCAA5;border:1px solid rgba(30,158,117,0.3);border-radius:3px;font-size:9px;cursor:pointer;letter-spacing:1px;}
+.cagri-sure{font-size:10px;color:rgba(255,255,255,0.3);margin-bottom:6px;text-align:right;}
+.cagri-tamam{padding:7px 14px;background:rgba(30,158,117,0.2);color:#5DCAA5;border:1px solid rgba(30,158,117,0.3);border-radius:3px;font-size:9px;cursor:pointer;display:block;}
 
-.bos{text-align:center;padding:3rem;font-size:13px;color:rgba(255,255,255,0.25);font-style:italic;}
 .yenile-btn{width:100%;padding:10px;background:rgba(201,168,76,0.1);color:var(--g);border:1px solid rgba(201,168,76,0.2);border-radius:4px;font-size:10px;letter-spacing:1px;cursor:pointer;margin-bottom:12px;}
+.bos{text-align:center;padding:3rem;font-size:13px;color:rgba(255,255,255,0.25);font-style:italic;}
 </style>
 </head>
 <body>
 
-<!-- GİRİŞ -->
 <div id="giris">
   <div style="text-align:center;margin-bottom:2rem;">
     <div class="logo-num">40</div>
@@ -105,293 +90,231 @@ body{font-family:system-ui,sans-serif;background:var(--siyah);min-height:100vh;c
   <div class="rol-sec">ROLÜNÜZÜ SEÇİN</div>
   <div class="rol-grid">
     <div class="rol-k" onclick="rolSec('mutfak')">
-      <div class="rol-ico">🍳</div>
+      <div class="rol-ico">&#x1F373;</div>
       <div class="rol-nm">MUTFAK</div>
-      <div class="rol-ds">Sipariş ekranı</div>
+      <div class="rol-ds">Sipariş takibi</div>
     </div>
     <div class="rol-k" onclick="rolSec('garson')">
-      <div class="rol-ico">🙋</div>
+      <div class="rol-ico">&#x1F64B;</div>
       <div class="rol-nm">GARSON</div>
       <div class="rol-ds">Masa ve çağrı</div>
     </div>
   </div>
 </div>
 
-<!-- ŞİFRE -->
 <div id="sifre-ekran">
   <div style="text-align:center;margin-bottom:2rem;">
     <div class="logo-num">40</div>
     <div class="logo-ad">KIRKİKİNDİ</div>
   </div>
-  <div class="sifre-lbl" id="sifre-lbl">ŞİFRE</div>
-  <input class="sifre-inp" id="sifre-inp" type="password" placeholder="••••" maxlength="10">
-  <button class="sifre-btn" onclick="sifreGir()">◆ GİRİŞ</button>
-  <div class="sifre-hata" id="sifre-hata">Yanlış şifre.</div>
+  <div class="sifre-lbl" id="sifre-lbl">MUTFAK SİFRESİ</div>
+  <input class="sifre-inp" id="sifre-inp" type="password" placeholder="&bull;&bull;&bull;&bull;" maxlength="10">
+  <button class="sifre-btn" onclick="sifreGir()">GİRİŞ</button>
+  <div class="sifre-hata" id="sifre-hata">Yanlis sifre.</div>
   <div class="geri" onclick="geriDon()">← Geri</div>
 </div>
 
-<!-- UYGULAMA -->
 <div id="app">
   <div class="topbar">
-    <div class="brand">
-      <div class="brand-num">40</div>
-      <div>
-        <div class="brand-nm">KIRKİKİNDİ</div>
-        <div class="brand-rol" id="rol-lbl">—</div>
-      </div>
+    <div style="display:flex;align-items:center;">
+      <span class="brand-num">40</span>
+      <span class="brand-rol" id="rol-lbl"></span>
     </div>
     <div style="display:flex;align-items:center;gap:10px;">
-      <div class="live"><div class="live-dot"></div><span id="live-txt">CANLI</span></div>
-      <div class="cikis" onclick="cikisYap()">Çıkış</div>
+      <div class="live"><div class="live-dot"></div><span>CANLI</span></div>
+      <div class="cikis-btn" onclick="cikisYap()">Cikis</div>
     </div>
   </div>
   <div class="notif-bar" id="notif-bar"></div>
 
-  <!-- MUTFAK PANELİ -->
-  <div id="mutfak-panel" style="display:none;">
-    <div style="padding:12px;">
+  <div id="mutfak-wrap" style="display:none;">
+    <div class="pg on" style="display:block;">
       <div class="stats">
-        <div class="stat"><div class="stat-val" id="stat-yeni">0</div><div class="stat-lbl">YENİ</div></div>
-        <div class="stat"><div class="stat-val" id="stat-hazirlaniyor">0</div><div class="stat-lbl">HAZIRLANIYOR</div></div>
-        <div class="stat"><div class="stat-val" id="stat-hazir">0</div><div class="stat-lbl">HAZIR</div></div>
+        <div class="stat"><div class="stat-val" id="s-yeni">0</div><div class="stat-lbl">YENİ</div></div>
+        <div class="stat"><div class="stat-val" id="s-prep">0</div><div class="stat-lbl">HAZIRLANIYOR</div></div>
+        <div class="stat"><div class="stat-val" id="s-hazir">0</div><div class="stat-lbl">HAZIR</div></div>
+        <div class="stat"><div class="stat-val" id="s-done">0</div><div class="stat-lbl">TAMAMLANAN</div></div>
       </div>
-      <button class="yenile-btn" onclick="siparisleriYukle()">↻ Yenile</button>
-      <div id="siparis-liste"></div>
+      <button class="yenile-btn" onclick="siparisleriYukle()">&#8635; Yenile</button>
+      <div id="sip-liste"></div>
     </div>
   </div>
 
-  <!-- GARSON PANELİ -->
-  <div id="garson-panel" style="display:none;">
-    <div style="padding:12px 12px 6px;">
-      <div class="tabs">
-        <div class="tab on" id="gt0" onclick="garsonTab('cagriler',0)">ÇAĞRILAR</div>
-        <div class="tab" id="gt1" onclick="garsonTab('siparisler',1)">SİPARİŞLER</div>
-      </div>
+  <div id="garson-wrap" style="display:none;">
+    <div class="gtabs">
+      <div class="gtab on" id="gt0" onclick="garsonTab(0)">ÇAĞRILAR</div>
+      <div class="gtab" id="gt1" onclick="garsonTab(1)">SİPARİŞLER</div>
     </div>
-    <div style="padding:0 12px 12px;">
-      <div id="pg-cagriler" class="pg on">
-        <button class="yenile-btn" onclick="cagrilariYukle()">↻ Yenile</button>
-        <div id="cagri-liste"></div>
-      </div>
-      <div id="pg-siparisler" class="pg">
-        <button class="yenile-btn" onclick="siparisleriYukle()">↻ Yenile</button>
-        <div id="garson-sip-liste"></div>
-      </div>
+    <div id="gp0" class="pg on">
+      <button class="yenile-btn" onclick="cagrilariYukle()">&#8635; Yenile</button>
+      <div id="cagri-liste"></div>
+    </div>
+    <div id="gp1" class="pg">
+      <button class="yenile-btn" onclick="siparisleriYukle()">&#8635; Yenile</button>
+      <div id="garson-sip-liste"></div>
     </div>
   </div>
 </div>
 
 <script>
-var SB_URL='https://xhuvpbzpghazpipaovwt.supabase.co';
-var SB_KEY='sb_publishable_yRJxY27Pu36bRjcUdWrDWg_kf91VdGL';
-var sb=null;
-try{
-  if(window.supabase){
-    sb=window.supabase.createClient(SB_URL,SB_KEY);
-    console.log('Supabase baglandi');
-  } else {
-    console.log('Supabase script yuklenmedi');
-  }
-}catch(e){console.log('Supabase hata:',e);}
+var aktifRol = '';
+var SIFRELER = JSON.parse(localStorage.getItem('sifreler') || '{"mutfak":"1234","garson":"5678"}');
 
-var SIFRE_MUTFAK='1234';
-var SIFRE_GARSON='5678';
-var aktifRol='';
-var channel=null;
-
-// Şifreler localStorage'dan al (y\u00F6netimden de\u011Fi\u015Ftirilince)
-(function(){
-  var s=localStorage.getItem('sifreler');
-  if(s){var p=JSON.parse(s);SIFRE_MUTFAK=p.mutfak||'1234';SIFRE_GARSON=p.garson||'5678';}
-})();
-
-function rolSec(rol){
-  aktifRol=rol;
-  document.getElementById('giris').style.display='none';
-  document.getElementById('sifre-ekran').style.display='flex';
-  document.getElementById('sifre-lbl').textContent=rol==='mutfak'?'MUTFAK ŞİFRESİ':'GARSON ŞİFRESİ';
-  document.getElementById('sifre-inp').value='';
-  document.getElementById('sifre-hata').style.display='none';
-  setTimeout(function(){document.getElementById('sifre-inp').focus();},100);
+function rolSec(rol) {
+  aktifRol = rol;
+  document.getElementById('giris').style.display = 'none';
+  document.getElementById('sifre-ekran').style.display = 'flex';
+  document.getElementById('sifre-lbl').textContent = rol === 'mutfak' ? 'MUTFAK SIFRESI' : 'GARSON SIFRESI';
+  document.getElementById('sifre-inp').value = '';
+  document.getElementById('sifre-hata').style.display = 'none';
+  setTimeout(function() { document.getElementById('sifre-inp').focus(); }, 100);
 }
 
-function geriDon(){
-  document.getElementById('sifre-ekran').style.display='none';
-  document.getElementById('giris').style.display='flex';
+function geriDon() {
+  document.getElementById('sifre-ekran').style.display = 'none';
+  document.getElementById('giris').style.display = 'flex';
 }
 
-function sifreGir(){
-  var v=document.getElementById('sifre-inp').value;
-  var dogru=aktifRol==='mutfak'?SIFRE_MUTFAK:SIFRE_GARSON;
-  if(v!==dogru){document.getElementById('sifre-hata').style.display='block';return;}
-  document.getElementById('sifre-ekran').style.display='none';
-  document.getElementById('app').style.display='block';
-  document.getElementById('rol-lbl').textContent=aktifRol==='mutfak'?'🍳 MUTFAK':'🙋 GARSON';
-  if(aktifRol==='mutfak'){
-    document.getElementById('mutfak-panel').style.display='block';
+function sifreGir() {
+  var v = document.getElementById('sifre-inp').value;
+  var dogru = aktifRol === 'mutfak' ? SIFRELER.mutfak : SIFRELER.garson;
+  if (v !== dogru) { document.getElementById('sifre-hata').style.display = 'block'; return; }
+  document.getElementById('sifre-ekran').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  document.getElementById('rol-lbl').textContent = aktifRol === 'mutfak' ? 'MUTFAK' : 'GARSON';
+  if (aktifRol === 'mutfak') {
+    document.getElementById('mutfak-wrap').style.display = 'block';
     siparisleriYukle();
-    realtimeBaslat();
   } else {
-    document.getElementById('garson-panel').style.display='block';
+    document.getElementById('garson-wrap').style.display = 'block';
     cagrilariYukle();
     siparisleriYukle();
-    realtimeBaslat();
   }
-}
-
-document.getElementById('sifre-inp').addEventListener('keypress',function(e){if(e.key==='Enter')sifreGir();});
-
-function cikisYap(){
-  if(channel&&sb)sb.removeChannel(channel);
-  document.getElementById('app').style.display='none';
-  document.getElementById('giris').style.display='flex';
-  aktifRol='';
-}
-
-// S\u0130PAR\u0130\u015ELER
-async function siparisleriYukle(){
-  if(!sb){gosterbos('siparis-liste','Supabase baglantisi yok - yenileyin');console.log('sb null');return;}
-  var res=await sb.from('siparisler').select('*').in('durum',['new','prep','ready']).order('created_at',{ascending:true});
-  if(res.error){gosterbos('siparis-liste','Yükleme hatası.');return;}
-  var data=res.data||[];
-  
-  // \u0130statistikler
-  document.getElementById('stat-yeni').textContent=data.filter(function(d){return d.durum==='new';}).length;
-  document.getElementById('stat-hazirlaniyor').textContent=data.filter(function(d){return d.durum==='prep';}).length;
-  document.getElementById('stat-hazir').textContent=data.filter(function(d){return d.durum==='ready';}).length;
-  
-  if(data.length===0){gosterbos('siparis-liste','Bekleyen sipariş yok.');gosterbos('garson-sip-liste','Bekleyen sipariş yok.');return;}
-  
-  var html=renderSiparisler(data,'mutfak');
-  document.getElementById('siparis-liste').innerHTML=html;
-  var html2=renderSiparisler(data,'garson');
-  document.getElementById('garson-sip-liste').innerHTML=html2;
-}
-
-function renderSiparisler(data,tip){
-  var html='';
-  data.forEach(function(s){
-    var badge='';
-    if(s.durum==='new')badge='<span class="sip-badge badge-yeni">YENİ</span>';
-    else if(s.durum==='prep')badge='<span class="sip-badge badge-hazirlaniyor">HAZIRLANIYOR</span>';
-    else if(s.durum==='ready')badge='<span class="sip-badge badge-hazir">HAZIR</span>';
-    
-    var sure=zamanHesapla(s.created_at);
-    var urunler=Array.isArray(s.items)?s.items.join(', '):(s.items||'');
-    
-    html+='<div class="sip-kart">';
-    html+='<div class="sip-head"><div><div class="sip-masa">Masa '+s.masa_no+'</div></div><div style="display:flex;align-items:center;gap:8px;">'+badge+'<span class="sip-sure">'+sure+'</span></div></div>';
-    html+='<div class="sip-items">';
-    if(Array.isArray(s.items)){s.items.forEach(function(u){html+='<div class="sip-item">• '+u+'</div>';});}
-    else{html+='<div class="sip-item">'+urunler+'</div>';}
-    html+='</div>';
-    if(s.siparis_notu)html+='<div class="sip-not">📝 '+s.siparis_notu+'</div>';
-    
-    if(tip==='mutfak'){
-      html+='<div class="sip-actions">';
-      if(s.durum==='new')html+='<button class="sip-btn btn-hazirla" onclick="durumGuncelle('+s.id+',\'prep\')">▶ HAZIRLAMAYA BAŞLA</button>';
-      if(s.durum==='prep')html+='<button class="sip-btn btn-hazir" onclick="durumGuncelle('+s.id+',\'ready\')">✓ HAZIR</button>';
-      if(s.durum==='ready')html+='<button class="sip-btn btn-servis" onclick="durumGuncelle('+s.id+',\'done\')">✦ SERVİS EDİLDİ</button>';
-      html+='</div>';
-    } else {
-      if(s.durum==='ready'){
-        html+='<div class="sip-actions"><button class="sip-btn btn-servis" onclick="durumGuncelle('+s.id+',\'done\')">✦ SERVİS EDİLDİ</button></div>';
-      }
-    }
-    html+='</div>';
-  });
-  return html;
-}
-
-async function durumGuncelle(id,durum){
-  if(!sb){bildirimGoster('Supabase baglantisi yok!');return;}
-  try{
-    var res=await sb.from('siparisler').update({durum:durum}).eq('id',id);
-    if(res.error){bildirimGoster('Hata: '+res.error.message);return;}
+  setInterval(function() {
     siparisleriYukle();
-    if(durum==='ready')bildirimGoster('Sipariş hazır!');
-    if(durum==='done')bildirimGoster('Servis edildi!');
-    if(durum==='prep')bildirimGoster('Hazırlanıyor...');
-  }catch(e){bildirimGoster('Hata: '+e.message);}
+    if (aktifRol === 'garson') cagrilariYukle();
+  }, 15000);
 }
 
-// GARSON \u00C7A\u011ERILARI
-async function cagrilariYukle(){
-  if(!sb){gosterbos('cagri-liste','Supabase bağlantısı yok.');return;}
-  var simdi=new Date();
-  simdi.setHours(simdi.getHours()-1);
-  var res=await sb.from('garson_cagrisi').select('*').gt('created_at',simdi.toISOString()).order('created_at',{ascending:false});
-  if(res.error){gosterbos('cagri-liste','Yükleme hatası.');return;}
-  var data=res.data||[];
-  if(data.length===0){gosterbos('cagri-liste','Son 1 saatte çağrı yok.');return;}
-  var html='';
-  data.forEach(function(c){
-    html+='<div class="cagri-kart">';
-    html+='<div><div class="cagri-masa">Masa '+c.masa_no+'</div><div class="cagri-mesaj">'+c.mesaj+'</div></div>';
-    html+='<div style="text-align:right;"><div class="cagri-sure">'+zamanHesapla(c.created_at)+'</div>';
-    html+='<button class="cagri-tamam" onclick="cagriSil('+c.id+')">✓ TAMAM</button></div>';
-    html+='</div>';
+document.getElementById('sifre-inp').addEventListener('keypress', function(e) { if (e.key === 'Enter') sifreGir(); });
+
+function cikisYap() {
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('mutfak-wrap').style.display = 'none';
+  document.getElementById('garson-wrap').style.display = 'none';
+  document.getElementById('giris').style.display = 'flex';
+}
+
+function zamanHesapla(tarih) {
+  var fark = Math.floor((new Date() - new Date(tarih)) / 60000);
+  if (fark < 1) return 'Az once';
+  if (fark < 60) return fark + ' dk once';
+  return Math.floor(fark / 60) + ' sa once';
+}
+
+function bildirim(msg) {
+  var el = document.getElementById('notif-bar');
+  el.textContent = msg; el.classList.add('on');
+  setTimeout(function() { el.classList.remove('on'); }, 3000);
+}
+
+// SİPARİŞLER - localStorage'dan oku
+function siparisleriYukle() {
+  var tumSiparisler = JSON.parse(localStorage.getItem('siparisler') || '[]');
+  var aktif = tumSiparisler.filter(function(s) { return s.durum !== 'done'; });
+  var bugun = new Date();
+  bugun.setHours(0,0,0,0);
+  aktif = aktif.filter(function(s) { return new Date(s.created_at) >= bugun; });
+
+  document.getElementById('s-yeni').textContent = aktif.filter(function(s){return s.durum==='new';}).length;
+  document.getElementById('s-prep').textContent = aktif.filter(function(s){return s.durum==='prep';}).length;
+  document.getElementById('s-hazir').textContent = aktif.filter(function(s){return s.durum==='ready';}).length;
+  var done = tumSiparisler.filter(function(s){return s.durum==='done';}).length;
+  document.getElementById('s-done').textContent = done;
+
+  if (aktif.length === 0) {
+    document.getElementById('sip-liste').innerHTML = '<div class="bos">Bekleyen siparis yok.</div>';
+    document.getElementById('garson-sip-liste').innerHTML = '<div class="bos">Bekleyen siparis yok.</div>';
+    return;
+  }
+
+  var html = '';
+  aktif.sort(function(a,b){return new Date(a.created_at)-new Date(b.created_at);});
+  aktif.forEach(function(s) {
+    var badge = '';
+    if (s.durum === 'new') badge = '<span class="badge b-yeni">YENI</span>';
+    else if (s.durum === 'prep') badge = '<span class="badge b-prep">HAZIRLANIYOR</span>';
+    else if (s.durum === 'ready') badge = '<span class="badge b-hazir">HAZIR</span>';
+
+    html += '<div class="sip-kart">';
+    html += '<div class="sip-head"><div class="sip-masa">Masa ' + s.masa_no + '</div>';
+    html += '<div style="display:flex;align-items:center;gap:8px;">' + badge + '<span class="sip-sure">' + zamanHesapla(s.created_at) + '</span></div></div>';
+    html += '<div class="sip-items">';
+    if (Array.isArray(s.items)) {
+      s.items.forEach(function(u) { html += '<div class="sip-item">&#8226; ' + u + '</div>'; });
+    }
+    html += '</div>';
+    if (s.siparis_notu) html += '<div class="sip-not">Not: ' + s.siparis_notu + '</div>';
+    html += '<div class="sip-actions">';
+    if (s.durum === 'new') html += '<button class="sip-btn btn-hazirla" onclick="durumGuncelle(' + s.id + ',\'prep\')">&#9658; HAZIRLAMAYA BASLA</button>';
+    if (s.durum === 'prep') html += '<button class="sip-btn btn-hazir" onclick="durumGuncelle(' + s.id + ',\'ready\')">&#10003; HAZIR</button>';
+    if (s.durum === 'ready') html += '<button class="sip-btn btn-servis" onclick="durumGuncelle(' + s.id + ',\'done\')">&#10022; SERVIS EDILDI</button>';
+    html += '</div></div>';
   });
-  document.getElementById('cagri-liste').innerHTML=html;
+
+  document.getElementById('sip-liste').innerHTML = html;
+  document.getElementById('garson-sip-liste').innerHTML = html;
 }
 
-async function cagriSil(id){
-  if(!sb)return;
-  await sb.from('garson_cagrisi').delete().eq('id',id);
+function durumGuncelle(id, durum) {
+  var siparisler = JSON.parse(localStorage.getItem('siparisler') || '[]');
+  var idx = siparisler.findIndex(function(s) { return s.id == id; });
+  if (idx === -1) { bildirim('Siparis bulunamadi!'); return; }
+  siparisler[idx].durum = durum;
+  localStorage.setItem('siparisler', JSON.stringify(siparisler));
+  siparisleriYukle();
+  if (durum === 'prep') bildirim('Hazirlaniyor...');
+  if (durum === 'ready') bildirim('Siparis hazir!');
+  if (durum === 'done') bildirim('Servis edildi!');
+}
+
+// GARSON ÇAĞRILARI
+function cagrilariYukle() {
+  var cagriler = JSON.parse(localStorage.getItem('garson_cagrisi_log') || '[]');
+  var bugun = new Date(); bugun.setHours(0,0,0,0);
+  cagriler = cagriler.filter(function(c) { return new Date(c.created_at) >= bugun; });
+
+  if (cagriler.length === 0) {
+    document.getElementById('cagri-liste').innerHTML = '<div class="bos">Bugün çağrı yok.</div>';
+    return;
+  }
+  cagriler.sort(function(a,b){return new Date(b.created_at)-new Date(a.created_at);});
+  var html = '';
+  cagriler.forEach(function(c) {
+    html += '<div class="cagri-kart">';
+    html += '<div><div class="cagri-masa">Masa ' + c.masa_no + '</div>';
+    html += '<div class="cagri-mesaj">' + c.mesaj + '</div></div>';
+    html += '<div><div class="cagri-sure">' + zamanHesapla(c.created_at) + '</div>';
+    html += '<button class="cagri-tamam" onclick="cagriSil(' + c.id + ')">Tamam</button></div>';
+    html += '</div>';
+  });
+  document.getElementById('cagri-liste').innerHTML = html;
+}
+
+function cagriSil(id) {
+  var cagriler = JSON.parse(localStorage.getItem('garson_cagrisi_log') || '[]');
+  cagriler = cagriler.filter(function(c) { return c.id !== id; });
+  localStorage.setItem('garson_cagrisi_log', JSON.stringify(cagriler));
   cagrilariYukle();
 }
 
-function garsonTab(id,i){
-  document.querySelectorAll('.pg').forEach(function(p){p.classList.remove('on');});
-  document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('on');});
-  document.getElementById('pg-'+id).classList.add('on');
-  document.getElementById('gt'+i).classList.add('on');
+function garsonTab(i) {
+  document.querySelectorAll('.gtab').forEach(function(t,idx){t.classList.toggle('on', idx===i);});
+  document.getElementById('gp0').classList.toggle('on', i===0);
+  document.getElementById('gp1').classList.toggle('on', i===1);
+  document.getElementById('gp0').style.display = i===0?'block':'none';
+  document.getElementById('gp1').style.display = i===1?'block':'none';
 }
-
-// REALTIME
-function realtimeBaslat(){
-  if(!sb)return;
-  try{
-    channel=sb.channel('panel-changes')
-      .on('postgres_changes',{event:'INSERT',schema:'public',table:'siparisler'},function(p){
-        bildirimGoster('🆕 Yeni sipariş! Masa '+p.new.masa_no);
-        siparisleriYukle();
-      })
-      .on('postgres_changes',{event:'UPDATE',schema:'public',table:'siparisler'},function(){
-        siparisleriYukle();
-      })
-      .on('postgres_changes',{event:'INSERT',schema:'public',table:'garson_cagrisi'},function(p){
-        bildirimGoster('🔔 Garson çağrısı! Masa '+p.new.masa_no+' — '+p.new.mesaj);
-        if(aktifRol==='garson')cagrilariYukle();
-      })
-      .subscribe();
-  }catch(e){}
-}
-
-// YARDIMCI
-function zamanHesapla(tarih){
-  if(!tarih)return '';
-  var fark=Math.floor((new Date()-new Date(tarih))/60000);
-  if(fark<1)return 'Az önce';
-  if(fark<60)return fark+' dk önce';
-  return Math.floor(fark/60)+' sa önce';
-}
-
-function gosterbos(id,mesaj){
-  var el=document.getElementById(id);
-  if(el)el.innerHTML='<div class="bos">'+mesaj+'</div>';
-}
-
-function bildirimGoster(mesaj){
-  var el=document.getElementById('notif-bar');
-  el.textContent=mesaj;el.classList.add('on');
-  setTimeout(function(){el.classList.remove('on');},4000);
-}
-
-// Otomatik yenileme - her 30 saniyede
-setInterval(function(){
-  if(aktifRol){siparisleriYukle();if(aktifRol==='garson')cagrilariYukle();}
-},30000);
 </script>
 </body>
 </html>
