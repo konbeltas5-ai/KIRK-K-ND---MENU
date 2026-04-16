@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Kırkikindi — Menü</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Cinzel:wght@400;500;600;700&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 * {
     margin: 0;
@@ -1015,14 +1014,119 @@ body {
 
     <!-- MENÜ SAYFASI -->
     <div id="pg-menu" class="pg on">
-        <!-- MENÜ DİNAMİK -->
-        <div id="menu-yukleniyor" style="text-align:center;padding:3rem;">
-            <div style="font-size:10px;letter-spacing:2px;color:var(--g3);">◆ MENÜ YÜKLENIYOR ◆</div>
+        <!-- Soğuk Başlangıçlar -->
+        <div class="kat"><div class="kat-cizgi"></div><div class="kat-lbl">SOĞUK BAŞLANGIÇLAR</div><div class="kat-cizgi r"></div></div>
+        
+        <div class="yemek" onclick="notu('n1')">
+            <div class="foto-alan" id="fa1" onclick="fotoSec('f1');event.stopPropagation()"><div class="foto-ico">📷</div><div class="foto-txt">FOTOĞRAF EKLE</div><input type="file" id="f1" accept="image/*" style="display:none" onchange="fotoYukle('f1','fa1')"></div>
+            <div class="yemek-ic">
+                <div class="yemek-ust"><div class="yemek-ad" data-dish="Zeytinyağlı Yaprak Sarma">Zeytinyağlı Yaprak Sarma</div><div class="yemek-fiyat">₺175</div></div>
+                <div class="yemek-acik" data-acik="Zeytinyağlı Yaprak Sarma">İnce asma yapraklarına sarılmış pirinç ve baharat</div>
+                <div class="yemek-alt"><div class="badge-grup"><span class="badge bv">VEJETARYEN</span></div><button class="ekle" onclick="ekle('Zeytinyağlı Yaprak Sarma',175,this);event.stopPropagation()">+ EKLE</button></div>
+            </div>
         </div>
-        <div id="menu-icerik"></div>
-        <div class="footer"><div class="footer-txt" id="kdv-txt">FİYATLARA KDV DAHİLDİR · 2026</div></div>
+        <div id="n1" class="mnotu"><div class="mnotu-baslik">✦ MUTFAK NOTU</div><div class="mnotu-txt" data-ai="n1">Osmanlı sofralarının vazgeçilmezi. Soğuk servis, tamamen bitkisel. Glütensiz.</div></div>
 
-        <!-- ŞEFİN MENÜSÜ SAYFASI -->
+        <div class="yemek" onclick="notu('n2')">
+            <div class="foto-alan" id="fa2" onclick="fotoSec('f2');event.stopPropagation()"><div class="foto-ico">📷</div><div class="foto-txt">FOTOĞRAF EKLE</div><input type="file" id="f2" accept="image/*" style="display:none" onchange="fotoYukle('f2','fa2')"></div>
+            <div class="yemek-ic">
+                <div class="yemek-ust"><div class="yemek-ad" data-dish="Humus">Humus</div><div class="yemek-fiyat">₺95</div></div>
+                <div class="yemek-acik" data-acik="Humus">Nohut, tahin, zeytinyağı ve limon sosu ile hazırlanmaktadır</div>
+                <div class="yemek-alt"><div class="badge-grup"><span class="badge bv">VEGAN</span></div><button class="ekle" onclick="ekle('Humus',95,this);event.stopPropagation()">+ EKLE</button></div>
+            </div>
+        </div>
+        <div id="n2" class="mnotu"><div class="mnotu-baslik">✦ MUTFAK NOTU</div><div class="mnotu-txt">Protein açısından zengin, glütensiz. Lavaşla harika gider.</div></div>
+
+        <div class="yemek" onclick="notu('n3')">
+            <div class="foto-alan" id="fa3" onclick="fotoSec('f3');event.stopPropagation()"><div class="foto-ico">📷</div><div class="foto-txt">FOTOĞRAF EKLE</div><input type="file" id="f3" accept="image/*" style="display:none" onchange="fotoYukle('f3','fa3')"></div>
+            <div class="yemek-ic">
+                <div class="yemek-ust"><div class="yemek-ad" data-dish="Mütebbel">Mütebbel</div><div class="yemek-fiyat">₺95</div></div>
+                <div class="yemek-acik" data-acik="Mütebbel">Közlenmiş patlıcan, tahin, süzme yoğurt ve nar taneleri ile</div>
+                <div class="yemek-alt"><div class="badge-grup"></div><button class="ekle" onclick="ekle('Mütebbel',95,this);event.stopPropagation()">+ EKLE</button></div>
+            </div>
+        </div>
+        <div id="n3" class="mnotu"><div class="mnotu-baslik">✦ MUTFAK NOTU</div><div class="mnotu-txt">Dumanlı aroma + nar ekşisi mükemmel denge. Humus ile birlikte önerilir.</div></div>
+
+        <!-- Çorbalar -->
+        <div class="kat"><div class="kat-cizgi"></div><div class="kat-lbl">ÇORBALAR</div><div class="kat-cizgi r"></div></div>
+
+        <div class="yemek" onclick="notu('n9')">
+            <div class="foto-alan" id="fa9" onclick="fotoSec('f9');event.stopPropagation()"><div class="foto-ico">📷</div><div class="foto-txt">FOTOĞRAF EKLE</div><input type="file" id="f9" accept="image/*" style="display:none" onchange="fotoYukle('f9','fa9')"></div>
+            <div class="yemek-ic">
+                <div class="yemek-ust"><div class="yemek-ad" data-dish="Konya Tarhun Çorbası">Konya Tarhun Çorbası</div><div class="yemek-fiyat">₺220</div></div>
+                <div class="yemek-acik" data-acik="Konya Tarhun Çorbası">Tarhun otu, kuzu eti, yoğurt mayanesi ve tereyağı ile</div>
+                <div class="yemek-alt"><div class="badge-grup"><span class="badge bs">KONYA'YA ÖZGÜ</span></div><button class="ekle" onclick="ekle('Konya Tarhun Çorbası',220,this);event.stopPropagation()">+ EKLE</button></div>
+            </div>
+        </div>
+        <div id="n9" class="mnotu"><div class="mnotu-baslik">✦ MUTFAK NOTU</div><div class="mnotu-txt">Sadece Konya mutfağına özgü nadir tarif. Tarhunun ferahlatıcı aroması + yoğurt kremamsı doku.</div></div>
+
+        <div class="yemek" onclick="notu('n10')">
+            <div class="foto-alan" id="fa10" onclick="fotoSec('f10');event.stopPropagation()"><div class="foto-ico">📷</div><div class="foto-txt">FOTOĞRAF EKLE</div><input type="file" id="f10" accept="image/*" style="display:none" onchange="fotoYukle('f10','fa10')"></div>
+            <div class="yemek-ic">
+                <div class="yemek-ust"><div class="yemek-ad" data-dish="Konya Bamya Çorbası">Konya Bamya Çorbası</div><div class="yemek-fiyat">₺270</div></div>
+                <div class="yemek-acik" data-acik="Konya Bamya Çorbası">Çiçek bamya, kuzu eti ve salçalı sos ile hazırlanmaktadır</div>
+                <div class="yemek-alt"><div class="badge-grup"></div><button class="ekle" onclick="ekle('Konya Bamya Çorbası',270,this);event.stopPropagation()">+ EKLE</button></div>
+            </div>
+        </div>
+        <div id="n10" class="mnotu"><div class="mnotu-baslik">✦ MUTFAK NOTU</div><div class="mnotu-txt">Konya'nın imza çorbası. Derin et suyunda pişen bamya.</div></div>
+
+        <!-- Ana Yemekler -->
+        <div class="kat"><div class="kat-cizgi"></div><div class="kat-lbl">ANA YEMEKLER</div><div class="kat-cizgi r"></div></div>
+
+        <div class="yemek" onclick="notu('n13')">
+            <div class="foto-alan" id="fa13" onclick="fotoSec('f13');event.stopPropagation()"><div class="foto-ico">📷</div><div class="foto-txt">FOTOĞRAF EKLE</div><input type="file" id="f13" accept="image/*" style="display:none" onchange="fotoYukle('f13','fa13')"></div>
+            <div class="yemek-ic">
+                <div class="yemek-ust"><div class="yemek-ad" data-dish="Kuzu Şiş">Kuzu Şiş</div><div class="yemek-fiyat">₺550</div></div>
+                <div class="yemek-acik" data-acik="Kuzu Şiş">Pirinç pilavı, lavaş, köz domates, köz biber ve sumaklı soğan — 135g</div>
+                <div class="yemek-alt"><div class="badge-grup"><span class="badge bs">ŞEFİN TAVSİYESİ</span></div><button class="ekle" onclick="ekle('Kuzu Şiş',550,this);event.stopPropagation()">+ EKLE</button></div>
+            </div>
+        </div>
+        <div id="n13" class="mnotu"><div class="mnotu-baslik">✦ MUTFAK NOTU</div><div class="mnotu-txt">En çok sipariş edilen yemek. Marine edilmiş kuzu ızgara ateşinde. Sumaklı soğan keskin denge sağlar.</div></div>
+
+        <div class="yemek" onclick="notu('n14')">
+            <div class="foto-alan" id="fa14" onclick="fotoSec('f14');event.stopPropagation()"><div class="foto-ico">📷</div><div class="foto-txt">FOTOĞRAF EKLE</div><input type="file" id="f14" accept="image/*" style="display:none" onchange="fotoYukle('f14','fa14')"></div>
+            <div class="yemek-ic">
+                <div class="yemek-ust"><div class="yemek-ad" data-dish="Kuzu Pirzola">Kuzu Pirzola</div><div class="yemek-fiyat">₺750</div></div>
+                <div class="yemek-acik" data-acik="Kuzu Pirzola">Pirinç pilavı, lavaş, köz domates ve sumaklı soğan — 185g</div>
+                <div class="yemek-alt"><div class="badge-grup"></div><button class="ekle" onclick="ekle('Kuzu Pirzola',750,this);event.stopPropagation()">+ EKLE</button></div>
+            </div>
+        </div>
+        <div id="n14" class="mnotu"><div class="mnotu-baslik">✦ MUTFAK NOTU</div><div class="mnotu-txt">Menünün en premium eti. 185g porsiyon.</div></div>
+
+        <!-- Tatlılar -->
+        <div class="kat"><div class="kat-cizgi"></div><div class="kat-lbl">TATLILAR</div><div class="kat-cizgi r"></div></div>
+
+        <div class="yemek" onclick="notu('n20')">
+            <div class="foto-alan" id="fa20" onclick="fotoSec('f20');event.stopPropagation()"><div class="foto-ico">📷</div><div class="foto-txt">FOTOĞRAF EKLE</div><input type="file" id="f20" accept="image/*" style="display:none" onchange="fotoYukle('f20','fa20')"></div>
+            <div class="yemek-ic">
+                <div class="yemek-ust"><div class="yemek-ad" data-dish="Fırın Sütlaç">Fırın Sütlaç</div><div class="yemek-fiyat">₺140</div></div>
+                <div class="yemek-acik" data-acik="Fırın Sütlaç">Taze inek sütünden hazırlanan geleneksel el yapımı sütlaç</div>
+                <div class="yemek-alt"><div class="badge-grup"><span class="badge bv">GLÜTENSİZ</span></div><button class="ekle" onclick="ekle('Fırın Sütlaç',140,this);event.stopPropagation()">+ EKLE</button></div>
+            </div>
+        </div>
+        <div id="n20" class="mnotu"><div class="mnotu-baslik">✦ MUTFAK NOTU</div><div class="mnotu-txt">Hafif tatlı sevenler için ideal. El yapımı taze sütle. Glütensiz.</div></div>
+
+        <div class="yemek" onclick="notu('n22')">
+            <div class="foto-alan" id="fa22" onclick="fotoSec('f22');event.stopPropagation()"><div class="foto-ico">📷</div><div class="foto-txt">FOTOĞRAF EKLE</div><input type="file" id="f22" accept="image/*" style="display:none" onchange="fotoYukle('f22','fa22')"></div>
+            <div class="yemek-ic">
+                <div class="yemek-ust"><div class="yemek-ad" data-dish="Dondumalı Höşmerim">Dondumalı Höşmerim</div><div class="yemek-fiyat">₺250</div></div>
+                <div class="yemek-acik" data-acik="Dondumalı Höşmerim">Konya geleneksel peynir tatlısı, dondurma ile servis edilmektedir</div>
+                <div class="yemek-alt"><div class="badge-grup"><span class="badge bs">KONYA KLASİĞİ</span></div><button class="ekle" onclick="ekle('Dondumalı Höşmerim',250,this);event.stopPropagation()">+ EKLE</button></div>
+            </div>
+        </div>
+        <div id="n22" class="mnotu"><div class="mnotu-baslik">✦ MUTFAK NOTU</div><div class="mnotu-txt">Sadece Konya'ya özgü. Taze peynirden. Dondurmayla sıcak-soğuk kontrast.</div></div>
+
+        <!-- İçecekler -->
+        <div class="kat"><div class="kat-cizgi"></div><div class="kat-lbl">İÇECEKLER</div><div class="kat-cizgi r"></div></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 0.875rem 2rem;">
+            <div class="yemek" style="margin:0;"><div class="yemek-ic"><div class="yemek-ust"><div class="yemek-ad" style="font-size:14px;" data-dish="Sirkencubin Şerbeti">Sirkencubin Şerbeti</div><div class="yemek-fiyat">₺95</div></div><div class="yemek-acik" style="font-size:12px;">Osmanlı saray içeceği</div><div class="yemek-alt" style="margin-top:8px;"><div></div><button class="ekle" style="padding:5px 12px;font-size:8px;" onclick="ekle('Sirkencubin Şerbeti',95,this);event.stopPropagation()">+ EKLE</button></div></div></div>
+            <div class="yemek" style="margin:0;"><div class="yemek-ic"><div class="yemek-ust"><div class="yemek-ad" style="font-size:14px;" data-dish="Ayran">Ayran</div><div class="yemek-fiyat">₺65</div></div><div class="yemek-acik" style="font-size:12px;">El yapımı, taze</div><div class="yemek-alt" style="margin-top:8px;"><div></div><button class="ekle" style="padding:5px 12px;font-size:8px;" onclick="ekle('Ayran',65,this);event.stopPropagation()">+ EKLE</button></div></div></div>
+        </div>
+
+        <div class="footer"><div class="footer-txt">FİYATLARA KDV DAHİLDİR · 2026 İTİBARIYLA GEÇERLİDİR</div></div>
+    </div>
+
+    <!-- ŞEFİN MENÜSÜ SAYFASI -->
     <div id="pg-aksam" class="pg">
         <div class="kat"><div class="kat-cizgi"></div><div class="kat-lbl">ŞEFİN SEÇKİLERİ</div><div class="kat-cizgi r"></div></div>
         <div style="margin:0 0.875rem;">
@@ -1087,7 +1191,7 @@ body {
 
 // Supabase yapılandırması
 var SB_URL = 'https://xhuvpbzpghazpipaovwt.supabase.co';
-var SB_KEY = 'sb_publishable_yRJxY27Pu36bRjcUdWrDWg_kf91VdGL';
+var SB_KEY = 'sb_publishable_vR5mtSCXn0nxd-_I0TzLfw_jQrT_KZK';
 var sb = null;
 try { sb = supabase.createClient(SB_URL, SB_KEY); } catch(e) { console.log("Supabase bağlantısı yok"); }
 
@@ -1095,126 +1199,6 @@ var masaNo = '?';
 var sepet = {};
 var aktifDil = 'tr';
 var siparisId = null;
-var menuVerisi = [];
-
-// Badge sınıfları
-var BADGE_CSS = {
-  'VEGETARİYEN':'bv','VEGAN':'bv','GLÜTENSİZ':'bv',
-  'ACILI':'bh',
-  'KONYA':'bs','SEF':'bs','KLASIK':'bs','ŞEFİN TAVSİYESİ':'bs'
-};
-
-// Kategori sırası
-var KAT_SIRA = ['Soğuk Başlangıçlar','Çorbalar','Ana Yemekler','Tatlılar','İçecekler'];
-
-// Menüyü Supabase'den yükle
-async function menuYukle() {
-    if (!sb) { menuStatikGoster(); return; }
-    try {
-        var res = await sb.from('menu')
-            .select('*')
-            .eq('aktif', true)
-            .order('kategori')
-            .order('sira');
-
-        if (res.error || !res.data || res.data.length === 0) {
-            menuStatikGoster();
-            return;
-        }
-        menuVerisi = res.data;
-        menuRender(res.data);
-    } catch(e) {
-        menuStatikGoster();
-    }
-}
-
-function menuRender(data) {
-    // Kategorilere göre grupla
-    var katMap = {};
-    data.forEach(function(item) {
-        if (!katMap[item.kategori]) katMap[item.kategori] = [];
-        katMap[item.kategori].push(item);
-    });
-
-    var html = '';
-    var katlar = KAT_SIRA.filter(function(k){ return katMap[k]; });
-    // Listede olmayan kategorileri de ekle
-    Object.keys(katMap).forEach(function(k){
-        if (katlar.indexOf(k) === -1) katlar.push(k);
-    });
-
-    katlar.forEach(function(kat) {
-        if (!katMap[kat]) return;
-        html += '<div class="kat"><div class="kat-cizgi"></div><div class="kat-lbl">' + kat.toUpperCase() + '</div><div class="kat-cizgi r"></div></div>';
-
-        // İçecekler grid yapısı
-        if (kat === 'İçecekler') {
-            html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0.875rem 2rem;">';
-            katMap[kat].forEach(function(item) {
-                html += kartOlustur(item, true);
-            });
-            html += '</div>';
-        } else {
-            katMap[kat].forEach(function(item) {
-                html += kartOlustur(item, false);
-            });
-        }
-    });
-
-    html += '<div class="footer"><div class="footer-txt">FİYATLARA KDV DAHİLDİR · 16.01.2026 İTİBARIYLA GEÇERLİDİR</div></div>';
-
-    document.getElementById('menu-icerik').innerHTML = html;
-    document.getElementById('menu-yukleniyor').style.display = 'none';
-}
-
-function kartOlustur(item, kucuk) {
-    var dil = aktifDil;
-    var isim = (dil !== 'tr' && item['isim_'+dil]) ? item['isim_'+dil] : item.isim;
-    var acik = (dil !== 'tr' && item['aciklama_'+dil]) ? item['aciklama_'+dil] : (item.aciklama || '');
-    var mnotu = item.mutfak_notu || '';
-    var badge = item.badge || '';
-    var stokYok = item.stok === false;
-    var stokHtml = stokYok ? '<span style="color:#C03030;font-family:Cinzel,serif;font-size:9px;letter-spacing:1px;">STOKTA YOK</span>' : '';
-    var badgeHtml = '';
-    if (badge) {
-        var css = BADGE_CSS[badge] || 'bs';
-        badgeHtml = '<span class="badge ' + css + '">' + badge + '</span>';
-    }
-
-    if (kucuk) {
-        var btn = stokYok ? '' : '<button class="ekle" style="padding:5px 12px;font-size:8px;" onclick="ekleById(' + item.id + ',this);event.stopPropagation()">+ EKLE</button>';
-        return '<div class="yemek" style="margin:0;"><div class="yemek-ic">'
-            + '<div class="yemek-ust"><div class="yemek-ad" style="font-size:14px;" data-mid="' + item.id + '">' + isim + '</div><div class="yemek-fiyat">&#8378;' + item.fiyat + '</div></div>'
-            + '<div class="yemek-acik" style="font-size:12px;" data-amid="' + item.id + '">' + acik + '</div>'
-            + '<div class="yemek-alt" style="margin-top:8px;"><div>' + stokHtml + '</div>' + btn + '</div>'
-            + '</div></div>';
-    }
-
-    var notuId = 'mnotu_' + item.id;
-    var mnotu_html = mnotu ? '<div id="' + notuId + '" class="mnotu"><div class="mnotu-baslik">✦ MUTFAK NOTU</div><div class="mnotu-txt">' + mnotu + '</div></div>' : '';
-    var onclick_attr = mnotu ? ('onclick="notu(' + JSON.stringify(notuId) + ')"') : '';
-    var btn2 = stokYok ? stokHtml : '<button class="ekle" onclick="ekleById(' + item.id + ',this);event.stopPropagation()">+ EKLE</button>';
-
-    return '<div class="yemek" ' + onclick_attr + '>'
-        + '<div class="foto-alan" id="fa_' + item.id + '" onclick="fotoSecId(' + item.id + ');event.stopPropagation()">'
-        + '<div class="foto-ico">📷</div><div class="foto-txt">FOTOĞRAF EKLE</div>'
-        + '<input type="file" id="f_' + item.id + '" accept="image/*" style="display:none" onchange="fotoYukleId(' + item.id + ')"></div>'
-        + '<div class="yemek-ic">'
-        + '<div class="yemek-ust"><div class="yemek-ad" data-mid="' + item.id + '">' + isim + '</div><div class="yemek-fiyat">&#8378;' + item.fiyat + '</div></div>'
-        + '<div class="yemek-acik" data-amid="' + item.id + '">' + acik + '</div>'
-        + '<div class="yemek-alt"><div class="badge-grup">' + badgeHtml + '</div>' + btn2 + '</div>'
-        + '</div></div>' + mnotu_html;
-}
-
-function menuStatikGoster() {
-    // Supabase yoksa veya hata varsa bu mesajı göster
-    document.getElementById('menu-yukleniyor').innerHTML = '<div style="text-align:center;padding:2rem;font-style:italic;color:var(--ink3);">Menü yüklenemedi. Lütfen sayfayı yenileyin.</div>';
-}
-
-// Dil değişince menüyü yenile
-function menuDilGuncelle() {
-    if (menuVerisi.length > 0) menuRender(menuVerisi);
-}
 
 // Masa giriş
 function masaGir() {
@@ -1222,7 +1206,8 @@ function masaGir() {
     if (!inp) return;
     var n = parseInt(inp.value);
     if (!n || n < 1 || n > 99) {
-        document.getElementById('masa-hata').style.display = 'block';
+        var h = document.getElementById('masa-hata');
+        if (h) h.style.display = 'block';
         return;
     }
     masaNo = String(n);
@@ -1241,19 +1226,16 @@ document.getElementById('masa-inp')?.addEventListener('keypress', function(e) {
 
 // Kayıtlı masa
 (function() {
-    try {
-        var km = sessionStorage.getItem('km');
-        var url = new URLSearchParams(location.search).get('masa');
-        var m = url || km;
-        if (m) {
-            masaNo = m;
-            document.getElementById('ekran-masa').style.display = 'none';
-            document.getElementById('ana-wrap').style.display = 'block';
-            document.getElementById('masa-badge').textContent = 'MASA ' + masaNo;
-            var gm = document.getElementById('garson-masa-no');
-            if (gm) gm.textContent = masaNo;
-        }
-    } catch(e) {}
+    var km = sessionStorage.getItem('km');
+    var url = new URLSearchParams(location.search).get('masa');
+    var m = url || km;
+    if (m) {
+        masaNo = m;
+        document.getElementById('ekran-masa').style.display = 'none';
+        document.getElementById('ana-wrap').style.display = 'block';
+        document.getElementById('masa-badge').textContent = 'MASA ' + masaNo;
+        document.getElementById('garson-masa-no').textContent = masaNo;
+    }
 })();
 
 // Sayfa geçiş
@@ -1377,7 +1359,7 @@ async function garsonCagir(mesaj) {
     ];
     var h = '';
     kartlar.forEach(k => {
-        h += '<div class="garson-k" onclick="garsonCagirIdx(' + i + ')" data-idx="' + i + '">';
+        h += '<div class="garson-k" onclick="garsonCagir(\'' + k.alt + '\')">';
         h += '<div class="garson-ico">' + k.ikon + '</div>';
         h += '<div class="garson-ad">' + k.ad + '</div>';
         h += '<div class="garson-alt">' + k.alt + '</div>';
@@ -1391,16 +1373,7 @@ async function garsonCagir(mesaj) {
 var DIL_BAYRAK = { tr: '🇹🇷', en: '🇬🇧', de: '🇩🇪', ar: '🇸🇦', fr: '🇫🇷' };
 var DIL_AD = { tr: 'Türkçe', en: 'English', de: 'Deutsch', ar: 'العربية', fr: 'Français' };
 
-function dilSec(kod) {
-    aktifDil = kod;
-    menuDilGuncelle();
-    document.getElementById('dil-flag').textContent = DIL_BAYRAK[kod];
-    dilYukle();
-    var n = document.getElementById('sepet-notif');
-    n.textContent = DIL_AD[kod] + ' seçildi';
-    n.classList.add('ac');
-    setTimeout(() => n.classList.remove('ac'), 1500);
-}
+
 
 function dilYukle() {
     var h = '';
@@ -1412,15 +1385,58 @@ function dilYukle() {
     var el = document.getElementById('dil-grid');
     if (el) el.innerHTML = h;
 }
-// Garson kartlarını yükle (yönetimden)
-var _garsonKartlar = [];
+dilYukle();
+garsonKartlariYukle();
+sefMenusunuYukle();
 
-function garsonCagirIdx(i) {
-    var kartlar = _garsonKartlar;
-    if (!kartlar[i]) return;
-    garsonCagir(kartlar[i].alt);
+var YEMEK_ADI = {
+  'Zeytinyağlı Yaprak Sarma':{en:'Olive Oil Vine Leaves',de:'Weinblätter',ar:'ورق عنب',fr:'Feuilles de vigne'},
+  'Humus':{en:'Hummus',de:'Hummus',ar:'حمص',fr:'Houmous'},
+  'Mütebbel':{en:'Smoked Eggplant',de:'Aubergine',ar:'متبل',fr:'Aubergine fumée'},
+  'Acılı Ezme':{en:'Spicy Dip',de:'Würzige Paste',ar:'معجون حار',fr:'Purée épicée'},
+  'Bal Kabaklı Tarator':{en:'Squash Tarator',de:'Kürbis Tarator',ar:'تاراتور القرع',fr:'Tarator courge'},
+  'Semizotlu Yoğurt':{en:'Purslane Yogurt',de:'Portulak Joghurt',ar:'زبادي بالبقلة',fr:'Yaourt pourpier'},
+  'Zeytinyağlı Biber Dolması':{en:'Stuffed Peppers',de:'Gefüllte Paprika',ar:'فلفل محشو',fr:'Poivrons farcis'},
+  'Zeytinyağlı Köz Patlıcan':{en:'Roasted Eggplant',de:'Gegrillte Aubergine',ar:'باذنجان مشوي',fr:'Aubergine grillée'},
+  'Konya Tarhun Çorbası':{en:'Tarragon Soup',de:'Estragonsuppe',ar:'شوربة طرخون',fr:'Soupe estragon'},
+  'Konya Bamya Çorbası':{en:'Okra Soup',de:'Okrasuppe',ar:'شوربة بامية',fr:'Soupe gombo'},
+  'Güveçte Tandır Çorbası':{en:'Tandoor Soup',de:'Tandoor Suppe',ar:'شوربة تنور',fr:'Soupe tandoor'},
+  'Mercimek Çorbası':{en:'Lentil Soup',de:'Linsensuppe',ar:'شوربة العدس',fr:'Soupe lentilles'},
+  'Kuzu Şiş':{en:'Lamb Shish',de:'Lammspieß',ar:'شيش ضأن',fr:'Brochette agneau'},
+  'Kuzu Pirzola':{en:'Lamb Chops',de:'Lammkoteletts',ar:'ضلوع ضأن',fr:'Côtelettes agneau'},
+  'Beyti':{en:'Beyti Kebab',de:'Beyti Kebab',ar:'بيتي كباب',fr:'Beyti Kebab'},
+  'Levrek Izgara':{en:'Grilled Sea Bass',de:'Wolfsbarsch',ar:'قاروص مشوي',fr:'Bar grillé'},
+  'Karışık Izgara':{en:'Mixed Grill',de:'Gemischter Grill',ar:'مشاوي مشكلة',fr:'Grillade mixte'},
+  'Çöpleme':{en:'Lamb Casserole',de:'Lammauflauf',ar:'يخنة ضأن',fr:'Ragoût agneau'},
+  'Tirit (Köfte)':{en:'Meatball Tirit',de:'Fleischbällchen',ar:'كفتة تيريت',fr:'Boulettes viande'},
+  'Fırın Sütlaç':{en:'Rice Pudding',de:'Reispudding',ar:'أرز بالحليب',fr:'Riz au lait'},
+  'Havuç Dilim Baklava':{en:'Carrot Baklava',de:'Karotten Baklava',ar:'بقلاوة جزر',fr:'Baklava carotte'},
+  'Dondumalı Höşmerim':{en:'Hoşmerim Ice Cream',de:'Höşmerim mit Eis',ar:'حوشمريم آيس كريم',fr:'Höşmerim glace'},
+  'Nevzine':{en:'Walnut Dessert',de:'Walnuss Dessert',ar:'حلوى الجوز',fr:'Dessert noix'},
+  'Sirkencubin Şerbeti':{en:'Ottoman Sherbet',de:'Osmanisches Sorbet',ar:'شراب عثماني',fr:'Sorbet ottoman'},
+  'Nar Çiçeği Şerbeti':{en:'Pomegranate Sherbet',de:'Granatapfel Sorbet',ar:'شراب رمان',fr:'Sorbet grenade'},
+  'Reyhan Şerbeti':{en:'Basil Sherbet',de:'Basilikum Sorbet',ar:'شراب ريحان',fr:'Sorbet basilic'},
+  'Ayran':{en:'Yogurt Drink',de:'Joghurtgetränk',ar:'عيران',fr:'Ayran'}
+};
+
+function dilSec(kod) {
+    aktifDil = kod;
+    document.body.setAttribute('dir', kod === 'ar' ? 'rtl' : 'ltr');
+    document.getElementById('dil-flag').textContent = DIL_BAYRAK[kod];
+    document.querySelectorAll('[data-dish]').forEach(function(el) {
+        var k = el.getAttribute('data-dish');
+        if (kod === 'tr') { el.textContent = k; return; }
+        if (YEMEK_ADI[k] && YEMEK_ADI[k][kod]) el.textContent = YEMEK_ADI[k][kod];
+    });
+    dilYukle();
+    var n = document.getElementById('sepet-notif');
+    n.textContent = DIL_AD[kod] + ' seçildi';
+    n.classList.add('ac');
+    setTimeout(function(){ n.classList.remove('ac'); }, 1500);
 }
 
+var _gKartlar = [];
+function garsonCagirN(i){ if(_gKartlar[i]) garsonCagir(_gKartlar[i].alt); }
 function garsonKartlariYukle() {
     var saved = localStorage.getItem('garson_kartlar');
     var kartlar = saved ? JSON.parse(saved) : [
@@ -1431,13 +1447,13 @@ function garsonKartlariYukle() {
         {ikon:'🙋', ad:'YARDIM', alt:'Genel talebim var'},
         {ikon:'⭐', ad:'GERİ BİLDİRİM', alt:'Deneyimimi paylaşayım'}
     ];
-    _garsonKartlar = kartlar;
+    _gKartlar = kartlar;
     var el = document.getElementById('garson-grid-alan');
     if (!el) return;
     var h = '';
     for (var i = 0; i < kartlar.length; i++) {
         var k = kartlar[i];
-        h += '<div class="garson-k" onclick="garsonCagirIdx(' + i + ')">';
+        h += '<div class="garson-k" onclick="garsonCagirN(' + i + ')">';
         h += '<div class="garson-ico">' + k.ikon + '</div>';
         h += '<div class="garson-ad">' + k.ad + '</div>';
         h += '<div class="garson-alt">' + k.alt + '</div>';
@@ -1446,62 +1462,29 @@ function garsonKartlariYukle() {
     el.innerHTML = h;
 }
 
-
-// Şefin menüsünü yükle (yönetimden)
 function sefMenusunuYukle() {
-    var saved = localStorage.getItem('sef_oneri');
-    var oneri = saved ? JSON.parse(saved) : [
+    var oneri = JSON.parse(localStorage.getItem('sef_oneri') || 'null') || [
         {ikon:'🥗', baslik:'Bugünün Önerisi', acik:'Şefimizin günlük seçkisi', fiyat:''},
         {ikon:'🍖', baslik:'Ana Yemek Seçkisi', acik:'Özel pişirme tekniğiyle hazırlandı', fiyat:''}
     ];
     var tabAd = localStorage.getItem('sef_tab_tr') || 'Şefin Menüsü';
-    var baslik = localStorage.getItem('sef_baslik_tr') || 'Şefin Seçkileri';
-    var altMetin = localStorage.getItem('sef_alt_tr') || 'Şefimiz bugün sizin için özel olarak hazırladı';
-
-    // Tab adını güncelle
-    var tab1 = document.getElementById('tab1');
-    if (tab1) tab1.textContent = tabAd;
-
-    // Başlık güncelle
-    var kat = document.querySelector('#pg-aksam .kat-lbl');
-    if (kat) kat.textContent = baslik.toUpperCase();
-
-    // Kartları oluştur
-    var h = '';
-    if (oneri.length === 0) {
-        h = '<div style="text-align:center;padding:2rem;font-style:italic;color:var(--ink3);">Yönetim panelinden şefin önerilerini ekleyin.</div>';
-    } else {
-        oneri.forEach(function(o) {
-            h += '<div style="background:var(--beyaz);border:1px solid var(--border);border-radius:12px;padding:1.25rem;margin:0 0.875rem 0.75rem;">';
-            h += '<div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">';
-            h += '<span style="font-size:30px;">' + o.ikon + '</span><div>';
-            h += '<div style="font-size:16px;color:var(--ink);font-weight:600;">' + o.baslik + '</div>';
-            if (o.fiyat) h += '<div style="font-size:13px;color:var(--g3);margin-top:2px;">' + o.fiyat + '</div>';
-            h += '</div></div>';
-            h += '<div style="font-style:italic;font-size:14px;color:var(--ink2);line-height:1.6;border-left:3px solid rgba(139,105,20,0.4);padding-left:10px;">' + o.acik + '</div>';
-            h += '</div>';
-        });
-    }
-
-    // pg-aksam içine yerleştir
-    var sef = document.getElementById('pg-aksam');
-    if (sef) {
-        var mevcut = sef.querySelector('.sef-icerik');
-        if (mevcut) {
-            mevcut.innerHTML = h;
-        } else {
-            var div = document.createElement('div');
-            div.className = 'sef-icerik';
-            div.innerHTML = h;
-            sef.appendChild(div);
-        }
-    }
+    var t = document.getElementById('tab1');
+    if (t) t.textContent = tabAd;
+    var el = document.getElementById('pg-aksam');
+    if (!el) return;
+    var h = '<div class="kat"><div class="kat-cizgi"></div><div class="kat-lbl">' + (localStorage.getItem('sef_baslik_tr') || 'ŞEFİN SEÇKİLERİ') + '</div><div class="kat-cizgi r"></div></div>';
+    oneri.forEach(function(o) {
+        h += '<div style="background:#fff;border:1px solid rgba(139,105,20,0.15);border-radius:16px;padding:1.25rem;margin:0 0.875rem 0.75rem;">';
+        h += '<div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">';
+        h += '<span style="font-size:28px;">' + o.ikon + '</span><div>';
+        h += '<div style="font-size:16px;color:#1C1208;font-weight:600;">' + o.baslik + '</div>';
+        if (o.fiyat) h += '<div style="font-size:13px;color:#8B6914;margin-top:2px;">' + o.fiyat + '</div>';
+        h += '</div></div>';
+        h += '<div style="font-style:italic;font-size:14px;color:#3A2810;line-height:1.6;border-left:3px solid rgba(139,105,20,0.4);padding-left:10px;">' + o.acik + '</div>';
+        h += '</div>';
+    });
+    el.innerHTML = h;
 }
-
-dilYukle();
-menuYukle();
-garsonKartlariYukle();
-sefMenusunuYukle();
 
 </script>
 </body>
